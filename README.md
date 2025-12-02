@@ -1,16 +1,24 @@
-Aqui estão **vários tipos de gráficos** que você pode usar no **GitHub Markdown** usando **Mermaid** — todos funcionam direto no README.md e deixam a documentação muito mais bonita e profissional.
+# **README PRINCIPAL (Organizado e Pronto para Uso)**
 
-Abaixo listo:
+# **Devora - toki**
 
-* **Gráficos prontos com exemplos**
-* **Quando usar cada tipo**
-* **Códigos para copiar e colar**
+Aplicação web para gerenciamento de serviços
 
 ---
 
-# 📊 **1. Gráfico de Pizza (Pie Chart)**
+## **📡 Status do Projeto**
 
-Ótimo para mostrar proporções de tecnologias, módulos ou porcentagens.
+| Categoria          | Status                                                                  |
+| ------------------ | ----------------------------------------------------------------------- |
+| 🔧 Desenvolvimento | ![Dev](https://img.shields.io/badge/status-em%20desenvolvimento-yellow) |
+| 🚀 Produção        | ![Prod](https://img.shields.io/badge/versão-0.1.0-blue)                 |
+| 🧪 Testes          | ![Tests](https://img.shields.io/badge/testes-parciais-orange)           |
+
+---
+
+# **📊 Tecnologias Utilizadas**
+
+## **Gráfico de Pizza – Proporção das Tecnologias**
 
 ```mermaid
 pie title Uso das Tecnologias
@@ -18,56 +26,13 @@ pie title Uso das Tecnologias
     "JavaScript" : 25
     "TailwindCSS" : 15
     "Node.js" : 15
-    "Express" : 5
 ```
 
----
+# **📦 Arquitetura do Sistema**
 
-# 📈 **2. Gráfico de Barras (Bar Chart)**
+Este bloco revela o fluxo operacional e o modelo interno — a “máquina invisível” operando por trás da interface.
 
-Bom para comparar valores (ex: desempenho, commits, módulos).
-
-```mermaid
-bar title Contribuições por Mês
-    "Jan" : 10
-    "Fev" : 22
-    "Mar" : 13
-    "Abr" : 18
-```
-
----
-
-# 📉 **3. Gráfico de Linha (Line Chart)**
-
-Ótimo para mostrar evolução ao longo do tempo.
-
-```mermaid
-line
-    title Crescimento do Projeto
-    xaxis Jan Fev Mar Abr Mai Jun
-    yaxis 0 10 20 30 40
-    data "Commits" 2 6 14 22 35 48
-```
-
----
-
-# 🪜 **4. Gráfico de Funil (Funnel Chart)**
-
-Bom para processos: login, autenticação, vendas, passos de funnels.
-
-```mermaid
-flowchart TD
-    A[Usuários Totais] --> B[Usuários que acessam]
-    B --> C[Usuários que se registram]
-    C --> D[Usuários que fazem login]
-    D --> E[Usuários ativos]
-```
-
----
-
-# 🧭 **5. Diagrama de Fluxo (Flowchart)**
-
-Útil para explicar processos (login, cadastro, API, rotas etc.)
+## **🧭 Diagrama de Fluxo – Autenticação**
 
 ```mermaid
 flowchart TD
@@ -77,45 +42,7 @@ flowchart TD
     C --> E[Redirecionar para Dashboard]
 ```
 
----
-
-# 🔄 **6. Diagrama de Sequência (Sequence Diagram)**
-
-Excelente para APIs, autenticação, rotas, comunicação entre serviços.
-
-```mermaid
-sequenceDiagram
-    participant Cliente
-    participant Servidor
-    Cliente->>Servidor: POST /login
-    Servidor-->>Cliente: Token JWT
-    Cliente->>Servidor: GET /dashboard (com token)
-    Servidor-->>Cliente: Dados autorizados
-```
-
----
-
-# 🗂 **7. Diagrama de Gantt (Cronograma)**
-
-Perfeito para roadmap, planejamento e entregas.
-
-```mermaid
-gantt
-    title Cronograma do Projeto
-    dateFormat  YYYY-MM-DD
-    section Front-end
-    Componentes       :a1, 2025-01-01, 10d
-    Estilização       :a2, after a1, 7d
-    section Back-end
-    API               :b1, 2025-01-10, 14d
-    Autenticação      :b2, after b1, 10d
-```
-
----
-
-# 🧱 **8. Diagrama de Classes (Class Diagram)**
-
-Bom para modelagem de sistemas e APIs.
+## **🧱 Diagrama de Classes – Estrutura Lógica**
 
 ```mermaid
 classDiagram
@@ -133,49 +60,80 @@ classDiagram
     Usuario --> Auth
 ```
 
----
+# **🗓 Cronograma – Gantt**
 
-# 🗃 **9. Diagrama de Entidade-Relacionamento (ERD)**
-
-Excelente para banco de dados.
+O cronograma mostra o tempo como estrutura — o projeto é um processo, não um estado.
 
 ```mermaid
-erDiagram
-    USER ||--o{ TASK : possui
-    USER {
-        int id
-        string nome
-        string email
-    }
-    TASK {
-        int id
-        string titulo
-        boolean concluida
-    }
+gantt
+    title Cronograma do Projeto (3 dias)
+    dateFormat  YYYY-MM-DD
+
+    %% Dia 1
+    section Front-end
+    Componentes       :a1, 2025-01-01, 1d
+
+    %% Dia 2
+    Estilização       :a1, 2025-01-01 , 2025-01-03
+
+    %% Dia 3
+    section Back-end
+    API               :b1, 2025-01-03, 1d
+    Autenticação      :b2, 2025-01-03, 1d
 ```
 
 ---
 
-# 🔍 **10. Gráfico de Radar (Radar Chart)**
+# **🛠 Stack Detalhada**
 
-Bom para comparar níveis (skills, módulos, performance).
+### **Front-end**
 
-```mermaid
-radar
-    title Comparação de Skills
-    axes "React" "JavaScript" "Node" "CSS"
-    data "Dev 1" 80 70 60 90
-    data "Dev 2" 50 85 75 60
+- ⚛️ React
+- 🟨 JavaScript
+- 🎨 TailwindCSS
+
+### **Back-end**
+
+- 🟩 Node.js
+- 🚏 Express
+
+---
+
+# **👤 Responsável**
+
+[@GuilhermeNantes](https://github.com/GuilhermeNantes)
+
+---
+
+# **🤝 Contribuindo**
+
+Contribuições são sempre bem-vindas!
+
+- Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Siga [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+
+---
+
+# **🛠 Instalação**
+
+```bash
+git clone <url-do-repositorio>
+cd nome-do-projeto
+cd front-end
+npm install
+npm run dev
 ```
 
 ---
 
-# ✔ Quer que eu adicione esses gráficos no seu README?
+# **📸 Screenshots**
 
-Posso montar:
+![Tela Inicial](./assets/home.png)
 
-* Um **dashboard** de gráficos
-* Um README completo e estilizado
-* Gráficos específicos para *tecnologias, tarefas, API, banco, progresso etc.*
+---
 
-É só me dizer **qual você quer usar no seu README principal**.
+# **📄 Licença**
+
+MIT
+bé
+Quer adicionar mais camadas ao README?
