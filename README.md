@@ -22,10 +22,10 @@ Aplicação web para gerenciamento de serviços
 
 ```mermaid
 pie title Uso das Tecnologias
-    "React" : 40
-    "JavaScript" : 25
-    "TailwindCSS" : 15
-    "Node.js" : 15
+    "React" : 46
+    "JavaScript" : 23
+    "TailwindCSS" : 37
+    "Node.js" : 7
 ```
 
 # **📦 Arquitetura do Sistema**
