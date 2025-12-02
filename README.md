@@ -113,8 +113,8 @@ gantt
 
 Contribuições são sempre bem-vindas!
 
-* Consulte `CONTRIBUTING.md`
-* Siga `CODE_OF_CONDUCT.md`
+* Consulte [`CONTRIBUTING.md`](CONTRIBUTING.md)
+* Siga [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
 
 ---
 
