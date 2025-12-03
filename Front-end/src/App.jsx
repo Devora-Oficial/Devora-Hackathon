@@ -1,38 +1,37 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
+// client/src/App.jsx (CORRIGIDO)
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import LoginPage from './pages/LoginPage';
+// Importe outros componentes de página aqui conforme necessário
+
+import './App.css'; // Opcional: Para estilos globais ou reset
 
 function App() {
-  // const [count, setCount] = useState(0)
-
   return (
-    <>
-    <div className="teste-css bg-amber-400 w100 h10000">
-      teste
-    </div>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <>  {/* <-- FRAGMENTO DE ABERTURA */}
+      <Navbar />
+      
+      {/* O div principal agora contém apenas o conteúdo roteado e é o único elemento entre Navbar e Footer */}
+      <div style={{ minHeight: 'calc(100vh - 120px)' }}> 
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/sobre" element={<AboutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={
+            <div style={{ textAlign: 'center', padding: '50px' }}>
+              <h1>404 - Página Não Encontrada</h1>
+              <p>A URL que você digitou não existe.</p>
+            </div>
+          } />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
+      
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
