@@ -37,7 +37,9 @@ export default function Login() {
 
             {/* Botão */}
             <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40">
-              Entrar
+              <Link to="/dashboardEmpresa">
+                Entrar
+              </Link>
             </button>
 
             {/* Criar conta */}
