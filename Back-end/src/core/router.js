@@ -1,6 +1,6 @@
-const empresaRoutes = require("./routes/EmpresaRoutes");
-const servicoRoutes = require("./routes/ServicoRoutes");
-const agendamentoRoutes = require("./routes/AgendamentoRoutes");
+const empresaRoutes = require("../routes/EmpresaRoutes");
+const servicoRoutes = require("../routes/ServicoRoutes");
+const agendamentoRoutes = require("../routes/AgendamentoRoutes");
 
 module.exports = {
     async handle(req, res) {
