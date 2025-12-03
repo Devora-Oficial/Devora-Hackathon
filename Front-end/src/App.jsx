@@ -25,7 +25,7 @@ function App() {
       </div>
  
       <div className="w-1/2 relative  overflow-hidden flex items-center justify-center">
-        <div className="absolute inset-0  bg-gradient-zen bg-center">
+        <div className="absolute inset-0 bg-gradient-zen bg-center rounded-bl-4xl">
         </div>
 
         <div className="absolute bg-blue-700"></div>
