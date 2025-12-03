@@ -1,47 +1,40 @@
 const ServicoService = require("../services/ServicoService");
+const { ok, created, serverError } = require("../utils/response");
 
 const ServicoController = {
   async listar(req, res) {
     try {
       const servicos = await ServicoService.listar();
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(servicos));
+      ok(res, servicos);
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
   },
 
   async criar(req, res, body) {
     try {
       const id = await ServicoService.criar(body);
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ id }));
+      created(res, { id });
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
   },
 
   async atualizar(req, res, id, body) {
     try {
-      const affectedRows = await ServicoService.atualizar(id, body);
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ updated: affectedRows }));
+      const rows = await ServicoService.atualizar(id, body);
+      ok(res, { updated: rows });
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
   },
 
   async deletar(req, res, id) {
     try {
-      const affectedRows = await ServicoService.deletar(id);
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ deleted: affectedRows }));
+      const rows = await ServicoService.deletar(id);
+      ok(res, { deleted: rows });
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
   }
 };

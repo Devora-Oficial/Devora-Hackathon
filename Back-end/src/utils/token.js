@@ -15,6 +15,10 @@ module.exports = {
     },
 
     verify(token) {
-        return jwt.verify(token, process.env.JWT_SECRET);
+        try {
+            return jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return null; // evita quebrar o servidor
+        }
     }
 };
