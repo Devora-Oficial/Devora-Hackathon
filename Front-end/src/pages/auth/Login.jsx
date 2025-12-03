@@ -22,6 +22,12 @@ export default function Login() {
               <input type="password"placeholder="••••••••"className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:ring-purple-500 outline-none transition"/>
             </div>
 
+            {/* Botão */}
+            <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40">
+              <Link to="/dashboardEmpresa">
+                Entrar
+              </Link>
+            </button>
             {/* botao de entrar */}
             <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40">Entrar</button>
 
