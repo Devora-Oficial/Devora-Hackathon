@@ -1,4 +1,4 @@
--- Banco: gestor_agendamentos (assumido já criado)
+-- Banco: service_gate (assumido já criado)
 
 -- Tabela: admins da plataforma
 CREATE TABLE IF NOT EXISTS plataforma_admins (

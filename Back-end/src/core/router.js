@@ -1,7 +1,9 @@
-const produtoRoutes = require("./routes/ProdutoRoutes");
+const empresaRoutes = require("./routes/EmpresaRoutes");
+const servicoRoutes = require("./routes/ServicoRoutes");
+const agendamentoRoutes = require("./routes/AgendamentoRoutes");
 
 module.exports = {
-    handle(req, res) {
+    async handle(req, res) {
         res.setHeader("Content-Type", "application/json");
 
         // Rota de saúde do servidor
@@ -10,9 +12,21 @@ module.exports = {
             return;
         }
 
-        // Rotas de produto
-        if (req.url.startsWith("/produtos")) {
-            produtoRoutes(req, res);
+        // Rotas de empresas
+        if (req.url.startsWith("/empresas")) {
+            await empresaRoutes(req, res);
+            return;
+        }
+
+        // Rotas de serviços
+        if (req.url.startsWith("/servicos")) {
+            await servicoRoutes(req, res);
+            return;
+        }
+
+        // Rotas de agendamentos
+        if (req.url.startsWith("/agendamentos")) {
+            await agendamentoRoutes(req, res);
             return;
         }
 
