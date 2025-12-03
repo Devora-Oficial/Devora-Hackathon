@@ -52,7 +52,6 @@ export function DataTable({
   onAdd,
   onEdit,
   onDelete,
-  onView,
   addLabel = 'Adicionar',
   itemsPerPage = 10,
   className,
@@ -125,7 +124,7 @@ export function DataTable({
                   {column.header}
                 </th>
               ))}
-              {(onView || onEdit || onDelete) && (
+              {(onEdit || onDelete) && (
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                   Ações
                 </th>
@@ -136,7 +135,7 @@ export function DataTable({
             {paginatedData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={columns.length + (onView || onEdit || onDelete ? 1 : 0)}
+                  colSpan={columns.length + (onEdit || onDelete ? 1 : 0)}
                   className="px-6 py-12 text-center text-gray-500 dark:text-gray-400"
                 >
                   Nenhum registro encontrado
@@ -158,19 +157,9 @@ export function DataTable({
                         : String(getValue(item, column.key) ?? '')}
                     </td>
                   ))}
-                  {(onView || onEdit || onDelete) && (
+                  {(onEdit || onDelete) && (
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {onView && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => onView(item)}
-                            className="h-8 w-8 text-gray-600 dark:text-gray-400"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        )}
                         {onEdit && (
                           <Button
                             variant="ghost"
