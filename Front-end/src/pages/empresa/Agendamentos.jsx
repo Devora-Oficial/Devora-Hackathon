@@ -1,70 +1,52 @@
-// pages/Agendamentos.jsx
-import React, { useState } from 'react';
-// Importa componentes
-import { DataTable } from '../components/DataTable/DataTable';
-import Modal from '../components/ui/Modal';
-import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
-import { cn } from '../utils/cn'; // Importa a utilidade
+import { DataTable } from "../../components/DataTable";
 
-// Se esta for uma tela separada do App principal:
-export default function AgendamentosPage() {
-  // 1. Estado para os dados da tabela
-  const [data, setData] = useState([
-    { id: 1, cliente: 'Empresa ABC Ltda', servico: 'Consultoria', data: '2023-10-25', hora: '14:00', status: 'Confirmado' },
-    // ... outros dados
-  ]);
+  const appointments = [
+    { id: 1, customer: 'Carlos Silva', service: 'Corte + Barba', date: '01/12/2024', time: '10:00', status: 'Agendado' },
+    { id: 2, customer: 'Ana Paula Santos', service: 'Corte Masculino', date: '01/12/2024', time: '11:00', status: 'Agendado' },
+    { id: 3, customer: 'Roberto Oliveira', service: 'Barba Completa', date: '01/12/2024', time: '14:00', status: 'Concluído' },
+    { id: 4, customer: 'Fernanda Costa', service: 'Pigmentação', date: '02/12/2024', time: '09:00', status: 'Agendado' },
+    { id: 5, customer: 'Lucas Mendes', service: 'Corte Masculino', date: '30/11/2024', time: '16:00', status: 'Cancelado' },
+  ];
 
-  // 2. Estados de controle do Modal (Criar/Editar)
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentAgendamento, setCurrentAgendamento] = useState(null);
+  const columns = [
+    { key: 'customer', header: 'Cliente' },
+    { key: 'service', header: 'Serviço' },
+    { key: 'date', header: 'Data' },
+    { key: 'time', header: 'Horário' },
+    { 
+      key: 'status', 
+      header: 'Status',
+      render: (item) => (
+        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded">
+          {item.status}
+        </span>
+      )
+    },
+  ];
 
-  // 3. Definição das Colunas (Mantida intacta)
-  const columns = [ /* ... */ ];
-
-  // 4. Funções de Ação (Mantidas intactas)
-  const handleSave = (e) => { /* ... */ };
-  const handleDelete = (item) => { /* ... */ };
-
+const Agendamentos = () => {
   return (
-    <div className="bg-[#07060a] min-h-screen text-white font-sans antialiased">
-      <main className="pt-24 px-4 sm:px-8 max-w-7xl mx-auto">
-        <div className="space-y-8">
-          
-          {/* Cabeçalho da Página */}
-          {/* ... */}
-
-          {/* DATATABLE agora importada */}
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <DataTable 
-              title="Próximos Agendamentos"
-              data={data}
-              columns={columns}
-              addLabel="Novo Agendamento"
-              onAdd={() => { setCurrentAgendamento(null); setIsModalOpen(true); }}
-              onEdit={(item) => { setCurrentAgendamento(item); setIsModalOpen(true); }}
-              onDelete={handleDelete}
-              className="border-slate-800 bg-slate-900/50 backdrop-blur-md"
-            />
-          </div>
-
+    <div className="bg-[#07060a] text-white font-sans antialiased">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8 animate-fade-in-up">
+          <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
+          <p className="mt-1 text-muted-foreground">Gerencie os agendamentos da sua empresa</p>
         </div>
+        <DataTable
+          data={appointments}
+          columns={columns}
+          title="Lista de Agendamentos"
+          searchPlaceholder="Buscar agendamento..."
+          onAdd={() => console.log('Adicionar')}
+          onEdit={(customer) => console.log('Editar', customer)}
+          onDelete={(customer) => console.log('Deletar', customer)}
+          onView={(customer) => console.log('Ver', customer)}
+          addLabel="Novo Agendamento"
+          itemsPerPage={10}
+        />
       </main>
-
-      {/* Modal Específico desta Tela */}
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        title={currentAgendamento ? "Editar Agendamento" : "Novo Agendamento"}
-      >
-        {/* Formulário (mantido intacto, mas usando os novos Imports) */}
-        <form onSubmit={handleSave} className="space-y-4">
-          {/* ... use <Input> e <Button> importados ... */}
-        </form>
-      </Modal>
     </div>
-  );
+  )
 }
 
-// O App.jsx de Agendamentos.jsx deve ser removido ou alterado para
-// export default function App() { return <AgendamentosPage />; }
+export default Agendamentos
