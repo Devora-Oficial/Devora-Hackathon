@@ -1,38 +1,44 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
 
 function App() {
-  // const [count, setCount] = useState(0)
-
+ 
+  // -- Tela Login --
+ 
   return (
-    <>
-    <div className="teste-css bg-amber-400 w100 h10000">
-      teste
+    <div className="min-h-screen flex bg-slate-700 sh">
+      <div className="w-1/2 flex items-center justify-center">
+        <div className="w-full max-w-sm bg-slate-800 p-14 rounded-2xl shadow-xl border border-slate-800">
+          <h2 className="text-2xl font-bold text-center mb-6 text-white">Lolgin</h2>
+ 
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm text-white font-medium mb-1">Emahil</label>
+              <input type="email" className="w-full px-3 py-2 border rounded-lg text-white" placeholder="exemplo@exemplo.com" />
+            </div>
+            <div>
+              <label className="block text-sm text-white font-medium mb-1">PASword</label>
+              <input type="password" className="w-full px-3 py-2 border rounded-lg text-white" placeholder="••••••••" />
+            </div>
+            <button className="w-full py-2 bg-purple-700 text-white font-semibold rounded-lg">Entrada</button>
+            <p className="text-center text-sm text-white mt-3 ">Sem Contafdskk <a className="text-purple-600 underline cursor-pointer">Criar ai</a></p>
+          </div>
+        </div>
+      </div>
+ 
+      <div className="w-1/2 relative  overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-slate-900 bg-center">
+        </div>
+        
+        <div className="absolute bg-blue-700"></div>
+ 
+        <div className="relative text-white px-16">
+          <h1 className="text-4xl font-bold mb-4 text-white">WelTeCome!! <span className="text-white/90">SLAkk</span></h1>
+          <p className="text-white max-w-md">SLA TESTE SLA TESTE SLA TESTE SAL TESTE</p>
+        </div>
+ 
+        {/* <button className="absolute top-6 right-6 border border-white/70 text-white px-6 py-2 rounded-full">Deslogar</button> */}
+      </div>
     </div>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
-    </>
   )
 }
-
+ 
 export default App
