@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+@layer utilities {
+  .bg-gradient-zen {
+    background: linear-gradient(135deg,
+      rgb(75, 30, 255),
+      rgb(37, 98, 184),
+      rgb(71, 93, 255)
+    );
+    background-size: 600% 600%;
+    animation: gradient-zen 28s ease-in-out infinite;
+  }
+
+  @keyframes gradient-zen {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
