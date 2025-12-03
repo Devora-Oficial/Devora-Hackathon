@@ -1,18 +1,13 @@
+require("dotenv").config();
 const http = require("http");
+const router = require("./src/router");
+
+const PORT = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
-
-    const resposta = {
-        status: "ok",
-        message: "Servidor Node puro rodando perfeitamente!",
-        rota: req.url,
-        metodo: req.method
-    };
-
-    res.end(JSON.stringify(resposta));
+    router.handle(req, res);
 });
 
-server.listen(3000, () => {
-    console.log("🚀 Servidor ON em http://localhost:3000");
+server.listen(PORT, () => {
+    console.log(`🚀 Servidor ON em http://localhost:${PORT}`);
 });
