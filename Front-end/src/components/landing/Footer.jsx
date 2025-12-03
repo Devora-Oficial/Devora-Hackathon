@@ -1,20 +1,15 @@
+import React from "react";
+
 export default function Footer() {
   return (
-    <footer className="py-16">
-      <div className="max-w-7xl mx-auto px-6 text-center text-gray-400">
-
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
-            <svg width="18" height="18" stroke="white" fill="none" strokeWidth="1.5" viewBox="0 0 24 24">
-              <path d="M4 7h16M4 12h16M4 17h16"/>
-            </svg>
-          </div>
-          <span className="text-white font-semibold tracking-tight">
-            Service<span className="text-indigo-400">Gate</span>
-          </span>
+    <footer className="py-12 border-t border-white/6 text-gray-400">
+      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="text-sm">© {new Date().getFullYear()} ServiceGate — Todos os direitos reservados</div>
+        <div className="flex gap-4 text-sm">
+          <a href="/terms" className="hover:text-white">Termos</a>
+          <a href="/privacy" className="hover:text-white">Privacidade</a>
+          <a href="/contact" className="hover:text-white">Contato</a>
         </div>
-
-        <p className="text-sm">© {new Date().getFullYear()} ServiceGate. Hackathon Project.</p>
       </div>
     </footer>
   );
