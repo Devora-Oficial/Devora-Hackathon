@@ -37,8 +37,6 @@ export default function Login() {
               </button>
             </Link>
 
-            {/* p de criar a conta */}
-            <p className="text-center text-sm text-gray-300">Não tem conta?{" "}<Link className="text-purple-400 hover:underline" to="/register">Criar conta</Link></p>
           </div>
         </div>
       </div>

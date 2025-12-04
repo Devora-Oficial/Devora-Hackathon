@@ -39,12 +39,12 @@ export default function Hero() {
             viewport={{ once: true }}
             className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center lg:justify-start"
           >
-            <Link
-              to="/register"
+            <a
+              href="#pricing"
               className="px-8 py-3 bg-linear-to-r from-purple-600 to-indigo-600 text-white rounded-full font-semibold shadow-xl shadow-purple-900/40 hover:scale-[1.02] transition"
             >
-              Começar grátis
-            </Link>
+              Começar agora
+            </a>
 
             <a
               href="#features"
