@@ -252,13 +252,13 @@ const Agendamentos = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Descrição
+              Observação
             </label>
             <textarea
               value={formData.observation}
               onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
-              placeholder="Descreva o serviço"
+              placeholder="Anote uma observação"
               rows="3"
             />
           </div>
@@ -362,13 +362,13 @@ const Agendamentos = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Descrição
+              Observação
             </label>
             <textarea
               value={formData.observation}
               onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
-              placeholder="Descreva o serviço"
+              placeholder="Anote uma observação"
               rows="3"
             />
           </div>
