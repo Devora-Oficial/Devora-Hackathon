@@ -8,8 +8,6 @@
  */
 
 const db = require("../database/db");
-
-const db = require("../database/db");
 const hashUtil = require("../utils/hash");
 
 const AdminModel = {

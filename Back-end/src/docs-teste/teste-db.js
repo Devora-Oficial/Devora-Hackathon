@@ -1,3 +1,4 @@
+
 const db = require("../database/db");
 
 async function testConnection() {
@@ -9,4 +10,4 @@ async function testConnection() {
   }
 }
 
-testConnection();
+testConnection(); 

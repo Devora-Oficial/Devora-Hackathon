@@ -40,7 +40,7 @@ const server = http.createServer((req, res) => {
         // Acumula os chunks de dados do corpo da requisição
         body += chunk.toString();
     });
-x
+    
     req.on('end', () => {
         // Quando todos os dados foram recebidos, tenta fazer o parse
         try {
