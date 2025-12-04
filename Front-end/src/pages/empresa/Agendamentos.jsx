@@ -158,7 +158,7 @@ const Agendamentos = () => {
 
   return (
     <>
-      <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-16">
+      <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8">

@@ -1,14 +1,14 @@
 import { ArrowLeft } from "lucide-react";
-import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Login() {
   return (
     <div className="min-h-screen flex bg-[#07060a] text-white">
 
+      {/* Div da parte esquerda da página */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <Link 
-          to="/" // Altere para a rota da sua landing page se for diferente de "/"
+          to="/"
           className="absolute top-8 left-8 flex items-center space-x-2 p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
         >
           <ArrowLeft className="w-5 h-5" /> 
@@ -30,14 +30,12 @@ export default function Login() {
               <input type="password"placeholder="••••••••"className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:ring-purple-500 outline-none transition"/>
             </div>
 
-            {/* Botão */}
+            {/* botao de entrar (tirar o Link quando for fazer Login funcional) */}
             <Link to="/dashboardEmpresa">
               <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40">
                   Entrar
               </button>
             </Link>
-            {/* botao de entrar */}
-            {/* <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40">Entrar</button> */}
 
             {/* p de criar a conta */}
             <p className="text-center text-sm text-gray-300">Não tem conta?{" "}<Link className="text-purple-400 hover:underline" to="/register">Criar conta</Link></p>
@@ -45,6 +43,7 @@ export default function Login() {
         </div>
       </div>
 
+      {/* Div da parte direita da página */}
       <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden">
 
         <div className="absolute inset-0 bg-linear-to-br from-purple-600/30 to-indigo-700/30 backdrop-blur-xl"></div>

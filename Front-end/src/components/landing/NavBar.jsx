@@ -6,10 +6,10 @@ export default function Navbar() {
     <header className="w-full fixed top-0 left-0 z-50 bg-[#07060a]/40 backdrop-blur-md border-b border-white/6">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-900/40">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-900/40">
             <span className="text-white font-bold">SG</span>
           </div>
-          <span className="text-white font-semibold text-lg tracking-tight">
+          <span className="text-white font-bold text-lg tracking-tight">
             Service<span className="text-indigo-400">Gate</span>
           </span>
         </div>
@@ -29,7 +29,7 @@ export default function Navbar() {
 
           <Link
             to="/register"
-            className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition font-medium shadow-lg shadow-purple-900/40"
+            className="px-4 py-2 rounded-full bg-linear-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition font-medium shadow-lg shadow-purple-900/40"
           >
             Criar Conta
           </Link>

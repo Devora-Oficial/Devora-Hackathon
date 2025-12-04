@@ -25,16 +25,17 @@ export default function NavbarManage({ userType = "company", userName = "João S
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header className="w-full fixed top-0 left-0 z-50 bg-[#0a0a0f] border-b border-gray-800">
+    <header className="w-full fixed top-0 left-0 z-50 bg-[#07060a]/40 border-b border-white/6 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center">
-              <Building2 className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center">
+              {/* <Building2 className="w-6 h-6 text-white" /> */}
+              <span className="text-white font-bold">SG</span>
             </div>
-            <span className="text-white font-semibold text-lg tracking-tight hidden sm:block">
-              Service<span className="text-yellow-500">Gate</span>
+            <span className="text-white font-bold text-lg tracking-tight hidden sm:block">
+              Service<span className="text-indigo-400">Gate</span>
             </span>
           </div>
 
@@ -81,7 +82,7 @@ export default function NavbarManage({ userType = "company", userName = "João S
                     {userType === "admin" ? "Admin Master" : companyName}
                   </div>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm">
+                <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm">
                   {userName.charAt(0)}
                 </div>
               </div>
@@ -112,7 +113,7 @@ export default function NavbarManage({ userType = "company", userName = "João S
                 to={item.path}
                 className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                   active
-                    ? "text-yellow-500 bg-gray-800"
+                    ? "text-purple-600 bg-gray-800"
                     : "text-gray-400 hover:text-white"
                 }`}
               >

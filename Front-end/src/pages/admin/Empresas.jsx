@@ -33,6 +33,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 };
 
 const Empresas = () => {
+  // Alterar/Remover quando for puxado do banco
   const [companies, setCompanies] = useState([
     { id: 1, name: 'Barbearia Premium', email: 'contato@barbeariapremium.com', phone: '(11) 99999-1111', users: '5', clients: '150', status: 'Ativo' },
     { id: 2, name: 'Clínica Estética Belle', email: 'contato@clinicabelle.com', phone: '(11) 99999-2222', users: '8', clients: '320', status: 'Ativo' },
@@ -142,6 +143,7 @@ const Empresas = () => {
     return styles[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
   };
 
+  // Definição da estrutura da table da página (Empresas)
   const columns = [
     { 
       key: 'name', 
@@ -171,13 +173,13 @@ const Empresas = () => {
       )
     },
   ];
-    
+  
+  // Talvez remover quando login estiver funcional
   const tipoConta = 'admin'
-
 
   return (
     <>
-      <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-16">
+      <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage userType={tipoConta}/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8">
