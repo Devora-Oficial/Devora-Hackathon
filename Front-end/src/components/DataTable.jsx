@@ -80,7 +80,7 @@ export function DataTable({
   };
 
   return (
-    <div className={cn('bg-white dark:bg-[#0f0d1a] rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-white/5', className)}>
+    <div className={cn('bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700', className)}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 border-b border-gray-200 dark:border-gray-700">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
@@ -112,7 +112,7 @@ export function DataTable({
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#211d3d]">
+            <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
