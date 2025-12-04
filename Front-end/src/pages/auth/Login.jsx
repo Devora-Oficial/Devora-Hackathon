@@ -32,7 +32,7 @@ export default function Login() {
 
             {/* botao de entrar (tirar o Link quando for fazer Login funcional) */}
             <Link to="/dashboardEmpresa">
-              <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40">
+              <button className="w-full py-2 bg-purple-600 hover:bg-purple-500 transition font-semibold rounded-lg shadow-lg shadow-purple-900/40 cursor-pointer">
                   Entrar
               </button>
             </Link>
