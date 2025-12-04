@@ -70,7 +70,6 @@ function SettingsMenu({ activeSection, setActiveSection }) {
             <motion.button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              initial="hidden"
               animate={active ? "active" : "show"}
               variants={menuItemVariant}
               whileHover={{ x: 4 }}
