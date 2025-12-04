@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DataTable } from "../../components/DataTable";
 import { X, Building2 } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
+import { motion } from "framer-motion";
 
 // Componente Modal (fora do componente principal)
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -181,22 +182,35 @@ const Empresas = () => {
       <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage userType={tipoConta}/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut"}}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
             <h1 className="text-3xl font-bold tracking-tight">Empresas</h1>
             <p className="mt-1 text-gray-400">Gerencie todas as empresas cadastradas na plataforma</p>
-          </div>
+          </motion.div>
 
-          <DataTable
-            data={companies}
-            columns={columns}
-            title="Lista de Empresas"
-            searchPlaceholder="Buscar empresa..."
-            onAdd={handleAdd}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            addLabel="Nova Empresa"
-            itemsPerPage={10}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <DataTable
+              data={companies}
+              columns={columns}
+              title="Lista de Empresas"
+              searchPlaceholder="Buscar empresa..."
+              onAdd={handleAdd}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              addLabel="Nova Empresa"
+              itemsPerPage={10}
+            />
+          </motion.div>
         </main>
       </div>
 
