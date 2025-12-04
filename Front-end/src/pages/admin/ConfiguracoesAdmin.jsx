@@ -62,7 +62,7 @@ function AdminInfoSection({ adminData, setAdminData }) {
         <p className="text-gray-400">Gerencie os dados da sua conta administrativa</p>
       </div>
 
-      {/* Profile Pic */}
+      {/* Profile Pic
       <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
           <Upload className="w-5 h-5 text-indigo-400" />
@@ -81,7 +81,7 @@ function AdminInfoSection({ adminData, setAdminData }) {
             <p className="text-gray-400 text-xs mt-2">PNG, JPG — máximo 2MB.</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Admin Data */}
       <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
