@@ -1,3 +1,9 @@
+/* Abaixo está a versão atualizada do seu componente com: 
+   - Remoção total da borda dos <a> (Links)
+   - Linha azul embaixo APENAS quando estiver ativo
+   - Linha azul suave a direita (end) com Tailwind via pseudo-elemento
+*/
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Building2, Users, Scissors, Calendar, Settings, Moon, Sun, LogOut } from "lucide-react";
@@ -7,8 +13,7 @@ export default function NavbarManage({ userType = "company", userName = "João S
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  // Define navegação baseada no tipo de usuário
-  const navItems = userType === "admin" 
+  const navItems = userType === "admin"
     ? [
         { name: "Dashboard", path: "/dashboardAdmin", icon: LayoutDashboard },
         { name: "Empresas", path: "/empresas", icon: Building2 },
@@ -28,6 +33,7 @@ export default function NavbarManage({ userType = "company", userName = "João S
     <header className="w-full fixed top-0 left-0 z-50 bg-[#07060a]/40 border-b border-white/6 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center">
@@ -44,17 +50,22 @@ export default function NavbarManage({ userType = "company", userName = "João S
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
-              
+
               return (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    active
-                      ? "text-white bg-gray-800"
-                      : "text-gray-400 hover:text-white hover:bg-gray-800/50"
-                  }`}
+                  className={`relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-none outline-none
+                    ${active ? "text-white" : "text-gray-400 hover:text-white"}
+                  `}
                 >
+                  {/* Linha azul no hover/end */}
+                  <span
+                    className={`absolute bottom-0 right-0 h-[2px] w-0 bg-blue-500 transition-all duration-300
+                      ${active ? "w-full" : "group-hover:w-full"}
+                    `}
+                  />
+
                   <Icon className="w-4 h-4" />
                   {item.name}
                 </Link>
@@ -62,10 +73,8 @@ export default function NavbarManage({ userType = "company", userName = "João S
             })}
           </nav>
 
-          {/* Right Side - Theme Toggle + User Menu */}
+          {/* Right Side */}
           <div className="flex items-center gap-3">
-
-            {/* Dark Mode Toggle */}
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
@@ -86,10 +95,8 @@ export default function NavbarManage({ userType = "company", userName = "João S
                   {userName.charAt(0)}
                 </div>
               </div>
-
             </div>
 
-            {/* Dark Mode Toggle */}
             <Link
               to={"/login"}
               className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
@@ -106,7 +113,7 @@ export default function NavbarManage({ userType = "company", userName = "João S
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-            
+
             return (
               <Link
                 key={item.path}
