@@ -34,11 +34,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const Agendamentos = () => {
   const [appointments, setAppointments] = useState([
-    { id: 1, customer: 'Carlos Silva', service: 'Corte + Barba', date: '01/12/2024', time: '10:00', status: 'Agendado' },
-    { id: 2, customer: 'Ana Paula Santos', service: 'Corte Masculino', date: '01/12/2024', time: '11:00', status: 'Agendado' },
-    { id: 3, customer: 'Roberto Oliveira', service: 'Barba Completa', date: '01/12/2024', time: '14:00', status: 'Concluído' },
-    { id: 4, customer: 'Fernanda Costa', service: 'Pigmentação', date: '02/12/2024', time: '09:00', status: 'Agendado' },
-    { id: 5, customer: 'Lucas Mendes', service: 'Corte Masculino', date: '30/11/2024', time: '16:00', status: 'Cancelado' },
+    { id: 1, customer: 'Carlos Silva', service: 'Corte + Barba', date: '01/12/2024', time: '10:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
+    { id: 2, customer: 'Ana Paula Santos', service: 'Corte Masculino', date: '01/12/2024', time: '11:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
+    { id: 3, customer: 'Roberto Oliveira', service: 'Barba Completa', date: '01/12/2024', time: '14:00', observation: 'Corte de cabelo tradicional masculino', status: 'Concluído' },
+    { id: 4, customer: 'Fernanda Costa', service: 'Pigmentação', date: '02/12/2024', time: '09:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
+    { id: 5, customer: 'Lucas Mendes', service: 'Corte Masculino', date: '30/11/2024', time: '16:00', observation: 'Corte de cabelo tradicional masculino', status: 'Cancelado' },
   ]);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -51,6 +51,7 @@ const Agendamentos = () => {
     service: '',
     date: '',
     time: '',
+    observation: '',
     status: 'Agendado'
   });
 
@@ -61,6 +62,7 @@ const Agendamentos = () => {
       service: '',
       date: '',
       time: '',
+      observation: '',
       status: 'Agendado'
     });
   };
@@ -79,6 +81,7 @@ const Agendamentos = () => {
       service: appointment.service,
       date: appointment.date,
       time: appointment.time,
+      observation: appointment.observation,
       status: appointment.status
     });
     setIsEditModalOpen(true);
@@ -145,6 +148,7 @@ const Agendamentos = () => {
     { key: 'service', header: 'Serviço' },
     { key: 'date', header: 'Data' },
     { key: 'time', header: 'Horário' },
+    { key: 'observation', header: 'Observação' },
     { 
       key: 'status', 
       header: 'Status',
@@ -248,6 +252,19 @@ const Agendamentos = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Descrição
+            </label>
+            <textarea
+              value={formData.observation}
+              onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
+              placeholder="Descreva o serviço"
+              rows="3"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Status
             </label>
             <select
@@ -341,6 +358,19 @@ const Agendamentos = () => {
                 placeholder="HH:MM"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Descrição
+            </label>
+            <textarea
+              value={formData.observation}
+              onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
+              placeholder="Descreva o serviço"
+              rows="3"
+            />
           </div>
 
           <div>

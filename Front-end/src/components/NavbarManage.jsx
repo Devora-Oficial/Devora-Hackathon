@@ -21,7 +21,6 @@ export default function NavbarManage({ userType = "company", userName = "João S
       ]
     : [
         { name: "Dashboard", path: "/dashboardEmpresa", icon: LayoutDashboard },
-        { name: "Clientes", path: "/clientes", icon: Users },
         { name: "Serviços", path: "/servicos", icon: Scissors },
         { name: "Agendamentos", path: "/agendamentos", icon: Calendar },
         { name: "Configurações", path: "/configuracoes", icon: Settings },

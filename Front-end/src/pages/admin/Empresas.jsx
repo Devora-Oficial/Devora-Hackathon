@@ -35,11 +35,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 const Empresas = () => {
   // Alterar/Remover quando for puxado do banco
   const [companies, setCompanies] = useState([
-    { id: 1, name: 'Barbearia Premium', email: 'contato@barbeariapremium.com', phone: '(11) 99999-1111', users: '5', clients: '150', status: 'Ativo' },
-    { id: 2, name: 'Clínica Estética Belle', email: 'contato@clinicabelle.com', phone: '(11) 99999-2222', users: '8', clients: '320', status: 'Ativo' },
-    { id: 3, name: 'Academia Fitness Plus', email: 'contato@fitnessplus.com', phone: '(11) 99999-3333', users: '3', clients: '450', status: 'Ativo' },
-    { id: 4, name: 'Restaurante Sabor & Arte', email: 'contato@saborarte.com', phone: '(11) 99999-4444', users: '12', clients: '800', status: 'Inativo' },
-    { id: 5, name: 'Pet Shop Amigo Fiel', email: 'contato@amigofiel.com', phone: '(11) 99999-5555', users: '4', clients: '280', status: 'Ativo' },
+    { id: 1, name: 'Barbearia Premium', email: 'contato@barbeariapremium.com', password: '123', phone: '(11) 99999-1111', status: 'Ativo' },
+    { id: 2, name: 'Clínica Estética Belle', email: 'contato@clinicabelle.com', password: '123', phone: '(11) 99999-2222', status: 'Ativo' },
+    { id: 3, name: 'Academia Fitness Plus', email: 'contato@fitnessplus.com', password: '123', phone: '(11) 99999-3333', status: 'Ativo' },
+    { id: 4, name: 'Restaurante Sabor & Arte', email: 'contato@saborarte.com', password: '123', phone: '(11) 99999-4444', status: 'Inativo' },
+    { id: 5, name: 'Pet Shop Amigo Fiel', email: 'contato@amigofiel.com', password: '123', phone: '(11) 99999-5555', status: 'Ativo' },
   ]);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -50,9 +50,8 @@ const Empresas = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    password: '',
     phone: '',
-    users: '',
-    clients: '',
     status: 'Ativo'
   });
 
@@ -61,9 +60,8 @@ const Empresas = () => {
     setFormData({
       name: '',
       email: '',
+      password: '',
       phone: '',
-      users: '',
-      clients: '',
       status: 'Ativo'
     });
   };
@@ -80,9 +78,8 @@ const Empresas = () => {
     setFormData({
       name: company.name,
       email: company.email,
+      password: company.password,
       phone: company.phone,
-      users: company.users,
-      clients: company.clients,
       status: company.status
     });
     setIsEditModalOpen(true);
@@ -96,7 +93,7 @@ const Empresas = () => {
 
   // Salvar nova empresa
   const handleSaveNew = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.password || !formData.phone) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
@@ -112,7 +109,7 @@ const Empresas = () => {
 
   // Salvar edição
   const handleSaveEdit = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.password || !formData.phone) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
@@ -161,8 +158,6 @@ const Empresas = () => {
       )
     },
     { key: 'phone', header: 'Telefone' },
-    { key: 'users', header: 'Usuários' },
-    { key: 'clients', header: 'Clientes' },
     { 
       key: 'status', 
       header: 'Status',
@@ -236,6 +231,19 @@ const Empresas = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Senha *
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              placeholder=""
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Telefone *
             </label>
             <input
@@ -245,34 +253,6 @@ const Empresas = () => {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               placeholder="(11) 99999-9999"
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Usuários
-              </label>
-              <input
-                type="text"
-                value={formData.users}
-                onChange={(e) => setFormData({ ...formData, users: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Clientes
-              </label>
-              <input
-                type="text"
-                value={formData.clients}
-                onChange={(e) => setFormData({ ...formData, clients: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
           </div>
 
           <div>
@@ -341,6 +321,19 @@ const Empresas = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Senha *
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              placeholder=""
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Telefone *
             </label>
             <input
@@ -350,34 +343,6 @@ const Empresas = () => {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               placeholder="(11) 99999-9999"
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Usuários
-              </label>
-              <input
-                type="text"
-                value={formData.users}
-                onChange={(e) => setFormData({ ...formData, users: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Clientes
-              </label>
-              <input
-                type="text"
-                value={formData.clients}
-                onChange={(e) => setFormData({ ...formData, clients: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
           </div>
 
           <div>
