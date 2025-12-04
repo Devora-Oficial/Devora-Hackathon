@@ -1,49 +1,42 @@
 const AgendamentoService = require("../services/AgendamentoService");
+const { ok, created, serverError } = require("../utils/sendResponse");
 
 const AgendamentoController = {
   async listarPorEmpresa(req, res, empresa_id) {
     try {
       const agendamentos = await AgendamentoService.listarPorEmpresa(empresa_id);
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(agendamentos));
+      ok(res, agendamentos);
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
   },
 
   async criar(req, res, body) {
     try {
       const id = await AgendamentoService.criar(body);
-      res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ id }));
+      created(res, { id });
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
   },
 
   async atualizar(req, res, id, body) {
     try {
-        const affected = await AgendamentoService.atualizar(id, body);
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ affected }));
+      const affected = await AgendamentoService.atualizar(id, body);
+      ok(res, { affected });
     } catch (err) {
-        res.writeHead(500);
-        res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
-    },
+  },
 
-    async deletar(req, res, id) {
+  async deletar(req, res, id) {
     try {
-        const affected = await AgendamentoService.deletar(id);
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ affected }));
+      const affected = await AgendamentoService.deletar(id);
+      ok(res, { affected });
     } catch (err) {
-        res.writeHead(500);
-        res.end(JSON.stringify({ error: err.message }));
+      serverError(res, err.message);
     }
-    }
+  }
 };
 
 module.exports = AgendamentoController;

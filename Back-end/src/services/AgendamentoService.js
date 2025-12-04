@@ -1,11 +1,32 @@
 const AgendamentoModel = require("../models/AgendamentoModel");
 
 const AgendamentoService = {
-  listarPorEmpresa: (empresa_id) => AgendamentoModel.listarPorEmpresa(empresa_id),
-  buscarPorId: (id) => AgendamentoModel.buscarPorId(id),
-  criar: (dados) => AgendamentoModel.criar(dados),
-  atualizar: (id, dados) => AgendamentoModel.atualizar(id, dados),
-  deletar: (id) => AgendamentoModel.deletar(id)
+  async listarPorEmpresa(empresa_id) {
+    if (!empresa_id) throw new Error("ID da empresa é obrigatório.");
+    return await AgendamentoModel.listarPorEmpresa(empresa_id);
+  },
+
+  async buscarPorId(id) {
+    if (!id) throw new Error("ID do agendamento é obrigatório.");
+    return await AgendamentoModel.buscarPorId(id);
+  },
+
+  async criar(dados) {
+    if (!dados || !dados.empresa_id || !dados.servico_id || !dados.data_hora) {
+      throw new Error("Dados incompletos para criar agendamento.");
+    }
+    return await AgendamentoModel.criar(dados);
+  },
+
+  async atualizar(id, dados) {
+    if (!id) throw new Error("ID do agendamento é obrigatório.");
+    return await AgendamentoModel.atualizar(id, dados);
+  },
+
+  async deletar(id) {
+    if (!id) throw new Error("ID do agendamento é obrigatório.");
+    return await AgendamentoModel.deletar(id);
+  }
 };
 
 module.exports = AgendamentoService;

@@ -1,4 +1,5 @@
 const AuthService = require("../services/AuthService");
+const { ok, badRequest, serverError } = require("../utils/sendResponse");
 
 module.exports = {
     async login(req, res, body) {
@@ -6,17 +7,14 @@ module.exports = {
             const { email, senha, tipo } = body;
 
             if (!email || !senha || !tipo) {
-                res.writeHead(400, { "Content-Type": "application/json" });
-                return res.end(JSON.stringify({ error: "Dados incompletos." }));
+                return badRequest(res, "Dados incompletos.");
             }
 
             const result = await AuthService.Login(email, senha, tipo);
+            ok(res, result);
 
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(result));
         } catch (error) {
-            res.writeHead(400, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: error.message }));
+            serverError(res, error.message);
         }
     }
 };

@@ -8,25 +8,35 @@ const EmpresaModel = require("../models/EmpresaModel");
 const { compare } = require("../utils/hash");
 const { generate } = require("../utils/token");
 
-module.exports = {
-  async Login(email,senha,tipo){
-    let user = null
-    if (tipo === "admin") {
+const AuthService = {
+  async login(email, senha, tipo) {
+    if (!email || !senha || !tipo) {
+      throw new Error("Dados insuficientes para login.");
+    }
+
+    let user = null;
+
+    switch (tipo) {
+      case "admin":
         user = await AdminModel.findByEmail(email);
-    } else if (tipo === "empresa") {
+        break;
+
+      case "empresa":
         user = await EmpresaModel.findByEmail(email);
-    } else {
+        break;
+
+      default:
         throw new Error("Tipo de login inválido.");
     }
 
     if (!user) {
-        throw new Error("Usuário não encontrado.");
+      throw new Error("Usuário não encontrado.");
     }
 
-    
-    const valid = await compare(senha, user.senha);
-    if (!valid) {
-        throw new Error("Senha incorreta.");
+    const senhaValida = await compare(senha, user.senha);
+
+    if (!senhaValida) {
+      throw new Error("Senha incorreta.");
     }
 
     const token = generate({
@@ -43,4 +53,6 @@ module.exports = {
       token
     };
   }
-}
+};
+
+module.exports = AuthService;
