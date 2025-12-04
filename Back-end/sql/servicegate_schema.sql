@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   empresa_id INT NOT NULL,
   data_hora DATETIME NOT NULL,
   duracao_minutos INT NOT NULL,
-  status ENUM('pendente','confirmado','cancelado','concluido') DEFAULT 'pendente',
+  status ENUM('agendado','cancelado','concluido') DEFAULT 'agendado',
   observacao TEXT,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE,
