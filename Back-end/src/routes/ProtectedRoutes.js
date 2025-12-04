@@ -17,8 +17,7 @@ module.exports = {
         const { method, url } = req;
 
         if (method === "POST" && url === "/auth/login") {
-            const body = await parseBody(req);
-            return AuthController.login(req, res, body);
+            return AuthController.login(req, res);
         }
 
         res.writeHead(404);
@@ -43,7 +42,7 @@ module.exports = {
 
         // POST /empresas (público - cadastro)
         if (method === "POST" && url === "/empresas") {
-            const body = await parseBody(req);
+            const body = req.body;
             return EmpresaController.criar(req, res, body);
         }
 
@@ -62,7 +61,7 @@ module.exports = {
                 return res.end(JSON.stringify({ error: "Sem permissão" }));
             }
 
-            const body = await parseBody(req);
+            const body = req.body;
             return EmpresaController.atualizar(req, res, id, body);
         }
 
@@ -100,14 +99,14 @@ module.exports = {
         }
 
         if (method === "POST" && url === "/servicos") {
-            const body = await parseBody(req);
+            const body = req.body;
             body.empresa_id = empresa_id;
             return ServicoController.criar(req, res, body);
         }
 
         if (method === "PUT" && url.match(/^\/servicos\/\d+$/)) {
             const id = url.split("/")[2];
-            const body = await parseBody(req);
+            const body = req.body;
             return ServicoController.atualizar(req, res, id, body, empresa_id);
         }
 
@@ -139,14 +138,14 @@ module.exports = {
         }
 
         if (method === "POST" && url === "/agendamentos") {
-            const body = await parseBody(req);
+            const body = req.body;
             body.empresa_id = empresa_id;
             return AgendamentoController.criar(req, res, body);
         }
 
         if (method === "PUT" && url.match(/^\/agendamentos\/\d+$/)) {
             const id = url.split("/")[2];
-            const body = await parseBody(req);
+            const body = req.body;
             return AgendamentoController.atualizar(req, res, id, body, empresa_id);
         }
 
