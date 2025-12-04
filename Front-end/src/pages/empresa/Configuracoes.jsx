@@ -21,70 +21,7 @@ import {
   Check,
   X
 } from 'lucide-react';
-
-// Navbar Component
-function Navbar({ currentUser }) {
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'clients', label: 'Clientes', icon: '👥' },
-    { id: 'services', label: 'Serviços', icon: '✂️' },
-    { id: 'appointments', label: 'Agendamentos', icon: '📅' },
-    { id: 'settings', label: 'Configurações', icon: '⚙️', active: true },
-  ];
-
-  return (
-    <nav className="bg-[#0f0d1a] border-b border-white/5 px-8 py-4">
-      <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
-            <Building2 className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-white font-semibold text-xl">
-            Service<span className="text-indigo-400">Gate</span>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1">
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
-                item.active
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 rounded-full bg-indigo-600 border-2 border-white/20 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-red-500 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-green-500 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-cyan-500 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-yellow-500 hover:scale-110 transition"></button>
-          </div>
-
-          <button className="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition">
-            <Moon className="w-5 h-5" />
-          </button>
-
-          <div className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/5 transition cursor-pointer">
-            <div className="text-right">
-              <div className="text-white text-sm font-medium">{currentUser.name}</div>
-              <div className="text-gray-400 text-xs">{currentUser.business}</div>
-            </div>
-            <LogOut className="w-5 h-5 text-gray-400" />
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
+import NavbarManage from '../../components/NavbarManage';
 
 // Settings Menu Component
 function SettingsMenu({ activeSection, setActiveSection }) {
@@ -526,8 +463,8 @@ export default function CompanySettings() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08060f]">
-      <Navbar currentUser={currentUser} />
+    <div className="min-h-screen bg-[#08060f] pt-16">
+      <NavbarManage/>
       
       <main className="max-w-[1600px] mx-auto p-8">
         <div className="flex gap-8">
