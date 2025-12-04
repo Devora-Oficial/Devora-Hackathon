@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS empresas (
   nome VARCHAR(180) NOT NULL,
   email VARCHAR(180) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
-  telefone VARCHAR(30),
-  endereco VARCHAR(255),
+  telefone VARCHAR(30) NOT NULL,
+  cep VARCHAR(9) NOT NULL,
   ativo TINYINT(1) DEFAULT 1,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -60,8 +60,7 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   servico_id INT NOT NULL,
   empresa_id INT NOT NULL,
   data_hora DATETIME NOT NULL,
-  duracao_minutos INT NOT NULL,
-  status ENUM('pendente','confirmado','cancelado','concluido') DEFAULT 'pendente',
+  status ENUM('Agendado','Cancelado','Concluído') DEFAULT 'Agendado',
   observacao TEXT,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE,

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { DataTable } from "../../components/DataTable";
-import { X, Scissors } from "lucide-react";
+import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
+import { motion } from "framer-motion";
 
 // Componente Modal (fora do componente principal)
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -145,9 +146,6 @@ const Servicos = () => {
       header: 'Serviço',
       render: (item) => (
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-yellow-500/10 flex items-center justify-center">
-            <Scissors className="h-5 w-5 text-yellow-500" />
-          </div>
           <div>
             <div className="font-medium text-gray-900 dark:text-white">{item.name}</div>
             <div className="text-sm text-gray-500 dark:text-gray-400">{item.description}</div>
@@ -173,22 +171,35 @@ const Servicos = () => {
       <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut"}}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
             <h1 className="text-3xl font-bold tracking-tight">Serviços</h1>
             <p className="mt-1 text-gray-400">Gerencie os serviços oferecidos pela sua empresa</p>
-          </div>
+          </motion.div>
 
-          <DataTable
-            data={services}
-            columns={columns}
-            title="Lista de Serviços"
-            searchPlaceholder="Buscar serviço..."
-            onAdd={handleAdd}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            addLabel="Novo Serviço"
-            itemsPerPage={10}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <DataTable
+              data={services}
+              columns={columns}
+              title="Lista de Serviços"
+              searchPlaceholder="Buscar serviço..."
+              onAdd={handleAdd}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              addLabel="Novo Serviço"
+              itemsPerPage={10}
+            />
+          </motion.div>
         </main>
       </div>
 
