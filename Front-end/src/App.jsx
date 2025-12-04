@@ -32,7 +32,7 @@ export default function App() {
         <Route path="/usuarios" element={<Usuarios />} />
         {/* Rotas da parte de empresa */}
         <Route path="/dashboardEmpresa" element={<DashboardEmpresa />} />
-        <Route path="/clientes" element={<ConfiguracoesAdmin />} />
+        <Route path="/clientes" element={<Clientes />} />
         <Route path="/servicos" element={<Servicos />} />
         <Route path="/agendamentos" element={<Agendamentos />} />
         <Route path="/configuracoes" element={<Configuracoes />} />
