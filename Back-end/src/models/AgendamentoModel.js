@@ -9,6 +9,8 @@
 
 const db = require("../database/db");
 
+const validStatus = ["Agendado", "Cancelado", "Concluído"];
+
 const AgendamentoModel = {
 
   async listarPorEmpresa(empresa_id) {
@@ -60,6 +62,13 @@ const AgendamentoModel = {
         status || "pendente",
         observacao || null
       ]
+    const { servico_id, empresa_id, data_hora, duracao_minutos, status, observacao } = dados;
+
+    const statusValido = validStatus.includes(status) ? status : "Agendado";
+
+    const [result] = await db.query(
+      "INSERT INTO agendamentos (servico_id, empresa_id, data_hora, duracao_minutos, status, observacao) VALUES (?, ?, ?, ?, ?, ?)",
+      [servico_id, empresa_id, data_hora, duracao_minutos, statusValido, observacao || null]
     );
 
     return result.insertId;
@@ -76,6 +85,11 @@ const AgendamentoModel = {
            observacao = ?
        WHERE id = ?`,
       [data_hora, duracao_minutos, status, observacao, id]
+    const statusValido = validStatus.includes(status) ? status : "Agendado";
+
+    const [result] = await db.query(
+      "UPDATE agendamentos SET data_hora = ?, duracao_minutos = ?, status = ?, observacao = ? WHERE id = ?",
+      [data_hora, duracao_minutos, statusValido, observacao || null, id]
     );
 
     return result.affectedRows;

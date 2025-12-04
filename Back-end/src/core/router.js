@@ -1,36 +1,55 @@
-// src/core/router.js
-const empresaRoutes = require("../routes/EmpresaRoutes");
-const servicoRoutes = require("../routes/ServicoRoutes");
-const agendamentoRoutes = require("../routes/AgendamentoRoutes");
-const authRoutes = require("../routes/authRoutes");
+const ProtectedRoutes = require("../routes/ProtectedRoutes");
 
 module.exports = {
     async handle(req, res) {
         res.setHeader("Content-Type", "application/json");
 
-        // Healthcheck
-        if (req.url === "/" && req.method === "GET") {
-            return res.end(JSON.stringify({ status: "ok", message: "Servidor rodando" }));
+        const { url, method } = req;
+
+        // ---------------------------
+        // 🚀 Healthcheck
+        // ---------------------------
+        if (url === "/" && method === "GET") {
+            return res.end(JSON.stringify({
+                status: "ok",
+                message: "Servidor rodando"
+            }));
         }
 
-        // Login
-        if (req.url.startsWith("/auth")) {
-            return authRoutes(req, res);
+        // ---------------------------
+        // 🔐 Autenticação
+        // ---------------------------
+        if (url.startsWith("/auth")) {
+            return ProtectedRoutes.auth(req, res);
         }
 
-        if (req.url.startsWith("/empresas")) {
-            return empresaRoutes(req, res);
+        // ---------------------------
+        // 🏢 Empresas
+        // ---------------------------
+        if (url.startsWith("/empresas")) {
+            return ProtectedRoutes.empresas(req, res);
         }
 
-        if (req.url.startsWith("/servicos")) {
-            return servicoRoutes(req, res);
+        // ---------------------------
+        // 🛠️ Serviços
+        // ---------------------------
+        if (url.startsWith("/servicos")) {
+            return ProtectedRoutes.servicos(req, res);
         }
 
-        if (req.url.startsWith("/agendamentos")) {
-            return agendamentoRoutes(req, res);
+        // ---------------------------
+        // 📅 Agendamentos
+        // ---------------------------
+        if (url.startsWith("/agendamentos")) {
+            return ProtectedRoutes.agendamentos(req, res);
         }
 
+        // ---------------------------
+        // ❌ Rota não encontrada
+        // ---------------------------
         res.writeHead(404);
-        res.end(JSON.stringify({ error: "Rota não encontrada" }));
+        return res.end(JSON.stringify({
+            error: "Rota não encontrada"
+        }));
     }
 };

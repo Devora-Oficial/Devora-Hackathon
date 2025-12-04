@@ -14,20 +14,14 @@ const EmpresaModel = {
 
   async listar() {
     const [rows] = await db.query(
-      `SELECT 
-         id, nome, email, telefone, endereco, criado_em 
-       FROM empresas 
-       ORDER BY criado_em DESC`
+      "SELECT id, nome, email, telefone, cep, ativo, criado_em FROM empresas ORDER BY criado_em DESC"
     );
     return rows;
   },
 
   async buscarPorId(id) {
     const [rows] = await db.query(
-      `SELECT 
-         id, nome, email, telefone, endereco, criado_em 
-       FROM empresas 
-       WHERE id = ?`,
+      "SELECT id, nome, email, telefone, cep, ativo, criado_em FROM empresas WHERE id = ?",
       [id]
     );
     return rows[0] || null;
@@ -40,7 +34,7 @@ const EmpresaModel = {
 
     const [result] = await db.query(
       `INSERT INTO empresas 
-        (nome, email, senha, telefone, endereco) 
+        (nome, email, senha, telefone, cep) 
        VALUES (?, ?, ?, ?, ?)`,
       [nome, email, senhaHash, telefone, endereco]
     );
@@ -49,14 +43,10 @@ const EmpresaModel = {
   },
 
   async atualizar(id, dados) {
-    const { nome, email, senha, telefone, endereco } = dados;
+    const { nome, email, senha, telefone, cep, ativo } = dados;
 
-    let query = `
-      UPDATE empresas 
-      SET nome = ?, email = ?, telefone = ?, endereco = ?
-    `;
-
-    const params = [nome, email, telefone, endereco];
+    let query = "UPDATE empresas SET nome = ?, email = ?, telefone = ?, cep = ?, ativo = ?";
+    const params = [nome, email, telefone, cep, ativo !== undefined ? ativo : 1];
 
     if (senha) {
       const senhaHash = await hashUtil.hash(senha);
@@ -79,8 +69,7 @@ const EmpresaModel = {
     return result.affectedRows;
   },
 
-  // 🔹 UTILIZADO NO LOGIN
-  async buscarPorEmail(email) {
+  async findByEmail(email) {
     const [rows] = await db.query(
       "SELECT * FROM empresas WHERE email = ? LIMIT 1",
       [email]
