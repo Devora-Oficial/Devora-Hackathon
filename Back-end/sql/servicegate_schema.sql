@@ -67,12 +67,3 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE,
   INDEX idx_empresa_data (empresa_id, data_hora)
 );
-
-INSERT INTO plataforma_admins (nome, email, senha)
-VALUES 
-('Administrador Teste', 'admin@teste.com', '$2b$10$Cw9Wq5JZf4xP9gO8aN4T6OXVyhi0SKxF7hF5ZWSr1L6MjYSY4OwFi');
-
-INSERT INTO empresas (nome, email, senha, telefone, endereco)
-VALUES
-('Empresa Teste', 'empresa@teste.com', '$2b$10$Cw9Wq5JZf4xP9gO8aN4T6OXVyhi0SKxF7hF5ZWSr1L6MjYSY4OwFi', 
- '11999999999', 'Rua Teste');
