@@ -19,7 +19,7 @@ export default function Hero() {
         >
           <h1 className="text-5xl md:text-6xl font-extrabold leading-tight text-white">
             O futuro da gestão de serviços para{" "}
-            <span className="text-purple-400">barbearias, clínicas e restaurantes</span>
+            <span className="text-purple-400">empresas e negócios</span>
           </h1>
 
           <motion.p
@@ -29,7 +29,7 @@ export default function Hero() {
             viewport={{ once: true }}
             className="mt-6 text-lg text-gray-300 max-w-xl"
           >
-            Agendamentos, filas digitais, gestão de equipe, pagamentos e insights automáticos — tudo numa plataforma só, feita pra negócios de serviço.
+            Comece a gerenciar seus agendamentos digitalmente agora! — eficiência e agilidade, feita para seus negócios.
           </motion.p>
 
           <motion.div

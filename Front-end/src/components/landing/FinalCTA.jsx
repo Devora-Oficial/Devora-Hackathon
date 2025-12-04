@@ -30,7 +30,7 @@ export default function FinalCTA() {
           transition={{ delay: 0.35 }}
           className="text-gray-300 mt-3"
         >
-          Teste grátis por 14 dias. Sem cartão de crédito.
+          Acesse o plano que melhor se encaixa para você.
         </motion.p>
 
         <motion.div
@@ -39,25 +39,16 @@ export default function FinalCTA() {
           transition={{ delay: 0.45 }}
           className="mt-8 flex justify-center gap-4"
         >
+
           <motion.div whileHover={{ scale: 1.06 }} transition={{ type: "spring", stiffness: 160 }}>
-            <Link
-              to="/register"
+            <a
+              href="#pricing"
               className="px-8 py-3 bg-purple-600 rounded-full text-white 
                          font-semibold shadow-lg hover:bg-purple-500 
                          hover:shadow-purple-900/30 transition"
             >
-              Criar conta
-            </Link>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.06 }} transition={{ type: "spring", stiffness: 160 }}>
-            <Link
-              to="/pricing"
-              className="px-8 py-3 border border-white/10 rounded-full text-white 
-                         hover:bg-white/10 transition"
-            >
               Ver planos
-            </Link>
+            </a>
           </motion.div>
         </motion.div>
       </motion.div>

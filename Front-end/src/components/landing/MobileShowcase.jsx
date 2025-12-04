@@ -36,7 +36,7 @@ export default function MobileShowcase() {
           </h3>
 
           <p className="text-gray-300 mt-4">
-            App mobile com notificações, retirada de senha digital, confirmação e gestão de filas em tempo real.
+            Sistema mobile com notificações, retirada de senha digital, confirmação e gestão de filas em tempo real.
           </p>
 
           <ul className="mt-6 text-gray-300 space-y-3">

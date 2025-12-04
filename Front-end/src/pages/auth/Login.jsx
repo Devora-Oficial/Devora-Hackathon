@@ -49,7 +49,7 @@ export default function Login() {
         <div className="absolute inset-0 bg-linear-to-br from-purple-600/30 to-indigo-700/30 backdrop-blur-xl"></div>
 
         <div className="relative px-16 text-center">
-          <h1 className="text-4xl font-bold mb-4 drop-shadow-lg">Bem-vindo ao Site :)</h1>
+          <h1 className="text-4xl font-bold mb-4 drop-shadow-lg">Bem-vindo ao ServiceGate</h1>
           <p className="text-gray-200 max-w-md mx-auto text-lg">
             Continue acessando o sistema de forma segura e rápida.  
             Sua produtividade começa aqui.
