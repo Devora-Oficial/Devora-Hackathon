@@ -35,7 +35,7 @@ function SettingsMenu({ activeSection, setActiveSection }) {
   ];
 
   return (
-    <div className="w-64 bg-[#0f0d1a] border border-white/5 rounded-2xl p-4">
+    <div className="w-80 bg-[#0f0d1a] border border-white/5 rounded-2xl p-4">
       <div className="space-y-1">
         {sections.map(section => {
           const Icon = section.icon;
@@ -75,7 +75,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
           Logo da Empresa
         </h3>
         <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 flex items-center justify-center text-4xl">
+          <div className="w-24 h-24 rounded-xl bg-linear-to-br from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 flex items-center justify-center text-4xl">
             {companyData.logo}
           </div>
           <div>
@@ -463,7 +463,7 @@ export default function CompanySettings() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08060f] pt-16">
+    <div className="min-h-screen bg-[#08060f] pt-28 md:pt-16">
       <NavbarManage/>
       
       <main className="max-w-[1600px] mx-auto p-8">

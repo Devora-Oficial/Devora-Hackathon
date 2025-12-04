@@ -130,7 +130,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#08060f] pt-16">
+    <div className="min-h-screen bg-[#08060f] pt-28 md:pt-16">
       <NavbarManage/>
 
       <main className="max-w-[1600px] mx-auto p-8">
@@ -205,7 +205,7 @@ export default function Dashboard() {
                   <span className="text-indigo-400 text-sm">45%</span>
                 </div>
                 <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style={{ width: '45%' }}></div>
+                  <div className="h-full bg-linear-to-r from-indigo-600 to-purple-600 rounded-full" style={{ width: '45%' }}></div>
                 </div>
               </div>
               <div>
@@ -214,7 +214,7 @@ export default function Dashboard() {
                   <span className="text-indigo-400 text-sm">30%</span>
                 </div>
                 <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full" style={{ width: '30%' }}></div>
+                  <div className="h-full bg-linear-to-r from-purple-600 to-pink-600 rounded-full" style={{ width: '30%' }}></div>
                 </div>
               </div>
               <div>
@@ -223,7 +223,7 @@ export default function Dashboard() {
                   <span className="text-indigo-400 text-sm">25%</span>
                 </div>
                 <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full" style={{ width: '25%' }}></div>
+                  <div className="h-full bg-linear-to-r from-blue-600 to-cyan-600 rounded-full" style={{ width: '25%' }}></div>
                 </div>
               </div>
             </div>
@@ -236,7 +236,7 @@ export default function Dashboard() {
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-3 py-3 border-b border-white/5">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold">
                   JS
                 </div>
                 <div className="flex-1">
@@ -245,7 +245,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="flex items-center gap-3 py-3 border-b border-white/5">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-semibold">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-semibold">
                   PS
                 </div>
                 <div className="flex-1">
@@ -254,7 +254,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="flex items-center gap-3 py-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 flex items-center justify-center text-white font-semibold">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-600 to-cyan-600 flex items-center justify-center text-white font-semibold">
                   CL
                 </div>
                 <div className="flex-1">

@@ -6,7 +6,7 @@ const Button = ({ children, onClick, disabled, variant = 'default', size = 'defa
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
   
   const variants = {
-    default: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+    default: 'bg-indigo-500 text-white hover:bg-purple-600 focus:ring-blue-500 cursor-pointer',
     outline: 'border border-gray-300 bg-transparent hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800',
     ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800',
   };
@@ -165,7 +165,7 @@ export function DataTable({
                             variant="ghost"
                             size="icon"
                             onClick={() => onEdit(item)}
-                            className="h-8 w-8 text-gray-600 dark:text-gray-400"
+                            className="h-8 w-8 text-gray-600 dark:text-gray-400 hover:bg-gray-800/50 cursor-pointer"
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -175,7 +175,7 @@ export function DataTable({
                             variant="ghost"
                             size="icon"
                             onClick={() => onDelete(item)}
-                            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

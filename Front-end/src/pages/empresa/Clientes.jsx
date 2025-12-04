@@ -3,6 +3,8 @@ import { DataTable } from "../../components/DataTable";
 import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
 
+// LEMBRAR QUE ESSA TELA TALVEZ NÃO ESTEJA NA VERSÃO FINAL, CASO NÃO, REMOVER LINK DA NAVBAR
+
 // Componente Modal (fora do componente principal)
 const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
@@ -32,6 +34,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   );
 };
 
+// Remover/Alterar quando os dados forem puxados do banco
 const Clientes = () => {
   const [clients, setClients] = useState([
     { id: 1, name: 'Carlos Silva', email: 'carlos@email.com', phone: '(11) 98888-1111', observations: 'Cliente VIP', registeredAt: '19/01/2024' },
@@ -153,6 +156,7 @@ const Clientes = () => {
     return colors[index];
   };
 
+  // Definição da estrutura da table da página (Clientes)
   const columns = [
     { 
       key: 'name', 
@@ -176,7 +180,7 @@ const Clientes = () => {
 
   return (
     <>
-      <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-16">
+      <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="mb-8">
