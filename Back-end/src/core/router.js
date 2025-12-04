@@ -29,6 +29,12 @@ module.exports = {
             return ProtectedRoutes.agendamentos(req, res);
         }
 
+        // Admin
+        if (req.url.startsWith("/admins")) {
+            return ProtectedRoutes.admin(req, res);
+        }
+
+
         // Rota não encontrada
         res.writeHead(404);
         res.end(JSON.stringify({ error: "Rota não encontrada" }));
