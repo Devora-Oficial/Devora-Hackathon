@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,130 +18,153 @@ export default function Login() {
     try {
       const response = await fetch("http://localhost:3000/auth/login", { 
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Credenciais inválidas ou erro no servidor.");
+        throw new Error(errorData.message || "Credenciais inválidas.");
       }
 
       const data = await response.json();
 
-      // Armazena o token
       localStorage.setItem("authToken", data.token);
-      
-      // Armazena a role
       localStorage.setItem("role", data.role);
-
-      // Armazena os dados do usuário
       localStorage.setItem("userData", JSON.stringify({
-        nome: data.nome || data.user?.nome || "Usuário",
-        email: data.email || data.user?.email || email,
-        empresa: data.empresa || data.user?.empresa || "",
-        id: data.id || data.user?.id || null
+        nome: data.nome || "Usuário",
+        email: data.email || email,
+        empresa: data.empresa || "",
+        id: data.id || null
       }));
 
-      // Redireciona com base na role
-      if (data.role === "empresa") {
-        navigate("/dashboardEmpresa");
-      } else if (data.role === "admin") {
-        navigate("/dashboardAdmin");
-      } else {
-        setError("Tipo de conta não reconhecido.");
-      }
+      if (data.role === "empresa") navigate("/dashboardEmpresa");
+      if (data.role === "admin") navigate("/dashboardAdmin");
 
     } catch (err) {
       setError(err.message);
-      console.error("Erro de Login:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-[#07060a] text-white">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      className="min-h-screen flex text-white relative overflow-hidden"
+    >
 
-      {/* Div da parte esquerda da página (Formulário) */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative bg-[#000000]">
+
         <Link 
           to="/"
-          className="absolute top-8 left-8 flex items-center space-x-2 p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
+          className="absolute top-8 left-8 flex items-center space-x-2 p-2 rounded-lg text-gray-300 hover:text-white hover:bg-black/30 transition"
         >
-          <ArrowLeft className="w-5 h-5" /> 
+          <ArrowLeft className="w-5 h-5" />
           <span className="hidden sm:inline">Voltar para Home</span>
         </Link>
-        
-        <div className="w-full max-w-md bg-[#0d0c11] p-10 rounded-2xl shadow-xl border border-white/10">
-          <h2 className="text-3xl font-bold text-center mb-8">Entrar na plataforma</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-5"> 
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-              <input 
-                id="email"
-                type="email"
-                placeholder="seuemail@exemplo.com"
-                className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:ring-purple-500 outline-none transition"
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-              />
-            </div>
+        <div className="w-full max-w-md p-[2px] rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-700 shadow-2xl">
+          <div className="bg-[#0d0c11]/90 backdrop-blur-xl p-10 rounded-2xl border border-white/10">
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1">Senha</label>
-              <input 
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="w-full px-4 py-2 bg-black/40 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:ring-purple-500 outline-none transition"
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                required
-              />
-            </div>
+            <h2 className="text-3xl font-bold text-center mb-8">Entrar na plataforma</h2>
 
-            {error && (
-                <div className="text-red-400 text-sm text-center bg-red-900/30 p-2 rounded-lg">
-                    {error}
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* EMAIL */}
+              <div>
+                <label className="block text-sm mb-1">Email</label>
+                <input 
+                  id="email"
+                  type="email"
+                  placeholder="seuemail@exemplo.com"
+                  className="w-full px-4 py-2 bg-black/40 border border-white/20 rounded-lg outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* SENHA */}
+              <div>
+                <label className="block text-sm mb-1">Senha</label>
+                <input 
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full px-4 py-2 bg-black/40 border border-white/20 rounded-lg outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {error && (
+                <div className="text-red-300 text-sm text-center bg-red-900/30 p-2 rounded-lg">
+                  {error}
                 </div>
-            )}
+              )}
 
-            <button 
-              type="submit" 
-              className={`w-full py-2 font-semibold rounded-lg shadow-lg shadow-purple-900/40 transition cursor-pointer 
-                          ${isLoading 
-                            ? 'bg-purple-800 opacity-70 cursor-not-allowed' 
-                            : 'bg-purple-600 hover:bg-purple-500'}`} 
-              disabled={isLoading} 
-            >
-              {isLoading ? 'Carregando...' : 'Entrar'}
-            </button>
+              {/* BOTÃO */}
+              <button
+                type="submit"
+                className="w-full py-2 font-semibold rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg"
+                disabled={isLoading}
+              >
+                {isLoading ? "Carregando..." : "Entrar"}
+              </button>
 
-          </form>
-          
+            </form>
+
+          </div>
         </div>
       </div>
 
-      {/* Div da parte direita da página */}
-      <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden">
 
-        <div className="absolute inset-0 bg-linear-to-br from-purple-600/30 to-indigo-700/30 backdrop-blur-xl"></div>
 
-        <div className="relative px-16 text-center">
-          <h1 className="text-4xl font-bold mb-4 drop-shadow-lg">Bem-vindo ao ServiceGate</h1>
-          <p className="text-gray-200 max-w-md mx-auto text-lg">
-            Continue acessando o sistema de forma segura e rápida.  
-            Sua produtividade começa aqui.
+      {/* LADO DIREITO COM ANIMAÇÃO */}
+      <motion.div 
+        initial={{ x: 80, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.9 }}
+        className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 overflow-hidden bg-[#07060a]"
+      >
+
+        {/* fundo animado */}
+        <motion.div 
+          className="absolute inset-0 opacity-40"
+          animate={{
+            background: [
+              "linear-gradient(135deg, #3b1e63, #4b2b85)",
+              "linear-gradient(135deg, #4b2b85, #243060)",
+              "linear-gradient(135deg, #243060, #3b1e63)",
+            ]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        />
+
+        {/* glow animando */}
+        <motion.div
+          className="absolute blur-[180px] w-[700px] h-[700px] bg-purple-700/30 rounded-full"
+          animate={{ x: [0, 70, -70, 0], y: [0, 50, -50, 0] }}
+          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <motion.div
+          animate={{ scale: [1, 1.04, 1] }}
+          transition={{ duration: 6, repeat: Infinity }}
+          className="text-center relative"
+        >
+          <h1 className="text-5xl font-extrabold mb-4 drop-shadow-lg">
+            Bem-vindo ao <span className="text-purple-400">ServiceGate</span>
+          </h1>
+          <p className="text-gray-200 text-lg max-w-md mx-auto">
+            Segurança, velocidade e tecnologia moderna ao seu alcance.
           </p>
-        </div>
-
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
