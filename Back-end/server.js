@@ -18,51 +18,51 @@ const http = require("http");
 const router = require("./src/core/router"); 
 
 const PORT = process.env.PORT || 3000;
-const ALLOWED_ORIGIN = "http://localhost:5173"; 
+const ALLOWED_ORIGIN = "http://localhost:5173"; 
 
 const server = http.createServer((req, res) => {
-    
-    // === 1. Middleware CORS (Cross-Origin Resource Sharing) ===
-    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   
+    // === 1. Middleware CORS (Cross-Origin Resource Sharing) ===
+    res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-    if (req.method === 'OPTIONS') {
-        // Responde ao Pre-flight com sucesso (204 No Content)
-        res.writeHead(204); 
-        res.end();
-        return;
-    }
+    if (req.method === 'OPTIONS') {
+        // Responde ao Pre-flight com sucesso (204 No Content)
+        res.writeHead(204); 
+        res.end();
+        return;
+    }
 
-    // === 2. Middleware Body Parser (Leitura de JSON ASSÍNCRONA) ===
-    let body = '';
-    req.on('data', (chunk) => {
-        // Acumula os chunks de dados do corpo da requisição
-        body += chunk.toString();
-    });
+    // === 2. Middleware Body Parser (Leitura de JSON ASSÍNCRONA) ===
+    let body = '';
+    req.on('data', (chunk) => {
+        // Acumula os chunks de dados do corpo da requisição
+        body += chunk.toString();
+    });
 x
-    req.on('end', () => {
-        // Quando todos os dados foram recebidos, tenta fazer o parse
-        try {
-            const contentType = req.headers['content-type'];
-            if (contentType && contentType.includes('application/json') && body) {
-                // Anexa o corpo parseado (o objeto JSON) ao objeto req
-                req.body = JSON.parse(body);
-            } else {
-                req.body = {};
-            }
-        } catch (error) {
-            console.error("Erro ao fazer parse do JSON:", error);
-            // Em caso de JSON inválido, o fluxo continua, mas o body fica vazio
-            req.body = {};
-        }
+    req.on('end', () => {
+        // Quando todos os dados foram recebidos, tenta fazer o parse
+        try {
+            const contentType = req.headers['content-type'];
+            if (contentType && contentType.includes('application/json') && body) {
+                // Anexa o corpo parseado (o objeto JSON) ao objeto req
+                req.body = JSON.parse(body);
+            } else {
+                req.body = {};
+            }
+        } catch (error) {
+            console.error("Erro ao fazer parse do JSON:", error);
+            // Em caso de JSON inválido, o fluxo continua, mas o body fica vazio
+            req.body = {};
+        }
 
-        // === 3. Roteamento Principal ===
-        // O controle é passado ao roteador após a leitura do corpo.
-        router.handle(req, res);
-    });
+        // === 3. Roteamento Principal ===
+        // O controle é passado ao roteador após a leitura do corpo.
+        router.handle(req, res);
+    });
 });
 
 server.listen(PORT, () => {
-    console.log(`🚀 Servidor ON em http://localhost:${PORT}`);
+    console.log(`🚀 Servidor ON em http://localhost:${PORT}`);
 });

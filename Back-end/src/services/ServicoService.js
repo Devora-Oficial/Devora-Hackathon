@@ -28,14 +28,14 @@ const ServicoService = {
   },
 
   async criar(dados) {
-    if (!dados?.empresa_id || !dados?.nome || !dados?.valor) {
-      throw new Error("Dados incompletos para criar um serviço.");
-    }
+    if (!dados?.empresa_id || !dados?.nome || !dados?.valor) {
+      throw new Error("Dados incompletos para criar um serviço.");
+    }
     if (typeof dados.valor !== 'number' || dados.valor <= 0) {
         throw new Error("O valor do serviço deve ser um número positivo.");
     }
-    return await ServicoModel.criar(dados);
-  },
+    return await ServicoModel.criar(dados);
+  },
 
   async atualizar(id, dados) {
     if (!id) throw new Error("ID do serviço é obrigatório.");

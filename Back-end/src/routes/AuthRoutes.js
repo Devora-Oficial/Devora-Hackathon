@@ -11,17 +11,17 @@
  */
 
 const AuthController = require("../controllers/AuthController");
-const parseBody = require("../utils/bodyParser"); 
+const parseBody = require("../utils/bodyParser"); 
 const { notFound } = require("../utils/sendResponse");
 
 module.exports = async function (req, res) {
-    const { method, url } = req;
+    const { method, url } = req;
 
-    // ROTEAMENTO: POST /auth/login
-    if (method === "POST" && url === "/auth/login") {
-        const body = await parseBody(req); 
-        return AuthController.login(req, res, body); 
-    }
+    // ROTEAMENTO: POST /auth/login
+    if (method === "POST" && url === "/auth/login") {
+        const body = await parseBody(req); 
+        return AuthController.login(req, res, body); 
+    }
 
-    notFound(res, "Rota de auth não encontrada");
+    notFound(res, "Rota de auth não encontrada");
 };

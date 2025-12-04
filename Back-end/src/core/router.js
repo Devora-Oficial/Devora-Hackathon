@@ -19,43 +19,43 @@ const ProtectedRoutes = require("../routes/ProtectedRoutes");
 const { notFound, ok } = require("../utils/sendResponse");
 
 module.exports = {
-    async handle(req, res) {
-        res.setHeader("Content-Type", "application/json");
+    async handle(req, res) {
+        res.setHeader("Content-Type", "application/json");
 
-        const { url, method } = req;
+        const { url, method } = req;
 
-        // ---------------------------
-        // Healthcheck (Rota Pública)
-        // ---------------------------
-        if (url === "/" && method === "GET") {
-            return ok(res, {
-                status: "ok",
-                message: "Servidor rodando"
-            });
-        }
+        // ---------------------------
+        // Healthcheck (Rota Pública)
+        // ---------------------------
+        if (url === "/" && method === "GET") {
+            return ok(res, {
+                status: "ok",
+                message: "Servidor rodando"
+            });
+        }
 
-        // ---------------------------
-        // Roteamento para Handlers
-        // ---------------------------
-        if (url.startsWith("/auth")) {
-            return ProtectedRoutes.auth(req, res);
-        }
+        // ---------------------------
+        // Roteamento para Handlers
+        // ---------------------------
+        if (url.startsWith("/auth")) {
+            return ProtectedRoutes.auth(req, res);
+        }
 
-        if (url.startsWith("/empresas")) {
-            return ProtectedRoutes.empresas(req, res);
-        }
+        if (url.startsWith("/empresas")) {
+            return ProtectedRoutes.empresas(req, res);
+        }
 
-        if (url.startsWith("/servicos")) {
-            return ProtectedRoutes.servicos(req, res);
-        }
+        if (url.startsWith("/servicos")) {
+            return ProtectedRoutes.servicos(req, res);
+        }
 
-        if (url.startsWith("/agendamentos")) {
-            return ProtectedRoutes.agendamentos(req, res);
-        }
+        if (url.startsWith("/agendamentos")) {
+            return ProtectedRoutes.agendamentos(req, res);
+        }
 
-        // ---------------------------
-        //  Rota não encontrada (404)
-        // ---------------------------
-        notFound(res, "Rota não encontrada");
-    }
+        // ---------------------------
+        //  Rota não encontrada (404)
+        // ---------------------------
+        notFound(res, "Rota não encontrada");
+    }
 };

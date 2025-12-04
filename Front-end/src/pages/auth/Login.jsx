@@ -1,13 +1,19 @@
-import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, LogOut, User } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom"; // Assumindo que você usa o Router
 
-export default function Login() {
+// 🚨 URL DA API: Idealmente deve vir de variáveis de ambiente.
+// Usaremos a URL fixa para garantir a compilação.
+const API_BASE_URL = "http://localhost:3000"; 
+
+// ==========================================================
+// 1. LÓGICA DO LOGIN (Componente Principal)
+// ==========================================================
+function LoginComponent({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +21,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", { 
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,29 +35,23 @@ export default function Login() {
       }
 
       const data = await response.json();
-
-      // Armazena o token
-      localStorage.setItem("authToken", data.token);
+      const { token, role, user } = data;
       
-      // Armazena a role
-      localStorage.setItem("role", data.role);
-
-      // Armazena os dados do usuário
+      if (!token || !role) {
+          throw new Error("Resposta do servidor incompleta: token ou role ausente.");
+      }
+      
+      // 🚨 Login FUNCIONANDO: Armazena token, role e dados
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("role", role);
       localStorage.setItem("userData", JSON.stringify({
-        nome: data.nome || data.user?.nome || "Usuário",
-        email: data.email || data.user?.email || email,
-        empresa: data.empresa || data.user?.empresa || "",
-        id: data.id || data.user?.id || null
+        nome: user?.nome || data.nome || "Usuário",
+        email: user?.email || data.email || email,
+        empresa: user?.empresa || data.empresa || "",
+        id: user?.id || data.id || null
       }));
 
-      // Redireciona com base na role
-      if (data.role === "empresa") {
-        navigate("/dashboardEmpresa");
-      } else if (data.role === "admin") {
-        navigate("/dashboardAdmin");
-      } else {
-        setError("Tipo de conta não reconhecido.");
-      }
+      onLoginSuccess(role); // Chama a função para atualizar o estado global
 
     } catch (err) {
       setError(err.message);
