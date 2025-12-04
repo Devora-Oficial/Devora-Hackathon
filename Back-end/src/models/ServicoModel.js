@@ -1,4 +1,12 @@
-// src/models/ServicoModel.js
+/**
+ * ServiceGate - Model de Serviço
+ * -------------------------------------------------
+ * Responsável por operações no banco relacionadas à tabela 'servicos'.
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ */
+
 const db = require("../database/db");
 
 const ServicoModel = {

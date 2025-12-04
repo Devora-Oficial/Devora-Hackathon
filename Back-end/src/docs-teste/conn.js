@@ -1,4 +1,4 @@
-const db = require("./src/database/db");
+const db = require("../database/db");
 
 async function testConnection() {
   try {

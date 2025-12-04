@@ -1,8 +1,14 @@
 /**
- * ServiceGate - Auth Service
- * Responsável: Guilherme Nantes
- * Lógica: Tenta autenticar primeiro como Admin, depois como Empresa.
+ * ServiceGate - Auth de Serviço (Autenticação)
+ * -------------------------------------------------
+ * Responsável por operações de validação de credenciais 
+ * (Admin e Empresa) e geração de token de acesso (JWT).
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernados (Desenvolvimento Backend)
  */
+
 
 const AdminModel = require("../models/AdminModel");
 const EmpresaModel = require("../models/EmpresaModel");
@@ -11,109 +17,104 @@ const { compare } = require("../utils/hash");
 const { generate } = require("../utils/token");
 
 const AuthService = {
-  async login(email, senha, tipo) {
-    if (!email || !senha || !tipo) {
-      throw new Error("Dados insuficientes para login.");
-    }
+    // 1. Método com TIPO de login explícito (Mais performático)
+    async login(email, senha, tipo) {
+        if (!email || !senha || !tipo) {
+            throw new Error("Dados insuficientes para login.");
+        }
 
-    let user = null;
+        let user = null;
 
-    switch (tipo) {
-      case "admin":
-        user = await AdminModel.findByEmail(email);
-        break;
+        switch (tipo) {
+            case "admin":
+                user = await AdminModel.findByEmail(email);
+                break;
+            case "empresa":
+                user = await EmpresaModel.findByEmail(email);
+                break;
+            default:
+                throw new Error("Tipo de login inválido."); 
+        }
 
-      case "empresa":
-        user = await EmpresaModel.findByEmail(email);
-        break;
+        if (!user) {
+            // Mensagem genérica para segurança
+            throw new Error("Credenciais Inválidas."); 
+        }
 
-      default:
-        throw new Error("Tipo de login inválido.");
-    }
+        const senhaValida = await compare(senha, user.senha);
 
-    if (!user) {
-      throw new Error("Usuário não encontrado.");
-    }
+        if (!senhaValida) {
+            throw new Error("Credenciais Inválidas."); 
+        }
 
-    const senhaValida = await compare(senha, user.senha);
+        const token = generate({
+            id: user.id,
+            email: user.email,
+            role: tipo
+        });
 
-    if (!senhaValida) {
-      throw new Error("Senha incorreta.");
-    }
+        return {
+            id: user.id,
+            nome: user.nome || (tipo === 'admin' ? 'Administrador' : 'Empresa'),
+            email: user.email,
+            role: tipo,
+            token
+        };
+    },
 
-    const token = generate({
-      id: user.id,
-      email: user.email,
-      role: tipo
-    });
+    // 2. Método sem TIPO explícito (Mais conveniente, corrigido para ser seguro)
+    async authenticateUser(email, senha) {
+        if (!email || !senha) {
+            throw new Error("Dados insuficientes para autenticação.");
+        }
 
-    return {
-      id: user.id,
-      nome: user.nome,
-      email: user.email,
-      role: tipo,
-      token
-    };
-  }
+        let user = null;
+        let userRole = null;
+        
+        // Tenta buscar em Admin (Se houver erro de DB, ele é lançado aqui)
+        const admin = await AdminModel.findByEmail(email);
+        
+        if (admin) {
+            user = admin;
+            userRole = 'admin';
+        }
+
+        // Se não encontrou em Admin, tenta buscar em Empresa
+        if (!user) {
+            const empresa = await EmpresaModel.findByEmail(email);
+            if (empresa) {
+                user = empresa;
+                userRole = 'empresa';
+            }
+        }
+
+        // --- Validação de Credenciais ---
+        if (!user || !userRole) {
+            throw new Error("Credenciais Inválidas."); 
+        }
+
+        // Compara a senha (Segurança!)
+        const senhaValida = await compare(senha, user.senha);
+        
+        if (!senhaValida) {
+            throw new Error("Credenciais Inválidas."); 
+        }
+
+        // Gera o token com a role (tipo) descoberta
+        const token = generate({
+            id: user.id,
+            email: user.email,
+            role: userRole
+        });
+
+        return {
+            id: user.id,
+            nome: user.nome || 'Usuário',
+            email: user.email,
+            role: userRole,
+            token
+        };
+    }
 };
 
 module.exports = AuthService;
-module.exports = {
-    // ⚠️ Nova função de autenticação que não exige o 'tipo'
-    async authenticateUser(email, senha) {
-        let user = null;
-        let userRole = null;
-        
-        // --- Tenta como Admin ---
-        try {
-            const admin = await AdminModel.findByEmail(email);
-            if (admin) {
-                const valid = await compare(senha, admin.senha);
-                if (valid) {
-                    user = admin;
-                    userRole = 'admin';
-                }
-            }
-        } catch (error) {
-            // Ignora erros de DB na primeira tentativa e tenta o próximo modelo
-            console.warn("Falha ao buscar Admin. Tentando Empresa.", error.message);
-        }
-
-        // --- Tenta como Empresa (se não encontrou Admin) ---
-        if (!user) {
-            try {
-                const empresa = await EmpresaModel.findByEmail(email);
-                if (empresa) {
-                    const valid = await compare(senha, empresa.senha);
-                    if (valid) {
-                        user = empresa;
-                        userRole = 'empresa';
-                    }
-                }
-            } catch (error) {
-                console.warn("Falha ao buscar Empresa.", error.message);
-            }
-        }
-
-        // --- Resultado Final ---
-        if (!user || !userRole) {
-            // Lança erro que será capturado pelo Controller (Status 401)
-            throw new Error("Credenciais Inválidas ou usuário não encontrado.");
-        }
-
-        // Gera o token com a role (tipo) descoberta
-        const token = generate({
-            id: user.id,
-            email: user.email,
-            role: userRole
-        });
-
-        return {
-            id: user.id,
-            nome: user.nome || 'Usuário', // Garante que o nome exista
-            email: user.email,
-            role: userRole,
-            token
-        };
-    }
-};

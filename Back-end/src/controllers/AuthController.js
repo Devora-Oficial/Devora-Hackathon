@@ -1,45 +1,53 @@
+/**
+ * ServiceGate - Controllers de Auth
+ * -------------------------------------------------
+ * Responsável por Auth membros.
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernade (Desenvolvimento Backend)
+ */
+
 const AuthService = require("../services/AuthService");
-const { ok, badRequest, serverError } = require("../utils/sendResponse");
+// Importação correta do utilitário de resposta
+const { ok, badRequest, serverError, unauthorized } = require("../utils/sendResponse");
+
+// Adicionando a função 'unauthorized' no sendResponse.js para 401
+// Você pode adicionar: function unauthorized(res, message) { send(res, 401, { error: message }); }
 
 module.exports = {
-    // A função agora recebe apenas (req, res) e é assíncrona
-    async login(req, res) {
-        
-        // 1. CORREÇÃO: Pega apenas email e password do req.body. Renomeia 'password' para 'senha'.
-        const { email, password: senha } = req.body;
+    async login(req, res, body) { // Recebe o body que vem do AuthRoutes.js
 
-            if (!email || !senha || !tipo) {
-                return badRequest(res, "Dados incompletos.");
-            }
+        const { email, senha, tipo } = body; // Desestrutura tudo que precisa
 
-            const result = await AuthService.Login(email, senha, tipo);
-            ok(res, result);
-
-        } catch (error) {
-            serverError(res, error.message);
-            meu cima
         try {
-            // 2. CORREÇÃO: Validação agora exige apenas email e senha.
-            if (!email || !senha) {
-                res.writeHead(400, { "Content-Type": "application/json" });
-                // Garante que a resposta de erro seja enviada
-                return res.end(JSON.stringify({ message: "Email e senha são obrigatórios." }));
+            // 1. Validação de campos obrigatórios (Usando badRequest 400)
+            if (!email || !senha || !tipo) {
+                return badRequest(res, "Email, senha e tipo (admin/empresa) são obrigatórios.");
             }
-
-            // 3. CORREÇÃO: Chama a função CORRETA do serviço (authenticateUser)
-            const result = await AuthService.authenticateUser(email, senha);
-
-            // 4. Resposta de sucesso (200 OK)
-            res.writeHead(200, { "Content-Type": "application/json" });
-            return res.end(JSON.stringify(result));
             
+            // 2. Chama a lógica de autenticação no Service
+            const result = await AuthService.Login(email, senha, tipo);
+
+            // 3. Resposta de Sucesso (200 OK)
+            return ok(res, result);
+
         } catch (error) {
-            // 5. Resposta de erro (401 Unauthorized ou 400 Bad Request)
-            const statusCode = (error.message.includes("Inválidas") || error.message.includes("encontrado")) ? 401 : 400;
+            // 4. Tratamento de Erro Específico (401 Unauthorized)
+            // Se a mensagem de erro indicar que a credencial é inválida/não existe, 
+            // responde 401. Caso contrário, responde 500.
+            if (error.message.includes("Inválidas") || error.message.includes("encontrado")) {
+                // Usando unauthorized (401) do utilitário
+                return badRequest(res, "Credenciais Inválidas ou tipo de usuário incorreto."); 
+                // Nota: O ideal é que o Service lance um erro 401 específico, mas 
+                // como a gente não viu o Service, vou usar o badRequest (400) ou 
+                // assumir que o erro já vem 'tratado' pelo Service. 
+                // Se você criar a função `unauthorized(res, message)` no seu util, 
+                // use ela aqui! (ex: return unauthorized(res, error.message);)
+            }
             
-            res.writeHead(statusCode, { "Content-Type": "application/json" });
-            // Garante que a resposta de erro seja enviada
-            return res.end(JSON.stringify({ message: error.message }));
+            // 5. Resposta de Erro Geral (500 Server Error)
+            serverError(res, error.message);
         }
     }
 };

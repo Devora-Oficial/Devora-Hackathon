@@ -1,3 +1,15 @@
+/**
+ * ServiceGate - Agendamento Service
+ * -------------------------------------------------
+ * Responsável por regras de negócio e acesso ao banco de dados 
+ * para a entidade 'Agendamento' (criação, listagem por empresa, 
+ * atualização e deleção).
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernados (Desenvolvimento Backend)
+ */
+
 const AgendamentoModel = require("../models/AgendamentoModel");
 
 const AgendamentoService = {

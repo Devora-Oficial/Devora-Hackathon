@@ -1,11 +1,13 @@
 /**
  * ServiceGate - Model de Administradores da Plataforma
  * -------------------------------------------------
- * Responsável pelas operações na tabela 'plataforma_admins'.
+ * Responsável por operações no banco relacionadas à tabela 'plataforma_admins'.
  *
  * Responsável:
  * - Guilherme Nantes (Desenvolvimento Backend)
  */
+
+const db = require("../database/db");
 
 const db = require("../database/db");
 const hashUtil = require("../utils/hash");

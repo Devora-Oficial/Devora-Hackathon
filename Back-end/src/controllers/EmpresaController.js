@@ -1,6 +1,15 @@
-// src/controllers/EmpresaController.js
+/**
+ * ServiceGate - Controllers de Empresa
+ * -------------------------------------------------
+ * Responsável por operações no banco relacionadas à tabela 'empresas'.
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernade (Desenvolvimento Backend)
+ */
+
 const EmpresaService = require("../services/EmpresaService");
-const { ok, created, serverError } = require("../utils/sendResponse");
+const { ok, created, serverError,badRequest } = require("../utils/sendResponse");
 
 const EmpresaController = {
   async listar(req, res) {
@@ -15,7 +24,8 @@ const EmpresaController = {
   async criar(req, res, body) {
     try {
       if (!body.nome || !body.email || !body.senha || !body.telefone || !body.cep) {
-        return serverError(res, "Campos obrigatórios faltando");
+        // CORREÇÃO: Usando badRequest (400) para erro de campos faltando
+        return badRequest(res, "Campos obrigatórios faltando");
       }
       const id = await EmpresaService.criar(body);
       created(res, { id });

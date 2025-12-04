@@ -1,5 +1,5 @@
-const EmpresaModel = require("./src/models/EmpresaModel");
-const AdminModel = require("./src/models/AdminModel");
+const EmpresaModel = require("../models/EmpresaModel");
+const AdminModel = require("../models/AdminModel");
 
 async function seed() {
   // Criar Admin

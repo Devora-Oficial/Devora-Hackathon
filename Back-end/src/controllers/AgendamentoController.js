@@ -1,6 +1,16 @@
-// src/controllers/AgendamentoController.js
+/**
+ * ServiceGate - Controllers  de Agendamentos
+ * -------------------------------------------------
+ * Responsável por operações no banco relacionadas à tabela 'agendamentos'.
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernado (Desenvolvimento Backend)
+ */
+
 const AgendamentoService = require("../services/AgendamentoService");
-const { ok, created, serverError } = require("../utils/sendResponse");
+// Importando o badRequest agora!
+const { ok, created, serverError, badRequest } = require("../utils/sendResponse"); 
 
 const STATUS_VALIDOS = ["Agendado", "Cancelado", "Concluído"];
 
@@ -19,7 +29,8 @@ const AgendamentoController = {
       body.status = body.status || "Agendado"; // valor padrão
 
       if (!STATUS_VALIDOS.includes(body.status)) {
-        return res.writeHead(400).end(JSON.stringify({ error: "Status inválido" }));
+        // CORREÇÃO: Usando badRequest (400) do utilitário
+        return badRequest(res, "Status inválido para criação de agendamento.");
       }
 
       const id = await AgendamentoService.criar(body);
@@ -31,6 +42,11 @@ const AgendamentoController = {
 
   async atualizar(req, res, id, body) {
     try {
+      // Adicionando a validação de status aqui também!
+      if (body.status && !STATUS_VALIDOS.includes(body.status)) {
+         return badRequest(res, "Status inválido para atualização de agendamento.");
+      }
+      
       const affected = await AgendamentoService.atualizar(id, body);
       ok(res, { affected });
     } catch (err) {
@@ -38,33 +54,14 @@ const AgendamentoController = {
     }
   },
 
-  // async deletar(req, res, id) {
-  //   try {
-  //     const affected = await AgendamentoService.deletar(id);
-  //     ok(res, { affected });
-  //   } catch (err) {
-  //     serverError(res, err.message);
-  //     if (body.status && !STATUS_VALIDOS.includes(body.status)) {
-  //       return res.writeHead(400).end(JSON.stringify({ error: "Status inválido" }));
-  //     }
-
-  //     const affected = await AgendamentoService.atualizar(id, body);
-  //     res.writeHead(200, { "Content-Type": "application/json" });
-  //     res.end(JSON.stringify({ affected }));
-  //   } catch (err) {
-  //     res.writeHead(500);
-  //     res.end(JSON.stringify({ error: err.message }));
-  //   }
-  // },
-
   async deletar(req, res, id) {
     try {
       const affected = await AgendamentoService.deletar(id);
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ affected }));
+      // CORREÇÃO: Usando ok(200) do utilitário
+      ok(res, { affected }); 
     } catch (err) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: err.message }));
+      // CORREÇÃO: Usando serverError(500) do utilitário
+      serverError(res, err.message);
     }
   }
 };

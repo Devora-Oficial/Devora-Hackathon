@@ -1,5 +1,15 @@
+/**
+ * ServiceGate - Controllers de Serviço
+ * -------------------------------------------------
+ * Responsável por operações no banco relacionadas à tabela 'servicos'.
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernades (Desenvolvimento Backend)
+ */
+
 const ServicoService = require("../services/ServicoService");
-const { ok, created, serverError } = require("../utils/sendResponse");
+const { ok, created, serverError, badRequest } = require("../utils/sendResponse");
 
 const ServicoController = {
   async listar(req, res) {
@@ -12,13 +22,18 @@ const ServicoController = {
   },
 
   async criar(req, res, body) {
-    try {
-      const id = await ServicoService.criar(body);
-      created(res, { id });
-    } catch (err) {
-      serverError(res, err.message);
-    }
-  },
+    try {
+      // Exemplo de validação de campos obrigatórios (ajuste conforme seu model!)
+      if (!body.nome || !body.valor) { 
+        return badRequest(res, "Campos 'nome' e 'valor' são obrigatórios");
+      }
+      
+      const id = await ServicoService.criar(body);
+      created(res, { id });
+    } catch (err) {
+      serverError(res, err.message);
+    }
+  },
 
   async atualizar(req, res, id, body) {
     try {

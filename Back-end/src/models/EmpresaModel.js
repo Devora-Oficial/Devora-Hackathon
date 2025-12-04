@@ -11,32 +11,17 @@ const db = require("../database/db");
 const hashUtil = require("../utils/hash");
 
 const EmpresaModel = {
-
-  async listar() {
-    const [rows] = await db.query(
-      "SELECT id, nome, email, telefone, cep, ativo, criado_em FROM empresas ORDER BY criado_em DESC"
-    );
-    return rows;
-  },
-
-  async buscarPorId(id) {
-    const [rows] = await db.query(
-      "SELECT id, nome, email, telefone, cep, ativo, criado_em FROM empresas WHERE id = ?",
-      [id]
-    );
-    return rows[0] || null;
-  },
-
+  
   async criar(dados) {
-    const { nome, email, senha, telefone, endereco } = dados;
+    const { nome, email, senha, telefone, cep } = dados; 
 
     const senhaHash = await hashUtil.hash(senha);
 
     const [result] = await db.query(
       `INSERT INTO empresas 
-        (nome, email, senha, telefone, cep) 
-       VALUES (?, ?, ?, ?, ?)`,
-      [nome, email, senhaHash, telefone, endereco]
+         (nome, email, senha, telefone, cep) 
+         VALUES (?, ?, ?, ?, ?)`,
+      [nome, email, senhaHash, telefone, cep] // Usando 'cep'
     );
 
     return result.insertId;

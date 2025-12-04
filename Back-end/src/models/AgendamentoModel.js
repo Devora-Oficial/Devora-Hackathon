@@ -16,11 +16,11 @@ const AgendamentoModel = {
   async listarPorEmpresa(empresa_id) {
     const [rows] = await db.query(
       `SELECT 
-         id, servico_id, empresa_id, data_hora, duracao_minutos, 
-         status, observacao, criado_em
-       FROM agendamentos
-       WHERE empresa_id = ?
-       ORDER BY data_hora ASC`,
+          id, servico_id, empresa_id, data_hora, duracao_minutos, 
+          status, observacao, criado_em
+        FROM agendamentos
+        WHERE empresa_id = ?
+        ORDER BY data_hora ASC`,
       [empresa_id]
     );
 
@@ -30,10 +30,10 @@ const AgendamentoModel = {
   async buscarPorId(id) {
     const [rows] = await db.query(
       `SELECT 
-         id, servico_id, empresa_id, data_hora, duracao_minutos, 
-         status, observacao, criado_em
-       FROM agendamentos
-       WHERE id = ?`,
+          id, servico_id, empresa_id, data_hora, duracao_minutos, 
+          status, observacao, criado_em
+        FROM agendamentos
+        WHERE id = ?`,
       [id]
     );
 
@@ -41,29 +41,9 @@ const AgendamentoModel = {
   },
 
   async criar(dados) {
-    const {
-      servico_id,
-      empresa_id,
-      data_hora,
-      duracao_minutos,
-      status,
-      observacao
-    } = dados;
-
-    const [result] = await db.query(
-      `INSERT INTO agendamentos 
-        (servico_id, empresa_id, data_hora, duracao_minutos, status, observacao)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [
-        servico_id,
-        empresa_id,
-        data_hora,
-        duracao_minutos,
-        status || "pendente",
-        observacao || null
-      ]
     const { servico_id, empresa_id, data_hora, duracao_minutos, status, observacao } = dados;
 
+    // Garante que o status é um dos válidos ou usa "Agendado" como padrão
     const statusValido = validStatus.includes(status) ? status : "Agendado";
 
     const [result] = await db.query(
@@ -76,15 +56,8 @@ const AgendamentoModel = {
 
   async atualizar(id, dados) {
     const { data_hora, duracao_minutos, status, observacao } = dados;
-
-    const [result] = await db.query(
-      `UPDATE agendamentos
-       SET data_hora = ?, 
-           duracao_minutos = ?, 
-           status = ?, 
-           observacao = ?
-       WHERE id = ?`,
-      [data_hora, duracao_minutos, status, observacao, id]
+    
+    // Garante que o status é um dos válidos ou usa "Agendado"
     const statusValido = validStatus.includes(status) ? status : "Agendado";
 
     const [result] = await db.query(

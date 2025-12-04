@@ -1,3 +1,13 @@
+/**
+ * ServiceGate - controller de Administradores da Plataforma
+ * -------------------------------------------------
+ * Responsável por operações no banco relacionadas à tabela 'plataforma_admins'.
+ *
+ * Responsável:
+ * - Guilherme Nantes (Desenvolvimento Backend)
+ * - Robert Fernado (Desenvolvimento Backend)
+ */
+
 const AdminService = require("../services/AdminService");
 const { ok, created, serverError } = require("../utils/sendResponse");
 
