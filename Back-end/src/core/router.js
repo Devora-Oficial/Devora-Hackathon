@@ -1,36 +1,35 @@
+// src/core/router.js
 const empresaRoutes = require("../routes/EmpresaRoutes");
 const servicoRoutes = require("../routes/ServicoRoutes");
 const agendamentoRoutes = require("../routes/AgendamentoRoutes");
+const authRoutes = require("../routes/authRoutes");
 
 module.exports = {
     async handle(req, res) {
         res.setHeader("Content-Type", "application/json");
 
-        // Rota de saúde do servidor
-        if (req.url === "/") {
-            res.end(JSON.stringify({ status: "ok", message: "Servidor rodando" }));
-            return;
+        // Healthcheck
+        if (req.url === "/" && req.method === "GET") {
+            return res.end(JSON.stringify({ status: "ok", message: "Servidor rodando" }));
         }
 
-        // Rotas de empresas
+        // Login
+        if (req.url.startsWith("/auth")) {
+            return authRoutes(req, res);
+        }
+
         if (req.url.startsWith("/empresas")) {
-            await empresaRoutes(req, res);
-            return;
+            return empresaRoutes(req, res);
         }
 
-        // Rotas de serviços
         if (req.url.startsWith("/servicos")) {
-            await servicoRoutes(req, res);
-            return;
+            return servicoRoutes(req, res);
         }
 
-        // Rotas de agendamentos
         if (req.url.startsWith("/agendamentos")) {
-            await agendamentoRoutes(req, res);
-            return;
+            return agendamentoRoutes(req, res);
         }
 
-        // Caso nenhuma rota exista
         res.writeHead(404);
         res.end(JSON.stringify({ error: "Rota não encontrada" }));
     }

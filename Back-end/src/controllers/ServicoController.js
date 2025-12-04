@@ -1,5 +1,5 @@
 const ServicoService = require("../services/ServicoService");
-const { ok, created, serverError } = require("../utils/response");
+const { ok, created, serverError } = require("../utils/sendResponse");
 
 const ServicoController = {
   async listar(req, res) {

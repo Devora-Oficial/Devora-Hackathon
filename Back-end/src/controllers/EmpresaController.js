@@ -1,5 +1,5 @@
 const EmpresaService = require("../services/EmpresaService");
-const { ok, created, serverError } = require("../utils/response");
+const { ok, created, serverError } = require("../utils/sendResponse");
 
 const EmpresaController = {
   async listar(req, res) {

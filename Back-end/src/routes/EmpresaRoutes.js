@@ -1,34 +1,56 @@
 const EmpresaController = require("../controllers/EmpresaController");
 const parseBody = require("../utils/bodyParser");
+const auth = require("../utils/authMiddleware");
 
 module.exports = async function(req, res) {
-  const { method, url } = req;
+    const { method, url } = req;
 
-  // GET /empresas
-  if (method === "GET" && url === "/empresas") {
-    return EmpresaController.listar(req, res);
-  }
+    // GET /empresas (somente admin)
+    if (method === "GET" && url === "/empresas") {
+        const authData = auth(req, res);
+        if (authData.error || authData.user.role !== "admin") {
+            res.writeHead(403);
+            return res.end(JSON.stringify({ error: "Apenas admins podem listar empresas" }));
+        }
+        return EmpresaController.listar(req, res);
+    }
 
-  // POST /empresas
-  if (method === "POST" && url === "/empresas") {
-    const body = await parseBody(req);
-    return EmpresaController.criar(req, res, body);
-  }
+    // POST /empresas (público)
+    if (method === "POST" && url === "/empresas") {
+        const body = await parseBody(req);
+        return EmpresaController.criar(req, res, body);
+    }
 
-  // PUT /empresas/:id
-  if (method === "PUT" && url.match(/^\/empresas\/\d+$/)) {
-    const id = parseInt(url.split("/")[2], 10);
-    const body = await parseBody(req);
-    return EmpresaController.atualizar(req, res, id, body);
-  }
+    // PUT /empresas/:id
+    if (method === "PUT" && url.match(/^\/empresas\/\d+$/)) {
+        const authData = auth(req, res);
+        if (authData.error) {
+            res.writeHead(401);
+            return res.end(JSON.stringify({ error: authData.message }));
+        }
 
-  // DELETE /empresas/:id
-  if (method === "DELETE" && url.match(/^\/empresas\/\d+$/)) {
-    const id = parseInt(url.split("/")[2], 10);
-    return EmpresaController.deletar(req, res, id);
-  }
+        const id = parseInt(url.split("/")[2], 10);
+        
+        if (authData.user.role !== "admin" && authData.user.id !== id) {
+            res.writeHead(403);
+            return res.end(JSON.stringify({ error: "Sem permissão" }));
+        }
 
-  // Rota não encontrada
-  res.writeHead(404, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ error: "Rota de empresa não encontrada" }));
+        const body = await parseBody(req);
+        return EmpresaController.atualizar(req, res, id, body);
+    }
+
+    // DELETE /empresas/:id (admin)
+    if (method === "DELETE" && url.match(/^\/empresas\/\d+$/)) {
+        const authData = auth(req, res);
+        if (authData.error || authData.user.role !== "admin") {
+            res.writeHead(403);
+            return res.end(JSON.stringify({ error: "Apenas admins podem excluir empresas" }));
+        }
+        const id = parseInt(url.split("/")[2], 10);
+        return EmpresaController.deletar(req, res, id);
+    }
+
+    res.writeHead(404);
+    res.end(JSON.stringify({ error: "Rota de empresa não encontrada" }));
 };

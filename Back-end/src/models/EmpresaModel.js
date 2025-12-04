@@ -19,8 +19,6 @@ const EmpresaModel = {
 
   async criar(dados) {
     const { nome, email, senha, telefone, endereco } = dados;
-
-    // Hash da senha
     const hashSenha = await bcrypt.hash(senha, 10);
 
     const [result] = await db.query(
@@ -34,7 +32,6 @@ const EmpresaModel = {
   async atualizar(id, dados) {
     const { nome, email, senha, telefone, endereco } = dados;
 
-    // Monta query dinamicamente para atualizar senha apenas se fornecida
     let query = "UPDATE empresas SET nome = ?, email = ?, telefone = ?, endereco = ?";
     const params = [nome, email, telefone, endereco];
 
@@ -54,6 +51,15 @@ const EmpresaModel = {
   async deletar(id) {
     const [result] = await db.query("DELETE FROM empresas WHERE id = ?", [id]);
     return result.affectedRows;
+  },
+
+  // 🔹 FUNÇÃO PARA LOGIN
+  async findByEmail(email) {
+    const [rows] = await db.query(
+      "SELECT * FROM empresas WHERE email = ? LIMIT 1",
+      [email]
+    );
+    return rows[0] || null;
   }
 };
 

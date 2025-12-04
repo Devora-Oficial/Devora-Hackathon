@@ -7,6 +7,7 @@
  * - Guilherme Nantes (Desenvolvimento Backend)
  */
 
+// utils/token.js
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -15,10 +16,7 @@ module.exports = {
     },
 
     verify(token) {
-        try {
-            return jwt.verify(token, process.env.JWT_SECRET);
-        } catch (err) {
-            return null; // evita quebrar o servidor
-        }
+        return jwt.verify(token, process.env.JWT_SECRET);
     }
 };
+
