@@ -1,8 +1,4 @@
-// src/core/router.js
-const empresaRoutes = require("../routes/EmpresaRoutes");
-const servicoRoutes = require("../routes/ServicoRoutes");
-const agendamentoRoutes = require("../routes/AgendamentoRoutes");
-const authRoutes = require("../routes/authRoutes");
+const ProtectedRoutes = require("../routes/ProtectedRoutes");
 
 module.exports = {
     async handle(req, res) {
@@ -13,23 +9,27 @@ module.exports = {
             return res.end(JSON.stringify({ status: "ok", message: "Servidor rodando" }));
         }
 
-        // Login
+        // Auth
         if (req.url.startsWith("/auth")) {
-            return authRoutes(req, res);
+            return ProtectedRoutes.auth(req, res);
         }
 
+        // Empresas
         if (req.url.startsWith("/empresas")) {
-            return empresaRoutes(req, res);
+            return ProtectedRoutes.empresas(req, res);
         }
 
+        // Serviços
         if (req.url.startsWith("/servicos")) {
-            return servicoRoutes(req, res);
+            return ProtectedRoutes.servicos(req, res);
         }
 
+        // Agendamentos
         if (req.url.startsWith("/agendamentos")) {
-            return agendamentoRoutes(req, res);
+            return ProtectedRoutes.agendamentos(req, res);
         }
 
+        // Rota não encontrada
         res.writeHead(404);
         res.end(JSON.stringify({ error: "Rota não encontrada" }));
     }
