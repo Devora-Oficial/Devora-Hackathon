@@ -6,9 +6,14 @@ module.exports = async function(req, res) {
     const { method, url } = req;
     const authData = auth(req, res);
 
-    if (authData.error || authData.user.role !== "empresa") {
-        res.writeHead(401);
-        return res.end(JSON.stringify({ error: "Apenas empresas autenticadas podem acessar serviços" }));
+    // ✅ CORREÇÃO CRÍTICA: Verifica se authData e authData.user existem antes de continuar
+    if (!authData || !authData.user || authData.user.role !== "empresa") {
+        // O authMiddleware já enviou o 401. Apenas garantimos que a rota pare
+        if (!res.headersSent) {
+            res.writeHead(401);
+            res.end(JSON.stringify({ error: "Apenas empresas autenticadas podem acessar serviços" }));
+        }
+        return; 
     }
 
     const empresa_id = authData.user.id;
