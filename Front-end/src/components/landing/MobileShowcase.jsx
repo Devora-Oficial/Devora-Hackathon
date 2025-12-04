@@ -57,7 +57,7 @@ export default function MobileShowcase() {
           <motion.div
             style={{ transformOrigin: "bottom center" }} // base fixa
             animate={{
-              rotate: [-2, 2, -2], // <— balanço MUITO mais suave
+              rotate: [-8, 8, -8], // <— balanço MUITO mais suave
             }}
             transition={{
               duration: 2.6,
