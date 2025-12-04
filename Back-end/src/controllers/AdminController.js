@@ -1,12 +1,11 @@
-// src/controllers/EmpresaController.js
-const EmpresaService = require("../services/EmpresaService");
+const AdminService = require("../services/AdminService");
 const { ok, created, serverError } = require("../utils/sendResponse");
 
-const EmpresaController = {
+const AdminController = {
   async listar(req, res) {
     try {
-      const empresas = await EmpresaService.listar();
-      ok(res, empresas);
+      const admins = await AdminService.listar();
+      ok(res, admins);
     } catch (err) {
       serverError(res, err.message);
     }
@@ -14,10 +13,7 @@ const EmpresaController = {
 
   async criar(req, res, body) {
     try {
-      if (!body.nome || !body.email || !body.senha || !body.telefone || !body.cep) {
-        return serverError(res, "Campos obrigatórios faltando");
-      }
-      const id = await EmpresaService.criar(body);
+      const id = await AdminService.criar(body);
       created(res, { id });
     } catch (err) {
       serverError(res, err.message);
@@ -26,7 +22,7 @@ const EmpresaController = {
 
   async atualizar(req, res, id, body) {
     try {
-      const rows = await EmpresaService.atualizar(id, body);
+      const rows = await AdminService.atualizar(id, body);
       ok(res, { updated: rows });
     } catch (err) {
       serverError(res, err.message);
@@ -35,7 +31,7 @@ const EmpresaController = {
 
   async deletar(req, res, id) {
     try {
-      const rows = await EmpresaService.deletar(id);
+      const rows = await AdminService.deletar(id);
       ok(res, { deleted: rows });
     } catch (err) {
       serverError(res, err.message);
@@ -43,4 +39,4 @@ const EmpresaController = {
   }
 };
 
-module.exports = EmpresaController;
+module.exports = AdminController;
