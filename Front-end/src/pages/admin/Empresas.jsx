@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DataTable } from "../../components/DataTable";
 import { X, Building2 } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
+import { motion } from "framer-motion";
 
 // Componente Modal (fora do componente principal)
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -35,11 +36,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 const Empresas = () => {
   // Alterar/Remover quando for puxado do banco
   const [companies, setCompanies] = useState([
-    { id: 1, name: 'Barbearia Premium', email: 'contato@barbeariapremium.com', phone: '(11) 99999-1111', users: '5', clients: '150', status: 'Ativo' },
-    { id: 2, name: 'Clínica Estética Belle', email: 'contato@clinicabelle.com', phone: '(11) 99999-2222', users: '8', clients: '320', status: 'Ativo' },
-    { id: 3, name: 'Academia Fitness Plus', email: 'contato@fitnessplus.com', phone: '(11) 99999-3333', users: '3', clients: '450', status: 'Ativo' },
-    { id: 4, name: 'Restaurante Sabor & Arte', email: 'contato@saborarte.com', phone: '(11) 99999-4444', users: '12', clients: '800', status: 'Inativo' },
-    { id: 5, name: 'Pet Shop Amigo Fiel', email: 'contato@amigofiel.com', phone: '(11) 99999-5555', users: '4', clients: '280', status: 'Ativo' },
+    { id: 1, name: 'Barbearia Premium', email: 'contato@barbeariapremium.com', password: '123', phone: '(11) 99999-1111', cep: '00000-000', status: 'Ativo' },
+    { id: 2, name: 'Clínica Estética Belle', email: 'contato@clinicabelle.com', password: '123', phone: '(11) 99999-2222', cep: '00000-000', status: 'Ativo' },
+    { id: 3, name: 'Academia Fitness Plus', email: 'contato@fitnessplus.com', password: '123', phone: '(11) 99999-3333', cep: '00000-000', status: 'Ativo' },
+    { id: 4, name: 'Restaurante Sabor & Arte', email: 'contato@saborarte.com', password: '123', phone: '(11) 99999-4444', cep: '00000-000', status: 'Inativo' },
+    { id: 5, name: 'Pet Shop Amigo Fiel', email: 'contato@amigofiel.com', password: '123', phone: '(11) 99999-5555', cep: '00000-000', status: 'Ativo' },
   ]);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -50,9 +51,9 @@ const Empresas = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    password: '',
     phone: '',
-    users: '',
-    clients: '',
+    cep: '',
     status: 'Ativo'
   });
 
@@ -61,9 +62,9 @@ const Empresas = () => {
     setFormData({
       name: '',
       email: '',
+      password: '',
       phone: '',
-      users: '',
-      clients: '',
+      cep: '',
       status: 'Ativo'
     });
   };
@@ -80,9 +81,9 @@ const Empresas = () => {
     setFormData({
       name: company.name,
       email: company.email,
+      password: company.password,
       phone: company.phone,
-      users: company.users,
-      clients: company.clients,
+      cep: company.cep,
       status: company.status
     });
     setIsEditModalOpen(true);
@@ -96,7 +97,7 @@ const Empresas = () => {
 
   // Salvar nova empresa
   const handleSaveNew = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.password || !formData.phone || !formData.cep) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
@@ -112,7 +113,7 @@ const Empresas = () => {
 
   // Salvar edição
   const handleSaveEdit = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.password || !formData.phone || !formData.cep) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
@@ -161,8 +162,7 @@ const Empresas = () => {
       )
     },
     { key: 'phone', header: 'Telefone' },
-    { key: 'users', header: 'Usuários' },
-    { key: 'clients', header: 'Clientes' },
+    { key: 'cep', header: 'CEP' },
     { 
       key: 'status', 
       header: 'Status',
@@ -182,22 +182,35 @@ const Empresas = () => {
       <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage userType={tipoConta}/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut"}}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
             <h1 className="text-3xl font-bold tracking-tight">Empresas</h1>
             <p className="mt-1 text-gray-400">Gerencie todas as empresas cadastradas na plataforma</p>
-          </div>
+          </motion.div>
 
-          <DataTable
-            data={companies}
-            columns={columns}
-            title="Lista de Empresas"
-            searchPlaceholder="Buscar empresa..."
-            onAdd={handleAdd}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            addLabel="Nova Empresa"
-            itemsPerPage={10}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <DataTable
+              data={companies}
+              columns={columns}
+              title="Lista de Empresas"
+              searchPlaceholder="Buscar empresa..."
+              onAdd={handleAdd}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              addLabel="Nova Empresa"
+              itemsPerPage={10}
+            />
+          </motion.div>
         </main>
       </div>
 
@@ -236,6 +249,19 @@ const Empresas = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Senha *
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              placeholder=""
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Telefone *
             </label>
             <input
@@ -247,32 +273,17 @@ const Empresas = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Usuários
-              </label>
-              <input
-                type="text"
-                value={formData.users}
-                onChange={(e) => setFormData({ ...formData, users: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Clientes
-              </label>
-              <input
-                type="text"
-                value={formData.clients}
-                onChange={(e) => setFormData({ ...formData, clients: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              CEP *
+            </label>
+            <input
+              type="text"
+              value={formData.cep}
+              onChange={(e) => setFormData({ ...formData, cep: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              placeholder="00000-000"
+            />
           </div>
 
           <div>
@@ -341,6 +352,19 @@ const Empresas = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Senha *
+            </label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              placeholder=""
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Telefone *
             </label>
             <input
@@ -352,32 +376,17 @@ const Empresas = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Usuários
-              </label>
-              <input
-                type="text"
-                value={formData.users}
-                onChange={(e) => setFormData({ ...formData, users: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Clientes
-              </label>
-              <input
-                type="text"
-                value={formData.clients}
-                onChange={(e) => setFormData({ ...formData, clients: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="0"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              CEP *
+            </label>
+            <input
+              type="text"
+              value={formData.cep}
+              onChange={(e) => setFormData({ ...formData, cep: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              placeholder="00000-000"
+            />
           </div>
 
           <div>

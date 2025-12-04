@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DataTable } from "../../components/DataTable";
 import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
+import { motion } from "framer-motion";
 
 // Componente Modal (fora do componente principal)
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -34,11 +35,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const Agendamentos = () => {
   const [appointments, setAppointments] = useState([
-    { id: 1, customer: 'Carlos Silva', service: 'Corte + Barba', date: '01/12/2024', time: '10:00', status: 'Agendado' },
-    { id: 2, customer: 'Ana Paula Santos', service: 'Corte Masculino', date: '01/12/2024', time: '11:00', status: 'Agendado' },
-    { id: 3, customer: 'Roberto Oliveira', service: 'Barba Completa', date: '01/12/2024', time: '14:00', status: 'Concluído' },
-    { id: 4, customer: 'Fernanda Costa', service: 'Pigmentação', date: '02/12/2024', time: '09:00', status: 'Agendado' },
-    { id: 5, customer: 'Lucas Mendes', service: 'Corte Masculino', date: '30/11/2024', time: '16:00', status: 'Cancelado' },
+    { id: 1, customer: 'Carlos Silva', service: 'Corte + Barba', date: '01/12/2024', time: '10:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
+    { id: 2, customer: 'Ana Paula Santos', service: 'Corte Masculino', date: '01/12/2024', time: '11:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
+    { id: 3, customer: 'Roberto Oliveira', service: 'Barba Completa', date: '01/12/2024', time: '14:00', observation: 'Corte de cabelo tradicional masculino', status: 'Concluído' },
+    { id: 4, customer: 'Fernanda Costa', service: 'Pigmentação', date: '02/12/2024', time: '09:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
+    { id: 5, customer: 'Lucas Mendes', service: 'Corte Masculino', date: '30/11/2024', time: '16:00', observation: 'Corte de cabelo tradicional masculino', status: 'Cancelado' },
   ]);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -51,6 +52,7 @@ const Agendamentos = () => {
     service: '',
     date: '',
     time: '',
+    observation: '',
     status: 'Agendado'
   });
 
@@ -61,6 +63,7 @@ const Agendamentos = () => {
       service: '',
       date: '',
       time: '',
+      observation: '',
       status: 'Agendado'
     });
   };
@@ -79,6 +82,7 @@ const Agendamentos = () => {
       service: appointment.service,
       date: appointment.date,
       time: appointment.time,
+      observation: appointment.observation,
       status: appointment.status
     });
     setIsEditModalOpen(true);
@@ -145,6 +149,7 @@ const Agendamentos = () => {
     { key: 'service', header: 'Serviço' },
     { key: 'date', header: 'Data' },
     { key: 'time', header: 'Horário' },
+    { key: 'observation', header: 'Observação' },
     { 
       key: 'status', 
       header: 'Status',
@@ -161,22 +166,35 @@ const Agendamentos = () => {
       <div className="bg-[#07060a] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
         <NavbarManage/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut"}}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
             <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
             <p className="mt-1 text-gray-400">Gerencie os agendamentos da sua empresa</p>
-          </div>
+          </motion.div>
 
-          <DataTable
-            data={appointments}
-            columns={columns}
-            title="Lista de Agendamentos"
-            searchPlaceholder="Buscar agendamento..."
-            onAdd={handleAdd}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            addLabel="Novo Agendamento"
-            itemsPerPage={10}
-          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <DataTable
+              data={appointments}
+              columns={columns}
+              title="Lista de Agendamentos"
+              searchPlaceholder="Buscar agendamento..."
+              onAdd={handleAdd}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              addLabel="Novo Agendamento"
+              itemsPerPage={10}
+            />
+          </motion.div>
         </main>
       </div>
 
@@ -244,6 +262,19 @@ const Agendamentos = () => {
                 placeholder="HH:MM"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Observação
+            </label>
+            <textarea
+              value={formData.observation}
+              onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
+              placeholder="Anote uma observação"
+              rows="3"
+            />
           </div>
 
           <div>
@@ -341,6 +372,19 @@ const Agendamentos = () => {
                 placeholder="HH:MM"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Observação
+            </label>
+            <textarea
+              value={formData.observation}
+              onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
+              placeholder="Anote uma observação"
+              rows="3"
+            />
           </div>
 
           <div>
