@@ -77,7 +77,7 @@ export default function NavbarManage() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-none outline-none
+                  className={`relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-none rounded-lg
                     ${active ? "text-white" : "text-gray-400 hover:text-white"}
                   `}
                 >
