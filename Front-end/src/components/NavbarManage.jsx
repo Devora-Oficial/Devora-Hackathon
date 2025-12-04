@@ -61,7 +61,7 @@ export default function NavbarManage({ userType = "company", userName = "João S
                 >
                   {/* Linha azul no hover/end */}
                   <span
-                    className={`absolute bottom-0 right-0 h-[2px] w-0 bg-blue-500 transition-all duration-300
+                    className={`absolute bottom-0 right-0 h-0.5 w-0 bg-purple-600 transition-all duration-300
                       ${active ? "w-full" : "group-hover:w-full"}
                     `}
                   />
