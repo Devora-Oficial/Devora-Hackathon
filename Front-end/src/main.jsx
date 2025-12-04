@@ -1,13 +1,19 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
-import './index.css'
+// client/src/main.jsx (CORRIGIDO)
 
-createRoot(document.getElementById('root')).render(
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
+import { AuthProvider } from './contexts/AuthContext.jsx';
+// Importe o BrowserRouter diretamente
+import { BrowserRouter as Router } from 'react-router-dom'; 
+
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-)
+    <Router>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </Router>
+  </React.StrictMode>,
+);
