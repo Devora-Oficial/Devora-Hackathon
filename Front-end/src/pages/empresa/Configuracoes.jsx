@@ -35,7 +35,7 @@ function SettingsMenu({ activeSection, setActiveSection }) {
   ];
 
   return (
-    <div className="w-64 bg-[#0f0d1a] border border-white/5 rounded-2xl p-4">
+    <div className="w-80 bg-[#0f0d1a] border border-white/5 rounded-2xl p-4">
       <div className="space-y-1">
         {sections.map(section => {
           const Icon = section.icon;
