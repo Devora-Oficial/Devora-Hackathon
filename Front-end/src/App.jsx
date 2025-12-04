@@ -1,43 +1,44 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import LandingPage from './pages/landing/LandingPage'
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
-import DashboardAdmin from './pages/admin/DashboardAdmin'
-import Empresas from './pages/admin/Empresas'
-import ConfiguracoesAdmin from './pages/admin/ConfiguracoesAdmin'
-import Relatorios from './pages/admin/Relatorios'
-import Usuarios from './pages/admin/Usuarios'
-import DashboardEmpresa from './pages/empresa/DashboardEmpresa'
-import Clientes from './pages/empresa/Clientes'
-import Servicos from './pages/empresa/Servicos'
-import Agendamentos from './pages/empresa/Agendamentos'
-import Configuracoes from './pages/empresa/Configuracoes'
-import PerfilEmpresa from './pages/empresa/PerfilEmpresa'
 
-export default function App() {
+function App() {
+ 
+  // -- Tela Login --
+ 
   return (
-    <div className="bg-[#07060a] text-white font-sans min-h-screen">
-      <Routes>
-        {/* Rota padrão (Landing Page) */}
-        <Route path="/" element={<LandingPage />} />
-        {/* Rotas de auth */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        {/* Rotas da parte de adm */}
-        <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
-        <Route path="/empresas" element={<Empresas />} />
-        <Route path="/configuracoesAdmin" element={<ConfiguracoesAdmin />} />
-        <Route path="/relatorios" element={<Relatorios />} />
-        <Route path="/usuarios" element={<Usuarios />} />
-        {/* Rotas da parte de empresa */}
-        <Route path="/dashboardEmpresa" element={<DashboardEmpresa />} />
-        <Route path="/clientes" element={<Clientes />} />
-        <Route path="/servicos" element={<Servicos />} />
-        <Route path="/agendamentos" element={<Agendamentos />} />
-        <Route path="/configuracoes" element={<Configuracoes />} />
-        <Route path="/perfilEmpresa" element={<PerfilEmpresa />} />
-      </Routes>
+    <div className="min-h-screen flex bg-slate-700 shadow-xl rounded-b-lg">
+      <div className="w-1/2 flex items-center justify-center">
+        <div className="w-full max-w-sm bg-slate-800 p-14 rounded-2xl shadow-xl border border-slate-800">
+          <h2 className="text-2xl font-bold text-center mb-6 text-white">Lolgin</h2>
+ 
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm text-white font-medium mb-1">Emahil</label>
+              <input type="email" className="w-full px-3 py-2 border rounded-lg text-white" placeholder="exemplo@exemplo.com" />
+            </div>
+            <div>
+              <label className="block text-sm text-white font-medium mb-1">PASword</label>
+              <input type="password" className="w-full px-3 py-2 border rounded-lg text-white" placeholder="••••••••" />
+            </div>
+            <button className="w-full py-2 bg-purple-700 text-white font-semibold rounded-lg">EntraAikk</button>
+            <p className="text-center text-sm text-white mt-3 ">Sem Contafdskk <a className="text-purple-600 underline cursor-pointer">Criar ai</a></p>
+          </div>
+        </div>
+      </div>
+ 
+      <div className="w-1/2 relative  overflow-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-zen bg-center rounded-bl-4xl">
+        </div>
+
+        <div className="absolute bg-blue-700"></div>
+ 
+        <div className="relative text-white px-16">
+          <h1 className="text-4xl font-bold mb-4 text-white">WelTeCome!! <span className="text-white/90">SLAkk</span></h1>
+          <p className="text-white max-w-md">SLA TESTE SLA TESTE SLA TESTE SAL TESTE</p>
+        </div>
+ 
+        {/* <button className="absolute top-6 right-6 border border-white/70 text-white px-6 py-2 rounded-full">Deslogar</button> */}
+      </div>
     </div>
-  );
+  )
 }
+ 
+export default App
