@@ -10,12 +10,12 @@ export default function NavbarManage({ userType = "company", userName = "João S
   // Define navegação baseada no tipo de usuário
   const navItems = userType === "admin" 
     ? [
-        { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
-        { name: "Empresas", path: "/admin/empresas", icon: Building2 },
-        { name: "Configurações", path: "/admin/configuracoes", icon: Settings },
+        { name: "Dashboard", path: "/dashboardAdmin", icon: LayoutDashboard },
+        { name: "Empresas", path: "/empresas", icon: Building2 },
+        { name: "Configurações", path: "/configuracoesAdmin", icon: Settings },
       ]
     : [
-        { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+        { name: "Dashboard", path: "/dashboardEmpresa", icon: LayoutDashboard },
         { name: "Clientes", path: "/clientes", icon: Users },
         { name: "Serviços", path: "/servicos", icon: Scissors },
         { name: "Agendamentos", path: "/agendamentos", icon: Calendar },

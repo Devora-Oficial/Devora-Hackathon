@@ -11,6 +11,7 @@ import {
   Settings
 } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import NavbarManage from '../../components/NavbarManage';
 
 // Mock data para gráficos
 const revenueData = [
@@ -33,78 +34,6 @@ const appointmentsData = [
   { day: 'Sáb', value: 30 },
   { day: 'Dom', value: 28 },
 ];
-
-// Navbar Component
-function Navbar({ currentUser }) {
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'clients', label: 'Clientes' },
-    { id: 'services', label: 'Serviços' },
-    { id: 'appointments', label: 'Agendamentos' },
-    { id: 'settings', label: 'Configurações' },
-  ];
-
-  const [activeItem, setActiveItem] = useState('dashboard');
-
-  return (
-    <nav className="bg-[#0f0d1a] border-b border-white/5 px-8 py-4">
-      <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
-            <Building2 className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-white font-semibold text-xl">
-            Service<span className="text-indigo-400">Gate</span>
-          </span>
-        </div>
-
-        {/* Nav Items */}
-        <div className="flex items-center gap-1">
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => setActiveItem(item.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${activeItem === item.id
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
-            >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Right Side */}
-        <div className="flex items-center gap-4">
-          {/* Color Circles */}
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 rounded-full bg-indigo-600 border-2 border-white/20 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-red-500 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-green-500 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-cyan-500 hover:scale-110 transition"></button>
-            <button className="w-8 h-8 rounded-full bg-yellow-500 hover:scale-110 transition"></button>
-          </div>
-
-          {/* Dark Mode Toggle */}
-          <button className="p-2 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition">
-            <Moon className="w-5 h-5" />
-          </button>
-
-          {/* User Info */}
-          <div className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-white/5 transition cursor-pointer">
-            <div className="text-right">
-              <div className="text-white text-sm font-medium">{currentUser.name}</div>
-              <div className="text-gray-400 text-xs">{currentUser.business}</div>
-            </div>
-            <LogOut className="w-5 h-5 text-gray-400" />
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-}
 
 // Stat Card Component
 function StatCard({ title, value, subtitle, change, icon: Icon, color }) {
@@ -201,8 +130,8 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#08060f]">
-      <Navbar currentUser={currentUser} />
+    <div className="min-h-screen bg-[#08060f] pt-16">
+      <NavbarManage/>
 
       <main className="max-w-[1600px] mx-auto p-8">
         {/* Header */}
