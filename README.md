@@ -56,15 +56,30 @@ Contribuições são sempre bem-vindas!
 
 ---
 
-# **🛠 Instalação**
+# **🛠 Como usar**
 
+- Abrir Back-End
 ```bash
-git clone <url-do-repositorio>
-cd nome-do-projeto
-cd front-end
+cd Back-end
+npm install
+npm start
+```
+
+- Abrir Front-End
+```bash
+cd Front-end
 npm install
 npm run dev
 ```
+
+- Necessário ligar o XAMPP
+- Criar banco de dados no phpMyAdmin
+- Arquivo do banco: Debora-Hackathon/Back-end/sql/servicegate_schema.sql
+- Após criar o banco, no terminal do Back-end dê o comando:
+```bash
+node seed.js
+```
+- Então o sistema vai estar pronto para uso
 
 ---
 
