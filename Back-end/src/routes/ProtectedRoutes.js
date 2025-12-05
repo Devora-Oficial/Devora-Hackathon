@@ -6,7 +6,6 @@ const AuthController = require("../controllers/AuthController");
 const EmpresaController = require("../controllers/EmpresaController");
 const ServicoController = require("../controllers/ServicoController");
 const AgendamentoController = require("../controllers/AgendamentoController");
-const AdminController = require("../controllers/AdminController");
 
 // Função auxiliar para evitar repetição
 function handleAuthFailure(res, authData) {
@@ -28,7 +27,7 @@ module.exports = {
     // =========================
     // ROTAS DE AUTH
     // =========================
-    auth: async function (req, res) {
+    auth: async function(req, res) {
         const { method, url } = req;
 
         if (method === "POST" && url === "/auth/login") {
@@ -41,7 +40,7 @@ module.exports = {
     // =========================
     // ROTAS DE EMPRESAS
     // =========================
-    empresas: async function (req, res) {
+    empresas: async function(req, res) {
         const { method, url } = req;
 
         // GET /empresas (só admin)
@@ -109,7 +108,7 @@ module.exports = {
     // =========================
     // ROTAS DE SERVIÇOS (empresa)
     // =========================
-    servicos: async function (req, res) {
+    servicos: async function(req, res) {
         const { method, url } = req;
         const authData = auth(req, res);
 
@@ -153,7 +152,7 @@ module.exports = {
     // =========================
     // ROTAS DE AGENDAMENTOS (empresa)
     // =========================
-    agendamentos: async function (req, res) {
+    agendamentos: async function(req, res) {
         const { method, url } = req;
         const authData = auth(req, res);
 
@@ -192,38 +191,5 @@ module.exports = {
 
         res.writeHead(404);
         res.end(JSON.stringify({ error: "Rota de agendamento não encontrada" }));
-    },
-
-    admin: async function (req, res) {
-        const { method, url } = req;
-        const authData = auth(req, res);
-
-        if (authData.error || authData.user.role !== "admin") {
-            res.writeHead(403);
-            return res.end(JSON.stringify({ error: "Apenas admins podem acessar" }));
-        }
-
-        if (method === "GET" && url === "/admins") {
-            return AdminController.listar(req, res);
-        }
-
-        if (method === "POST" && url === "/admins") {
-            const body = await parseBody(req);
-            return AdminController.criar(req, res, body);
-        }
-
-        if (method === "PUT" && url.match(/^\/admins\/\d+$/)) {
-            const id = parseInt(url.split("/")[2], 10);
-            const body = await parseBody(req);
-            return AdminController.atualizar(req, res, id, body);
-        }
-
-        if (method === "DELETE" && url.match(/^\/admins\/\d+$/)) {
-            const id = parseInt(url.split("/")[2], 10);
-            return AdminController.deletar(req, res, id);
-        }
-
-        res.writeHead(404);
-        res.end(JSON.stringify({ error: "Rota de admin não encontrada" }));
     }
 };

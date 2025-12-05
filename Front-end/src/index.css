@@ -1,19 +1,5 @@
 @import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --color-primary: #8b5cf6;
-  --color-primary-2: #6366f1;
-  --color-primary-3: #3b82f6;
-}
-
-.dark {
-  color-scheme: dark;
-}
-
 @layer utilities {
   .bg-gradient-zen {
     background: linear-gradient(135deg,
@@ -38,6 +24,9 @@
   }
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Custom base styles */
 :root{
