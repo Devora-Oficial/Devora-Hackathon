@@ -4,41 +4,30 @@ import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
 import { motion } from "framer-motion";
 
-// ------------------------------
-// Modal
-// ------------------------------
-const Modal = ({ isOpen, onClose, title, children, isDarkMode }) => {
+// Componente Modal (fora do componente principal)
+const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div
-        className={`w-full max-w-md rounded-lg shadow-xl overflow-hidden transition-colors ${
-          isDarkMode ? "bg-[#1a1725] text-white" : "bg-white text-gray-900"
-        }`}
-      >
-        <div
-          className={`flex items-center justify-between p-6 border-b ${
-            isDarkMode ? "border-white/20" : "border-gray-200"
-          }`}
-        >
-          <h3 className="text-lg font-semibold">{title}</h3>
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
           <button
             onClick={onClose}
-            className={`transition ${
-              isDarkMode ? "text-gray-300 hover:text-gray-100" : "text-gray-500 hover:text-gray-800"
-            }`}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-
-        <div className="p-6">{children}</div>
+        <div className="p-6">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -50,13 +39,11 @@ const Agendamentos = () => {
   const [servicesList, setServicesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
 
-  // filtros / modais / form
-  const [search, setSearch] = useState("");
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  
   const [formData, setFormData] = useState({
     customer: '',
     serviceId: '', // Usar ID do serviço para API
@@ -305,15 +292,47 @@ const Agendamentos = () => {
     }
   };
 
+  // Função para retornar as classes CSS baseadas no status
+  const getStatusStyles = (status) => {
+    const styles = {
+      'Concluído': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+      'Agendado': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+      'Cancelado': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+    };
+    return styles[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+  };
+
+  const columns = [
+    { key: 'customer', header: 'Cliente' },
+    { key: 'service', header: 'Serviço' },
+    { key: 'date', header: 'Data' },
+    { key: 'time', header: 'Horário' },
+    { key: 'observation', header: 'Observação' },
+    { 
+      key: 'status', 
+      header: 'Status',
+      render: (item) => (
+        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyles(item.status)}`}>
+          {item.status}
+        </span>
+      )
+    },
+  ];
+
   return (
     <>
-      <div className={`min-h-screen pt-28 md:pt-16 ${isDarkMode ? "bg-[#08060f] text-white" : "bg-gray-50 text-gray-900"}`}>
-        <NavbarManage isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-
-        <main className="max-w-7xl mx-auto px-4 py-10">
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-            <h1 className="text-3xl font-bold">Agendamentos</h1>
-            <p className="text-gray-400 mt-1">Gerencie os agendamentos da sua empresa</p>
+      <div className="bg-[#08060f] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
+        <NavbarManage/>
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut"}}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
+            <h1 className="text-3xl font-bold tracking-tight">Agendamentos</h1>
+            <p className="mt-1 text-gray-400">Gerencie os agendamentos da sua empresa</p>
           </motion.div>
 
           <motion.div
@@ -349,7 +368,9 @@ const Agendamentos = () => {
       >
         <div className="space-y-4">
           <div>
-            <label className="block mb-1 text-sm">Cliente</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Cliente
+            </label>
             <input
               type="text"
               name="customer"
@@ -361,7 +382,9 @@ const Agendamentos = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">Serviço</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Serviço
+            </label>
             <select
               name="serviceId"
               value={formData.serviceId}
@@ -379,7 +402,9 @@ const Agendamentos = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1 text-sm">Data</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Data
+              </label>
               <input
                 type="date"
                 name="date"
@@ -390,7 +415,9 @@ const Agendamentos = () => {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm">Horário</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Horário
+              </label>
               <input
                 type="time"
                 name="time"
@@ -402,7 +429,9 @@ const Agendamentos = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">Observação</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Observação
+            </label>
             <textarea
               name="observation"
               value={formData.observation}
@@ -410,12 +439,13 @@ const Agendamentos = () => {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
               placeholder="Anote uma observação"
               rows="3"
-              placeholder="Anote uma observação"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">Status</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Status
+            </label>
             <select
               name="status"
               value={formData.status}
@@ -436,8 +466,10 @@ const Agendamentos = () => {
           >
             Cancelar
           </button>
-
-          <button onClick={salvarNovo} className="flex-1 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+          <button
+            onClick={handleSaveNew}
+            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
             Salvar
           </button>
         </div>
@@ -450,7 +482,9 @@ const Agendamentos = () => {
       >
         <div className="space-y-4">
           <div>
-            <label className="block mb-1 text-sm">Cliente</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Cliente
+            </label>
             <input
               type="text"
               name="customer"
@@ -462,7 +496,9 @@ const Agendamentos = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">Serviço</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Serviço
+            </label>
             <select
               name="serviceId"
               value={formData.serviceId}
@@ -480,7 +516,9 @@ const Agendamentos = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1 text-sm">Data</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Data
+              </label>
               <input
                 type="date"
                 name="date"
@@ -491,7 +529,9 @@ const Agendamentos = () => {
             </div>
 
             <div>
-              <label className="block mb-1 text-sm">Horário</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Horário
+              </label>
               <input
                 type="time"
                 name="time"
@@ -503,7 +543,9 @@ const Agendamentos = () => {
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">Observação</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Observação
+            </label>
             <textarea
               name="observation"
               value={formData.observation}
@@ -511,12 +553,13 @@ const Agendamentos = () => {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
               placeholder="Anote uma observação"
               rows="3"
-              placeholder="Anote uma observação"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm">Status</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Status
+            </label>
             <select
               name="status"
               value={formData.status}
@@ -537,29 +580,37 @@ const Agendamentos = () => {
           >
             Cancelar
           </button>
-
-          <button onClick={salvarEdicao} className="flex-1 px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">
+          <button
+            onClick={handleSaveEdit}
+            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
             Salvar Alterações
           </button>
         </div>
       </Modal>
 
-      {/* Modal Deletar */}
-      <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} title="Confirmar Exclusão" isDarkMode={isDarkMode}>
-        <p className="text-gray-400">
-          Tem certeza que deseja excluir{" "}
-          <strong className={isDarkMode ? "text-white" : "text-gray-900"}>{selected?.customer}</strong>?
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Confirmar Exclusão"
+      >
+        <p className="text-gray-600 dark:text-gray-400">
+          Tem certeza que deseja excluir o agendamento de <strong className="text-gray-900 dark:text-white">{selectedAppointment?.customer}</strong>?
         </p>
-
+        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+          Esta ação não pode ser desfeita.
+        </p>
         <div className="flex gap-3 mt-6">
           <button
-            onClick={() => setIsDeleteOpen(false)}
-            className="flex-1 px-4 py-2 rounded-md border border-gray-600 text-gray-300"
+            onClick={() => setIsDeleteModalOpen(false)}
+            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             Cancelar
           </button>
-
-          <button onClick={confirmarDelete} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+          <button
+            onClick={handleConfirmDelete}
+            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+          >
             Excluir
           </button>
         </div>
@@ -567,3 +618,5 @@ const Agendamentos = () => {
     </>
   );
 }
+
+export default Agendamentos;

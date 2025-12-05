@@ -20,36 +20,25 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div
-        className={`w-full max-w-md rounded-lg shadow-lg overflow-hidden transition-colors ${
-          isDarkMode ? "bg-[#1a1725] text-white" : "bg-white text-gray-900"
-        }`}
-      >
-        <div
-          className={`flex items-center justify-between p-5 border-b ${
-            isDarkMode ? "border-white/20" : "border-gray-200"
-          }`}
-        >
-          <h2 className="text-lg font-semibold">{title}</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
           <button
             onClick={onClose}
-            className={`transition ${
-              isDarkMode
-                ? "text-gray-300 hover:text-gray-100"
-                : "text-gray-500 hover:text-gray-800"
-            }`}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
-
-        <div className="p-6">{children}</div>
+        <div className="p-6">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -59,14 +48,11 @@ const Servicos = () => {
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true); 
 
-  const [search, setSearch] = useState("");
-
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
-  const [selected, setSelected] = useState(null);
-
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  
   const [formData, setFormData] = useState({
     nome: '',
     descricao: '',
@@ -342,23 +328,18 @@ const Servicos = () => {
 
   return (
     <>
-      <div
-        className={`min-h-screen pt-28 md:pt-16 ${
-          isDarkMode ? "bg-[#08060f] text-white" : "bg-gray-50 text-gray-900"
-        }`}
-      >
-        <NavbarManage isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-
-        <main className="max-w-7xl mx-auto px-4 py-10">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
+      <div className="bg-[#08060f] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
+        <NavbarManage/>
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
+            transition={{ duration: 0.5, ease: "easeOut"}}
+            viewport={{ once: true }}
+            className="mb-8"
           >
-            <h1 className="text-3xl font-bold">Serviços</h1>
-            <p className="text-gray-400 mt-1">
-              Gerencie seus serviços de forma simples
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight">Serviços</h1>
+            <p className="mt-1 text-gray-400">Gerencie os serviços oferecidos pela sua empresa</p>
           </motion.div>
 
           <motion.div
@@ -389,10 +370,9 @@ const Servicos = () => {
 
       {/* --- MODAL DE ADICIONAR --- */}
       <Modal
-        isOpen={isAddOpen}
-        onClose={() => setIsAddOpen(false)}
-        title="Adicionar Serviço"
-        isDarkMode={isDarkMode}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        title="Novo Serviço"
       >
         <div className="space-y-4">
           <div>
@@ -482,10 +462,9 @@ const Servicos = () => {
 
       {/* --- MODAL DE EDITAR --- */}
       <Modal
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
         title="Editar Serviço"
-        isDarkMode={isDarkMode}
       >
         <div className="space-y-4">
           <div>
@@ -571,27 +550,26 @@ const Servicos = () => {
 
       {/* --- MODAL DE DELETAR --- */}
       <Modal
-        isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
         title="Confirmar Exclusão"
-        isDarkMode={isDarkMode}
       >
-        <p className="text-gray-400">
-          Tem certeza que deseja excluir{" "}
-          <strong className="text-white">{selected?.servico}</strong>?
+        <p className="text-gray-600 dark:text-gray-400">
+          Tem certeza que deseja excluir o serviço <strong className="text-gray-900 dark:text-white">{selectedService?.name}</strong>?
         </p>
-
+        <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+          Esta ação não pode ser desfeita.
+        </p>
         <div className="flex gap-3 mt-6">
           <button
-            onClick={() => setIsDeleteOpen(false)}
-            className="flex-1 px-4 py-2 rounded-md border border-gray-600 text-gray-300"
+            onClick={() => setIsDeleteModalOpen(false)}
+            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             Cancelar
           </button>
-
           <button
-            onClick={confirmarDelete}
-            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            onClick={handleConfirmDelete}
+            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
           >
             Excluir
           </button>
@@ -600,3 +578,5 @@ const Servicos = () => {
     </>
   );
 }
+
+export default Servicos;
