@@ -14,6 +14,8 @@ import {
   Mail,
   Phone,
   Check,
+  Moon,
+  Sun
 } from 'lucide-react';
 import NavbarManage from '../../components/NavbarManage';
 
@@ -203,6 +205,7 @@ function AppearanceSection({ theme, setTheme }) {
         <h3 className="text-white font-semibold mb-4">Modo de Exibição</h3>
         <div className="grid grid-cols-2 gap-4">
           <button
+            type="button"
             onClick={() => setTheme({ ...theme, mode: 'dark' })}
             className={`p-6 rounded-xl border-2 transition-all ${theme.mode === 'dark'
                 ? 'border-indigo-500 bg-indigo-500/10'
@@ -213,7 +216,9 @@ function AppearanceSection({ theme, setTheme }) {
             <div className="text-white font-medium">Modo Escuro</div>
             <div className="text-gray-400 text-xs mt-1">Perfeito para uso noturno</div>
           </button>
+
           <button
+            type="button"
             onClick={() => setTheme({ ...theme, mode: 'light' })}
             className={`p-6 rounded-xl border-2 transition-all ${theme.mode === 'light'
                 ? 'border-indigo-500 bg-indigo-500/10'
@@ -237,17 +242,17 @@ function AppearanceSection({ theme, setTheme }) {
 
             return (
               <button
+                type="button"
                 key={t.id}
                 onClick={() => setTheme({ ...theme, color: t.id })}
                 className={`
-            group relative p-16 rounded-2xl border transition-all 
-            flex flex-col items-center 
-            ${active
+                  group relative p-6 rounded-2xl border transition-all 
+                  flex flex-col items-center 
+                  ${active
                     ? 'border-indigo-500 bg-indigo-500/10 shadow-[0_0_10px_rgba(99,102,241,0.25)]'
                     : 'border-white/10 hover:border-white/20 hover:bg-white/5'}
-          `}
+                `}
               >
-                {/* Paleta */}
                 <div className="flex gap-2 mb-3">
                   {t.colors.map((color, i) => (
                     <div
@@ -258,12 +263,10 @@ function AppearanceSection({ theme, setTheme }) {
                   ))}
                 </div>
 
-                {/* Nome */}
                 <span className="text-white font-medium text-sm tracking-wide">
                   {t.name}
                 </span>
 
-                {/* Check ativo */}
                 {active && (
                   <Check className="w-4 h-4 text-indigo-400 absolute top-3 right-3" />
                 )}
@@ -348,7 +351,7 @@ export default function ConfiguracoesAdmin() {
   const [activeSection, setActiveSection] = useState('adminInfo');
 
   const [adminData, setAdminData] = useState({
-    avatar: '🛡️',
+    avatar: 'Avatar',
     name: 'Administrador Master',
     email: 'admin@sistema.com',
     phone: '(00) 90000-0000',
@@ -369,12 +372,12 @@ export default function ConfiguracoesAdmin() {
     fontSize: 14,
   });
 
-  const [notifications, setNotifications] = useState({
-    systemAlerts: true,
-    newAdmins: true,
-    errorReports: true,
-    securityEvents: true,
-  });
+  // const [notifications, setNotifications] = useState({
+  //   systemAlerts: true,
+  //   newAdmins: true,
+  //   errorReports: true,
+  //   securityEvents: true,
+  // });
 
   const [showSaved, setShowSaved] = useState(false);
 
@@ -408,7 +411,12 @@ export default function ConfiguracoesAdmin() {
             )}
 
             {activeSection === 'notifications' && (
-              <NotificationsSection notifications={notifications} setNotifications={setNotifications} />
+              // <NotificationsSection notifications={notifications} setNotifications={setNotifications} />
+              <div className="bg-[#0f0d1a] border border-white/5 p-12 rounded-2xl text-center">
+                <Lock className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-white text-xl mb-2">Notificações</h3>
+                <p className="text-gray-400">Função em desenvolvimento</p>
+              </div>
             )}
 
             {activeSection === 'security' && (
