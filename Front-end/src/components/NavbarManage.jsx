@@ -11,21 +11,20 @@ export default function NavbarManage() {
   const [userData, setUserData] = useState({
     nome: "Usuário",
     email: "",
-    empresa: ""
   });
-  const [userType, setUserType] = useState("company");
+  const [userType, setUserType] = useState("empresa");
 
   // Carregar dados do usuário ao montar o componente
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData");
     const storedRole = localStorage.getItem("role");
-
+    
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
     }
 
     if (storedRole) {
-      setUserType(storedRole === "admin" ? "admin" : "company");
+      setUserType(storedRole === "admin" ? "admin" : "empresa");
     }
   }, []);
 
@@ -46,7 +45,7 @@ export default function NavbarManage() {
 
   // Função de logout
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userData");
     navigate("/login");

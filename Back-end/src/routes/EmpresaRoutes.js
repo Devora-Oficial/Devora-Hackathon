@@ -7,11 +7,18 @@ module.exports = async function(req, res) {
 
     // GET /empresas (somente admin)
     if (method === "GET" && url === "/empresas") {
-        const authData = auth(req, res);
+        const authData = auth(req); // Não precisa mais do 'res'
+
+        // Verifica se houve erro na autenticação OU se o usuário não é admin
         if (authData.error || authData.user.role !== "admin") {
-            res.writeHead(403);
-            return res.end(JSON.stringify({ error: "Apenas admins podem listar empresas" }));
+            // Usa o status 401 para erro de autenticação e 403 para erro de autorização
+            const statusCode = authData.error ? 401 : 403; 
+            const errorMessage = authData.error ? authData.message : "Apenas admins podem listar empresas";
+
+            res.writeHead(statusCode);
+            return res.end(JSON.stringify({ error: errorMessage }));
         }
+
         return EmpresaController.listar(req, res);
     }
 
@@ -23,7 +30,7 @@ module.exports = async function(req, res) {
 
     // PUT /empresas/:id
     if (method === "PUT" && url.match(/^\/empresas\/\d+$/)) {
-        const authData = auth(req, res);
+        const authData = auth(req);
         if (authData.error) {
             res.writeHead(401);
             return res.end(JSON.stringify({ error: authData.message }));
@@ -42,7 +49,7 @@ module.exports = async function(req, res) {
 
     // DELETE /empresas/:id (admin)
     if (method === "DELETE" && url.match(/^\/empresas\/\d+$/)) {
-        const authData = auth(req, res);
+        const authData = auth(req);
         if (authData.error || authData.user.role !== "admin") {
             res.writeHead(403);
             return res.end(JSON.stringify({ error: "Apenas admins podem excluir empresas" }));

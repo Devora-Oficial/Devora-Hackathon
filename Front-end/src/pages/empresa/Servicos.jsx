@@ -66,7 +66,7 @@ const Servicos = () => {
 
   // Função para pegar headers com Token
   const getHeaders = () => {
-    const token = localStorage.getItem("authToken"); // Assumindo que o token está salvo aqui
+    const token = localStorage.getItem("token"); // Assumindo que o token está salvo aqui
     return {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
@@ -75,7 +75,7 @@ const Servicos = () => {
 
   // --- CARREGAR DADOS (READ) ---
   async function fetchServices() {
-    const token = localStorage.getItem('authToken'); // Ou como você armazena o token
+    const token = localStorage.getItem('token'); // Ou como você armazena o token
     
     if (!token) {
         // Redireciona imediatamente se não houver token
@@ -94,7 +94,7 @@ const Servicos = () => {
 
         if (response.status === 401 || response.status === 403) {
             // Lógica para limpar o token e redirecionar para login
-            localStorage.removeItem('authToken');
+            localStorage.removeItem('token');
             // 🛑 Lança o erro que você está vendo no console
             throw new Error("Acesso não autorizado. Por favor, faça login novamente."); 
         }

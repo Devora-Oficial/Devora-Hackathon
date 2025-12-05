@@ -1,52 +1,43 @@
-// utils/authMiddleware.js
+// utils/authMiddleware.js (Versão Corrigida para Retorno Consistente)
+
 const { verify } = require("./token");
 
-module.exports = function authMiddleware(req, res) {
-    const authHeader = req.headers["authorization"];
+module.exports = function authMiddleware(req) { // Removido 'res'
+    // Usa 'authorization' em minúsculo, pois o Node normaliza os headers
+    const authHeader = req.headers["authorization"]; 
 
     // 1. Check for missing header
     if (!authHeader) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: true, message: "Token não enviado" }));
-        return null;
+        // Retorna o objeto de erro esperado pelo router
+        return { error: true, message: "Token não enviado" }; 
     }
 
     // Split the header: Expected format is "Bearer <token>"
     const parts = authHeader.split(' ');
 
     // 2. Check for correct format (must have 2 parts, and the first part must be 'Bearer')
-    if (parts.length !== 2 || parts[0] !== 'Bearer') {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: true, message: "Formato do Token inválido. Use: Bearer <token>" }));
-        return null;
+    if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
+        return { error: true, message: "Formato do Token inválido. Use: Bearer <token>" };
     }
 
     const token = parts[1];
     
-    // 3. Check for empty token string (e.g., if client sends "Bearer ")
+    // 3. Check for empty token string
     if (!token) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: true, message: "Token não fornecido após 'Bearer'" }));
-        return null;
+        return { error: true, message: "Token não fornecido após 'Bearer'" };
     }
 
     try {
-        const decoded = verify(token); // The verify() function should handle 'jwt malformed' or other errors by throwing
+        const userPayload = verify(token); 
         
-        // Final check if verification was unsuccessful
-        if (!decoded) {
-            // This is a redundant check if verify throws on failure, but keeps the flow clean
-            throw new Error("Token verification failed"); 
-        }
-
-        // disponibiliza o usuário na request
-        req.user = decoded;
-        return decoded;
+        // Garante que o payload retorne no formato user
+        req.user = userPayload; 
+        
+        // Retorna o payload decodificado (que contém id, email, role, etc)
+        return { user: userPayload, error: false }; 
         
     } catch (e) {
-        // This catches the 'jwt malformed' error from the line 'const decoded = verify(token);'
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: true, message: "Token inválido ou expirado" }));
-        return null;
+        // Captura erros de Token inválido ou expirado
+        return { error: true, message: "Token inválido ou expirado" };
     }
 };

@@ -31,17 +31,16 @@ export default function Login() {
       const data = await response.json();
 
       // Armazena o token
-      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("token", data.token);
       
       // Armazena a role
       localStorage.setItem("role", data.role);
 
       // Armazena os dados do usuário
       localStorage.setItem("userData", JSON.stringify({
-        nome: data.nome || data.user?.nome || "Usuário",
-        email: data.email || data.user?.email || email,
-        empresa: data.empresa || data.user?.empresa || "",
-        id: data.id || data.user?.id || null
+        nome: data.nome || "Usuário",
+        email: data.email || email,
+        id: data.id || null
       }));
 
       // Redireciona com base na role
