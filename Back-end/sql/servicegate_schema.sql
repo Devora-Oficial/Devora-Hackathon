@@ -15,11 +15,11 @@
  */
 
 -- Criar banco (se não existir)
-CREATE DATABASE IF NOT EXISTS servicegate
+CREATE DATABASE IF NOT EXISTS service_gate
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE servicegate;
+USE service_gate;
 
 CREATE TABLE plataforma_admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,45 +29,42 @@ CREATE TABLE plataforma_admins (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE empresas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    telefone VARCHAR(20),
-    endereco VARCHAR(255),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- Tabela: empresas
+CREATE TABLE IF NOT EXISTS empresas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(180) NOT NULL,
+  email VARCHAR(180) NOT NULL UNIQUE,
+  senha VARCHAR(255) NOT NULL,
+  telefone VARCHAR(30) NOT NULL,
+  cep VARCHAR(9) NOT NULL,
+  ativo TINYINT(1) DEFAULT 1,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE servicos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    empresa_id INT NOT NULL,
-    nome VARCHAR(160) NOT NULL,
-    descricao TEXT,
-    preco DECIMAL(10,2),
-    duracao INT, -- duração em minutos
-    FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE
+-- Tabela: serviços (cada serviço pertence a uma empresa)
+CREATE TABLE IF NOT EXISTS servicos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  empresa_id INT NOT NULL,
+  nome VARCHAR(180) NOT NULL,
+  descricao TEXT,
+  valor DECIMAL(10,2) DEFAULT 0.00,
+  duracao_minutos INT NOT NULL DEFAULT 30,
+  ativo TINYINT(1) DEFAULT 1,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE
 );
 
-CREATE TABLE clientes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    empresa_id INT NOT NULL,
-    nome VARCHAR(160) NOT NULL,
-    email VARCHAR(160),
-    telefone VARCHAR(20),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE
-);
-
-CREATE TABLE agendamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    empresa_id INT NOT NULL,
-    cliente_id INT NOT NULL,
-    servico_id INT NOT NULL,
-    data_hora DATETIME NOT NULL,
-    status ENUM('pendente', 'confirmado', 'cancelado', 'concluido') DEFAULT 'pendente',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
-    FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE
+-- Tabela: agendamentos (sem clientes)
+CREATE TABLE IF NOT EXISTS agendamentos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_nome VARCHAR(180) NOT NULL,
+  servico_id INT NOT NULL,
+  empresa_id INT NOT NULL,
+  data_hora DATETIME NOT NULL,
+  status ENUM('Agendado','Cancelado','Concluído') DEFAULT 'Agendado',
+  observacao TEXT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE,
+  FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE,
+  INDEX idx_empresa_data (empresa_id, data_hora)
 );

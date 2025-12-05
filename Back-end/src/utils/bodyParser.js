@@ -11,28 +11,23 @@
  * - Guilherme Nantes (Desenvolvimento Backend)
  */
 
-module.exports = function bodyParser(req){
-  return Promise ((resolve, reject)=>{
-    try {
-      let body = "";
-      
-      req.on("data", chunk => {
-        body += chunk.toString();
-      });
-      
-      req.on("end", () => {
-        try {
-            const json = JSON.parse(body || "{}");
-            resolve(json);
-        } catch (err) {
-            resolve({}); // evita quebrar o servidor
-        }
-      });
+module.exports = function bodyParser(req) {
+  return new Promise((resolve, reject) => {
+    let body = "";
 
-      req.on("error", err => reject(err));
+    req.on("data", chunk => {
+      body += chunk.toString();
+    });
 
-    } catch (err){
-      reject(err)
-    }
+    req.on("end", () => {
+      try {
+        const json = JSON.parse(body || "{}");
+        resolve(json);
+      } catch (err) {
+        resolve({}); // Se o JSON estiver malformado, retorna vazio
+      }
+    });
+
+    req.on("error", err => reject(err));
   });
-}
+};

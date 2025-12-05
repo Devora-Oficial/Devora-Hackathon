@@ -1,38 +1,43 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import LandingPage from './pages/landing/LandingPage'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import DashboardAdmin from './pages/admin/DashboardAdmin'
+import Empresas from './pages/admin/Empresas'
+import ConfiguracoesAdmin from './pages/admin/ConfiguracoesAdmin'
+import Relatorios from './pages/admin/Relatorios'
+import Usuarios from './pages/admin/Usuarios'
+import DashboardEmpresa from './pages/empresa/DashboardEmpresa'
+import Clientes from './pages/empresa/Clientes'
+import Servicos from './pages/empresa/Servicos'
+import Agendamentos from './pages/empresa/Agendamentos'
+import Configuracoes from './pages/empresa/Configuracoes'
+import PerfilEmpresa from './pages/empresa/PerfilEmpresa'
 
-function App() {
-  // const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-    <div className="teste-css bg-amber-400 w100 h10000">
-      teste
+    <div className="bg-[#07060a] text-white font-sans min-h-screen">
+      <Routes>
+        {/* Rota padrão (Landing Page) */}
+        <Route path="/" element={<LandingPage />} />
+        {/* Rotas de auth */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        {/* Rotas da parte de adm */}
+        <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+        <Route path="/empresas" element={<Empresas />} />
+        <Route path="/configuracoesAdmin" element={<ConfiguracoesAdmin />} />
+        <Route path="/relatorios" element={<Relatorios />} />
+        <Route path="/usuarios" element={<Usuarios />} />
+        {/* Rotas da parte de empresa */}
+        <Route path="/dashboardEmpresa" element={<DashboardEmpresa />} />
+        <Route path="/clientes" element={<Clientes />} />
+        <Route path="/servicos" element={<Servicos />} />
+        <Route path="/agendamentos" element={<Agendamentos />} />
+        <Route path="/configuracoes" element={<Configuracoes />} />
+        <Route path="/perfilEmpresa" element={<PerfilEmpresa />} />
+      </Routes>
     </div>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
-    </>
-  )
+  );
 }
-
-export default App
