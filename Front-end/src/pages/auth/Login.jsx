@@ -29,12 +29,14 @@ export default function Login() {
 
       const data = await response.json();
 
-      localStorage.setItem("authToken", data.token);
+      // Armazena o token
+      localStorage.setItem("token", data.token);
+      
+      // Armazena a role
       localStorage.setItem("role", data.role);
       localStorage.setItem("userData", JSON.stringify({
         nome: data.nome || "Usuário",
         email: data.email || email,
-        empresa: data.empresa || "",
         id: data.id || null
       }));
 

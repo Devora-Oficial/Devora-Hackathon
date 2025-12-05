@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DataTable } from "../../components/DataTable";
 import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
 import { motion } from "framer-motion";
 
-// Componente Modal (fora do componente principal)
+// --- Funções Auxiliares de Formatação ---
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+};
+
+const parseCurrency = (strValue) => {
+  if (typeof strValue === 'number') return strValue;
+  const cleaned = strValue.replace(/[^\d,]/g, '').replace(',', '.');
+  return parseFloat(cleaned) || 0;
+};
+
+// Componente Modal (Mantido)
 const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
@@ -34,13 +45,8 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 };
 
 const Servicos = () => {
-  const [services, setServices] = useState([
-    { id: 1, name: 'Corte Masculino', description: 'Corte de cabelo tradicional masculino', price: 'R$ 45.00', duration: '30 min', status: 'Ativo' },
-    { id: 2, name: 'Barba Completa', description: 'Aparar e modelar barba com toalha quente', price: 'R$ 35.00', duration: '25 min', status: 'Ativo' },
-    { id: 3, name: 'Corte + Barba', description: 'Combo corte masculino e barba completa', price: 'R$ 70.00', duration: '50 min', status: 'Ativo' },
-    { id: 4, name: 'Pigmentação', description: 'Pigmentação de barba ou cabelo', price: 'R$ 80.00', duration: '45 min', status: 'Ativo' },
-    { id: 5, name: 'Hidratação Capilar', description: 'Tratamento de hidratação profunda', price: 'R$ 60.00', duration: '40 min', status: 'Inativo' },
-  ]);
+  const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Mantido: Começa carregando
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -48,90 +54,247 @@ const Servicos = () => {
   const [selectedService, setSelectedService] = useState(null);
   
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    duration: '',
-    status: 'Ativo'
+    nome: '',
+    descricao: '',
+    valor: '',
+    duracao_minutos: '',
+    ativo: 1 // 1 para Ativo, 0 para Inativo
   });
+
+  const API_URL = "http://localhost:3000"; 
+
+  // Função para pegar headers com Token
+  const getHeaders = () => {
+    const token = localStorage.getItem("token"); // Assumindo que o token está salvo aqui
+    return {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    };
+  };
+
+  // 🔑 Função separada para buscar os dados (não faz manipulação de state)
+  async function fetchServicesApi() {
+    const token = localStorage.getItem('token'); 
+    
+    if (!token) {
+        throw new Error("Acesso não autorizado. Por favor, faça login novamente."); 
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/servicos`, {
+            method: 'GET',
+            headers: getHeaders()
+        });
+
+        if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem('token');
+            // Redirecionamento deve ser feito fora, mas o erro avisa
+            throw new Error("Sessão expirada. Por favor, faça login novamente."); 
+        }
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `Erro de rede: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data; // Retorna os dados crus do servidor
+
+    } catch (error) {
+        console.error("Erro na API:", error.message);
+        throw error;
+    }
+  }
+  // 2. 🔑 FUNÇÃO DE CARREGAMENTO (Manipula o state e mapeia dados)
+  // Agora está no escopo do componente, acessível pelos handlers CRUD
+  const loadServices = async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchServicesApi();
+
+      const formattedData = data.map(item => ({
+        id: item.id,
+        name: item.nome,
+        description: item.descricao,
+        rawPrice: item.valor, 
+        rawDuration: item.duracao_minutos,
+        price: formatCurrency(item.valor), 
+        duration: `${item.duracao_minutos} min`,
+        status: item.ativo === 1 ? 'Ativo' : 'Inativo',
+      }));
+
+      setServices(formattedData);
+
+    } catch (error) {
+      console.error("Erro ao carregar serviços:", error.message);
+      // alert(`Falha ao carregar serviços: ${error.message}`); // Comentado para evitar pop-up a cada erro
+      setServices([]); 
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 🔑 NOVO: useEffect com a lógica de carregamento e mapeamento
+  useEffect(() => {
+    loadServices();
+  }, []);
 
   // Resetar formulário
   const resetForm = () => {
     setFormData({
-      name: '',
-      description: '',
-      price: '',
-      duration: '',
-      status: 'Ativo'
+      nome: '',
+      descricao: '',
+      valor: '',
+      duracao_minutos: '',
+      ativo: 1
     });
   };
 
-  // Abrir modal de adicionar
   const handleAdd = () => {
     resetForm();
     setIsAddModalOpen(true);
   };
 
-  // Abrir modal de editar
   const handleEdit = (service) => {
     setSelectedService(service);
+    // Preencher form com dados do serviço selecionado (usando rawPrice e rawDuration)
     setFormData({
-      name: service.name,
-      description: service.description,
-      price: service.price,
-      duration: service.duration,
-      status: service.status
+      nome: service.name,
+      descricao: service.description,
+      valor: service.rawPrice, 
+      duracao_minutos: service.rawDuration,
+      ativo: service.status === 'Ativo' ? 1 : 0
     });
     setIsEditModalOpen(true);
   };
 
-  // Abrir modal de deletar
   const handleDelete = (service) => {
     setSelectedService(service);
     setIsDeleteModalOpen(true);
   };
 
-  // Salvar novo serviço
-  const handleSaveNew = () => {
-    if (!formData.name || !formData.description || !formData.price || !formData.duration) {
-      alert('Por favor, preencha todos os campos!');
+  // --- CRIAR SERVIÇO (CREATE) ---
+  const handleSaveNew = async () => {
+    if (!formData.nome || !formData.valor) {
+      alert('Preencha os campos obrigatórios!');
       return;
     }
     
-    const newService = {
-      id: services.length > 0 ? Math.max(...services.map(s => s.id)) + 1 : 1,
-      ...formData
-    };
-    setServices([...services, newService]);
-    setIsAddModalOpen(false);
-    resetForm();
+    // 🔑 Passo 1: Obter e Checar o Token explicitamente
+    const token = localStorage.getItem('token'); 
+    if (!token) {
+        alert('Acesso não autorizado. Por favor, faça login novamente.');
+        return;
+    }
+
+    try {
+      const payload = {
+        nome: formData.nome,
+        descricao: formData.descricao,
+        valor: parseCurrency(formData.valor),
+        duracao_minutos: parseInt(formData.duracao_minutos) || 30,
+        ativo: parseInt(formData.ativo)
+      };
+
+      const response = await fetch(`${API_URL}/servicos`, {
+        method: "POST",
+        headers: getHeaders(), 
+        body: JSON.stringify(payload)
+      });
+
+      // 🔑 Passo 2: Tratar o Erro de forma robusta
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao criar serviço: ${response.status}`);
+      }
+
+      await loadServices(); // Recarrega a lista
+      setIsAddModalOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error(error);
+      alert(`Erro ao salvar serviço: ${error.message}`);
+    }
   };
 
-  // Salvar edição
-  const handleSaveEdit = () => {
-    if (!formData.name || !formData.description || !formData.price || !formData.duration) {
-      alert('Por favor, preencha todos os campos!');
+  // --- ATUALIZAR SERVIÇO (UPDATE) ---
+  const handleSaveEdit = async () => {
+    if (!formData.nome || !formData.valor) {
+      alert('Preencha os campos obrigatórios!');
       return;
     }
+
+    // 🔑 Passo 1: Obter e Checar o Token explicitamente
+    const token = localStorage.getItem('token'); 
+    if (!token) {
+        alert('Acesso não autorizado. Por favor, faça login novamente.');
+        return;
+    }
     
-    setServices(services.map(service => 
-      service.id === selectedService.id 
-        ? { ...service, ...formData }
-        : service
-    ));
-    setIsEditModalOpen(false);
-    setSelectedService(null);
-    resetForm();
+    try {
+      const payload = {
+        nome: formData.nome,
+        descricao: formData.descricao,
+        valor: parseCurrency(formData.valor),
+        duracao_minutos: parseInt(formData.duracao_minutos),
+        ativo: parseInt(formData.ativo)
+      };
+
+      const response = await fetch(`${API_URL}/servicos/${selectedService.id}`, {
+        method: "PUT",
+        headers: getHeaders(), 
+        body: JSON.stringify(payload)
+      });
+
+      // 🔑 Passo 2: Tratar o Erro de forma robusta
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao atualizar serviço: ${response.status}`);
+      }
+
+      await loadServices();
+      setIsEditModalOpen(false);
+      setSelectedService(null);
+      resetForm();
+    } catch (error) {
+      console.error(error);
+      alert(`Erro ao atualizar serviço: ${error.message}`);
+    }
   };
 
-  // Confirmar deleção
-  const handleConfirmDelete = () => {
-    setServices(services.filter(service => service.id !== selectedService.id));
-    setIsDeleteModalOpen(false);
-    setSelectedService(null);
+  // --- DELETAR SERVIÇO (DELETE) ---
+  const handleConfirmDelete = async () => {
+    if (!selectedService) return;
+
+    // 🔑 Passo 1: Obter e Checar o Token explicitamente
+    const token = localStorage.getItem('token'); 
+    if (!token) {
+        alert('Acesso não autorizado. Por favor, faça login novamente.');
+        return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/servicos/${selectedService.id}`, {
+        method: "DELETE",
+        headers: getHeaders()
+      });
+
+      // 🔑 Passo 2: Tratar o Erro de forma robusta
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao excluir serviço: ${response.status}`);
+      }
+
+      await loadServices();
+      setIsDeleteModalOpen(false);
+      setSelectedService(null);
+    } catch (error) {
+      console.error(error);
+      alert(`Erro ao excluir serviço: ${error.message}`);
+    }
   };
 
-  // Função para retornar as classes CSS baseadas no status
+  // ... (Resto do código de estilos e colunas permanece igual)
   const getStatusStyles = (status) => {
     const styles = {
       'Ativo': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
@@ -188,22 +351,27 @@ const Servicos = () => {
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <DataTable
-              data={services}
-              columns={columns}
-              title="Lista de Serviços"
-              searchPlaceholder="Buscar serviço..."
-              onAdd={handleAdd}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              addLabel="Novo Serviço"
-              itemsPerPage={10}
-            />
+            {/* Adicionado Feedback de Loading */}
+            {isLoading ? (
+              <div className="text-center text-white py-10">Carregando serviços...</div>
+            ) : (
+              <DataTable
+                data={services}
+                columns={columns}
+                title="Lista de Serviços"
+                searchPlaceholder="Buscar serviço..."
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                addLabel="Novo Serviço"
+                itemsPerPage={10}
+              />
+            )}
           </motion.div>
         </main>
       </div>
 
-      {/* Modal de Adicionar */}
+      {/* --- MODAL DE ADICIONAR (Mantido) --- */}
       <Modal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -216,8 +384,8 @@ const Servicos = () => {
             </label>
             <input
               type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              value={formData.nome}
+              onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               placeholder="Ex: Corte Masculino"
             />
@@ -228,8 +396,8 @@ const Servicos = () => {
               Descrição
             </label>
             <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.descricao}
+              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
               placeholder="Descreva o serviço"
               rows="3"
@@ -242,24 +410,24 @@ const Servicos = () => {
                 Preço
               </label>
               <input
-                type="text"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                type="number" 
+                value={formData.valor}
+                onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="R$ 45.00"
+                placeholder="Ex: 45.00"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Duração
+                Duração (minutos)
               </label>
               <input
-                type="text"
-                value={formData.duration}
-                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                type="number" 
+                value={formData.duracao_minutos}
+                onChange={(e) => setFormData({ ...formData, duracao_minutos: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="30 min"
+                placeholder="30"
               />
             </div>
           </div>
@@ -269,12 +437,12 @@ const Servicos = () => {
               Status
             </label>
             <select
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              value={formData.ativo}
+              onChange={(e) => setFormData({ ...formData, ativo: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             >
-              <option value="Ativo">Ativo</option>
-              <option value="Inativo">Inativo</option>
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
             </select>
           </div>
         </div>
@@ -295,7 +463,7 @@ const Servicos = () => {
         </div>
       </Modal>
 
-      {/* Modal de Editar */}
+      {/* --- MODAL DE EDITAR (Mantido) --- */}
       <Modal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -308,10 +476,9 @@ const Servicos = () => {
             </label>
             <input
               type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              value={formData.nome}
+              onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-              placeholder="Ex: Corte Masculino"
             />
           </div>
 
@@ -320,10 +487,9 @@ const Servicos = () => {
               Descrição
             </label>
             <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.descricao}
+              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
-              placeholder="Descreva o serviço"
               rows="3"
             />
           </div>
@@ -334,24 +500,22 @@ const Servicos = () => {
                 Preço
               </label>
               <input
-                type="text"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                type="number"
+                value={formData.valor}
+                onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="R$ 45.00"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Duração
+                Duração (minutos)
               </label>
               <input
-                type="text"
-                value={formData.duration}
-                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                type="number"
+                value={formData.duracao_minutos}
+                onChange={(e) => setFormData({ ...formData, duracao_minutos: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="30 min"
               />
             </div>
           </div>
@@ -361,12 +525,12 @@ const Servicos = () => {
               Status
             </label>
             <select
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              value={formData.ativo}
+              onChange={(e) => setFormData({ ...formData, ativo: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             >
-              <option value="Ativo">Ativo</option>
-              <option value="Inativo">Inativo</option>
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
             </select>
           </div>
         </div>
@@ -387,7 +551,7 @@ const Servicos = () => {
         </div>
       </Modal>
 
-      {/* Modal de Deletar */}
+      {/* --- MODAL DE DELETAR (Mantido) --- */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
