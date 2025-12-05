@@ -7,6 +7,7 @@ import {
   DollarSign,
   Server,
   TrendingUp,
+  LogOut,
   Activity,
   ShieldCheck,
 } from 'lucide-react';

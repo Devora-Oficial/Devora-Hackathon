@@ -14,6 +14,8 @@ import {
   Mail,
   Phone,
   Check,
+  Moon,
+  Sun
 } from 'lucide-react';
 import NavbarManage from '../../components/NavbarManage';
 
@@ -62,7 +64,7 @@ function AdminInfoSection({ adminData, setAdminData }) {
         <p className="text-gray-400">Gerencie os dados da sua conta administrativa</p>
       </div>
 
-      {/* Profile Pic */}
+      {/* Profile Pic
       <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
           <Upload className="w-5 h-5 text-indigo-400" />
@@ -81,7 +83,7 @@ function AdminInfoSection({ adminData, setAdminData }) {
             <p className="text-gray-400 text-xs mt-2">PNG, JPG — máximo 2MB.</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Admin Data */}
       <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
@@ -183,12 +185,12 @@ function PermissionsSection({ permissions, setPermissions }) {
 // Appearance & Notifications reaproveitados
 function AppearanceSection({ theme, setTheme }) {
   const themes = [
-    { id: 'dark', name: 'Escuro', colors: ['#8b5cf6', '#6366f1', '#3b82f6'] },
-    { id: 'purple', name: 'Roxo', colors: ['#a855f7', '#8b5cf6', '#7c3aed'] },
-    { id: 'blue', name: 'Azul', colors: ['#3b82f6', '#2563eb', '#1d4ed8'] },
-    { id: 'green', name: 'Verde', colors: ['#10b981', '#059669', '#047857'] },
-    { id: 'red', name: 'Vermelho', colors: ['#ef4444', '#dc2626', '#b91c1c'] },
-    { id: 'orange', name: 'Laranja', colors: ['#f97316', '#ea580c', '#c2410c'] },
+    { id: 'purple', name: 'Roxo', colors: ['#7c3aed'] },
+    { id: 'blue', name: 'Azul', colors: ['#1d4ed8'] },
+    { id: 'green', name: 'Verde', colors: ['#10b981'] },
+    { id: 'red', name: 'Vermelho', colors: ['#dc2626'] },
+    { id: 'orange', name: 'Laranja', colors: ['#ea580c'] },
+    { id: 'yellow', name: 'Amarelo', colors: ['#f9a603'] },
   ];
 
   return (
@@ -203,24 +205,25 @@ function AppearanceSection({ theme, setTheme }) {
         <h3 className="text-white font-semibold mb-4">Modo de Exibição</h3>
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => setTheme({...theme, mode: 'dark'})}
-            className={`p-6 rounded-xl border-2 transition-all ${
-              theme.mode === 'dark'
+            type="button"
+            onClick={() => setTheme({ ...theme, mode: 'dark' })}
+            className={`p-6 rounded-xl border-2 transition-all ${theme.mode === 'dark'
                 ? 'border-indigo-500 bg-indigo-500/10'
                 : 'border-white/10 hover:border-white/20'
-            }`}
+              }`}
           >
             <Moon className="w-8 h-8 text-indigo-400 mx-auto mb-3" />
             <div className="text-white font-medium">Modo Escuro</div>
             <div className="text-gray-400 text-xs mt-1">Perfeito para uso noturno</div>
           </button>
+
           <button
-            onClick={() => setTheme({...theme, mode: 'light'})}
-            className={`p-6 rounded-xl border-2 transition-all ${
-              theme.mode === 'light'
+            type="button"
+            onClick={() => setTheme({ ...theme, mode: 'light' })}
+            className={`p-6 rounded-xl border-2 transition-all ${theme.mode === 'light'
                 ? 'border-indigo-500 bg-indigo-500/10'
                 : 'border-white/10 hover:border-white/20'
-            }`}
+              }`}
           >
             <Sun className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
             <div className="text-white font-medium">Modo Claro</div>
@@ -230,52 +233,46 @@ function AppearanceSection({ theme, setTheme }) {
       </div>
 
       {/* Color Themes */}
-      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
-        <h3 className="text-white font-semibold mb-4">Esquema de Cores</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {themes.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setTheme({...theme, color: t.id})}
-              className={`p-4 rounded-xl border-2 transition-all ${
-                theme.color === t.id
-                  ? 'border-indigo-500 bg-indigo-500/10'
-                  : 'border-white/10 hover:border-white/20'
-              }`}
-            >
-              <div className="flex gap-2 mb-3">
-                {t.colors.map((color, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-lg"
-                    style={{ backgroundColor: color }}
-                  ></div>
-                ))}
-              </div>
-              <div className="text-white font-medium text-sm">{t.name}</div>
-              {theme.color === t.id && (
-                <Check className="w-4 h-4 text-indigo-400 mx-auto mt-2" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-4 space-y-4">
+        <h3 className="text-white font-semibold text-lg">Esquema de Cores</h3>
 
-      {/* Font Size */}
-      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
-        <h3 className="text-white font-semibold mb-4">Tamanho da Fonte</h3>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-400 text-sm">Pequeno</span>
-          <input
-            type="range"
-            min="12"
-            max="18"
-            value={theme.fontSize}
-            onChange={(e) => setTheme({...theme, fontSize: e.target.value})}
-            className="flex-1 h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
-          />
-          <span className="text-gray-400 text-sm">Grande</span>
-          <div className="text-white font-medium ml-4">{theme.fontSize}px</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
+          {themes.map((t) => {
+            const active = theme.color === t.id;
+
+            return (
+              <button
+                type="button"
+                key={t.id}
+                onClick={() => setTheme({ ...theme, color: t.id })}
+                className={`
+                  group relative p-6 rounded-2xl border transition-all 
+                  flex flex-col items-center 
+                  ${active
+                    ? 'border-indigo-500 bg-indigo-500/10 shadow-[0_0_10px_rgba(99,102,241,0.25)]'
+                    : 'border-white/10 hover:border-white/20 hover:bg-white/5'}
+                `}
+              >
+                <div className="flex gap-2 mb-3">
+                  {t.colors.map((color, i) => (
+                    <div
+                      key={i}
+                      className="w-8 h-8 rounded-full shadow-sm ring-1 ring-white/10"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+
+                <span className="text-white font-medium text-sm tracking-wide">
+                  {t.name}
+                </span>
+
+                {active && (
+                  <Check className="w-4 h-4 text-indigo-400 absolute top-3 right-3" />
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -354,7 +351,7 @@ export default function ConfiguracoesAdmin() {
   const [activeSection, setActiveSection] = useState('adminInfo');
 
   const [adminData, setAdminData] = useState({
-    avatar: '🛡️',
+    avatar: 'Avatar',
     name: 'Administrador Master',
     email: 'admin@sistema.com',
     phone: '(00) 90000-0000',
@@ -375,12 +372,12 @@ export default function ConfiguracoesAdmin() {
     fontSize: 14,
   });
 
-  const [notifications, setNotifications] = useState({
-    systemAlerts: true,
-    newAdmins: true,
-    errorReports: true,
-    securityEvents: true,
-  });
+  // const [notifications, setNotifications] = useState({
+  //   systemAlerts: true,
+  //   newAdmins: true,
+  //   errorReports: true,
+  //   securityEvents: true,
+  // });
 
   const [showSaved, setShowSaved] = useState(false);
 
@@ -414,7 +411,12 @@ export default function ConfiguracoesAdmin() {
             )}
 
             {activeSection === 'notifications' && (
-              <NotificationsSection notifications={notifications} setNotifications={setNotifications} />
+              // <NotificationsSection notifications={notifications} setNotifications={setNotifications} />
+              <div className="bg-[#0f0d1a] border border-white/5 p-12 rounded-2xl text-center">
+                <Lock className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-white text-xl mb-2">Notificações</h3>
+                <p className="text-gray-400">Função em desenvolvimento</p>
+              </div>
             )}
 
             {activeSection === 'security' && (
