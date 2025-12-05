@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  Building2, 
-  Users, 
-  Calendar, 
+import {
+  Building2,
+  Users,
+  Calendar,
   Settings,
   LogOut,
   Moon,
@@ -43,11 +43,10 @@ function SettingsMenu({ activeSection, setActiveSection }) {
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                activeSection === section.id
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeSection === section.id
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
+                }`}
             >
               <Icon className="w-5 h-5" />
               <span className="font-medium text-sm">{section.label}</span>
@@ -69,7 +68,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
       </div>
 
       {/* Logo Upload */}
-      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
+      {/* <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
         <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
           <Upload className="w-5 h-5 text-indigo-400" />
           Logo da Empresa
@@ -85,7 +84,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
             <p className="text-gray-400 text-xs mt-2">PNG, JPG ou SVG. Tamanho máximo 2MB.</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Company Details */}
       <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
@@ -96,7 +95,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
             <input
               type="text"
               value={companyData.name}
-              onChange={(e) => setCompanyData({...companyData, name: e.target.value})}
+              onChange={(e) => setCompanyData({ ...companyData, name: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
@@ -104,7 +103,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
             <label className="block text-gray-400 text-sm mb-2">Tipo de Negócio</label>
             <select
               value={companyData.type}
-              onChange={(e) => setCompanyData({...companyData, type: e.target.value})}
+              onChange={(e) => setCompanyData({ ...companyData, type: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition"
             >
               <option value="barbearia">Barbearia</option>
@@ -121,7 +120,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
             <input
               type="email"
               value={companyData.email}
-              onChange={(e) => setCompanyData({...companyData, email: e.target.value})}
+              onChange={(e) => setCompanyData({ ...companyData, email: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
@@ -133,7 +132,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
             <input
               type="tel"
               value={companyData.phone}
-              onChange={(e) => setCompanyData({...companyData, phone: e.target.value})}
+              onChange={(e) => setCompanyData({ ...companyData, phone: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
@@ -145,11 +144,11 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
             <input
               type="text"
               value={companyData.address}
-              onChange={(e) => setCompanyData({...companyData, address: e.target.value})}
+              onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
-          <div>
+          {/* <div>
             <label className="block text-gray-400 text-sm mb-2">CNPJ</label>
             <input
               type="text"
@@ -171,7 +170,7 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition"
               placeholder="https://..."
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -181,12 +180,12 @@ function CompanyInfoSection({ companyData, setCompanyData }) {
 // Appearance Section
 function AppearanceSection({ theme, setTheme }) {
   const themes = [
-    { id: 'dark', name: 'Escuro', colors: ['#8b5cf6', '#6366f1', '#3b82f6'] },
-    { id: 'purple', name: 'Roxo', colors: ['#a855f7', '#8b5cf6', '#7c3aed'] },
-    { id: 'blue', name: 'Azul', colors: ['#3b82f6', '#2563eb', '#1d4ed8'] },
-    { id: 'green', name: 'Verde', colors: ['#10b981', '#059669', '#047857'] },
-    { id: 'red', name: 'Vermelho', colors: ['#ef4444', '#dc2626', '#b91c1c'] },
-    { id: 'orange', name: 'Laranja', colors: ['#f97316', '#ea580c', '#c2410c'] },
+    { id: 'purple', name: 'Roxo', colors: ['#7c3aed'] },
+    { id: 'blue', name: 'Azul', colors: ['#1d4ed8'] },
+    { id: 'green', name: 'Verde', colors: ['#10b981'] },
+    { id: 'red', name: 'Vermelho', colors: ['#dc2626'] },
+    { id: 'orange', name: 'Laranja', colors: ['#ea580c'] },
+    { id: 'yellow', name: 'Amarelo', colors: ['#f9a603'] },
   ];
 
   return (
@@ -201,24 +200,22 @@ function AppearanceSection({ theme, setTheme }) {
         <h3 className="text-white font-semibold mb-4">Modo de Exibição</h3>
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => setTheme({...theme, mode: 'dark'})}
-            className={`p-6 rounded-xl border-2 transition-all ${
-              theme.mode === 'dark'
+            onClick={() => setTheme({ ...theme, mode: 'dark' })}
+            className={`p-6 rounded-xl border-2 transition-all ${theme.mode === 'dark'
                 ? 'border-indigo-500 bg-indigo-500/10'
                 : 'border-white/10 hover:border-white/20'
-            }`}
+              }`}
           >
             <Moon className="w-8 h-8 text-indigo-400 mx-auto mb-3" />
             <div className="text-white font-medium">Modo Escuro</div>
             <div className="text-gray-400 text-xs mt-1">Perfeito para uso noturno</div>
           </button>
           <button
-            onClick={() => setTheme({...theme, mode: 'light'})}
-            className={`p-6 rounded-xl border-2 transition-all ${
-              theme.mode === 'light'
+            onClick={() => setTheme({ ...theme, mode: 'light' })}
+            className={`p-6 rounded-xl border-2 transition-all ${theme.mode === 'light'
                 ? 'border-indigo-500 bg-indigo-500/10'
                 : 'border-white/10 hover:border-white/20'
-            }`}
+              }`}
           >
             <Sun className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
             <div className="text-white font-medium">Modo Claro</div>
@@ -228,52 +225,48 @@ function AppearanceSection({ theme, setTheme }) {
       </div>
 
       {/* Color Themes */}
-      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
-        <h3 className="text-white font-semibold mb-4">Esquema de Cores</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {themes.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setTheme({...theme, color: t.id})}
-              className={`p-4 rounded-xl border-2 transition-all ${
-                theme.color === t.id
-                  ? 'border-indigo-500 bg-indigo-500/10'
-                  : 'border-white/10 hover:border-white/20'
-              }`}
-            >
-              <div className="flex gap-2 mb-3">
-                {t.colors.map((color, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-lg"
-                    style={{ backgroundColor: color }}
-                  ></div>
-                ))}
-              </div>
-              <div className="text-white font-medium text-sm">{t.name}</div>
-              {theme.color === t.id && (
-                <Check className="w-4 h-4 text-indigo-400 mx-auto mt-2" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-4 space-y-4">
+        <h3 className="text-white font-semibold text-lg">Esquema de Cores</h3>
 
-      {/* Font Size */}
-      <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-6">
-        <h3 className="text-white font-semibold mb-4">Tamanho da Fonte</h3>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-400 text-sm">Pequeno</span>
-          <input
-            type="range"
-            min="12"
-            max="18"
-            value={theme.fontSize}
-            onChange={(e) => setTheme({...theme, fontSize: e.target.value})}
-            className="flex-1 h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
-          />
-          <span className="text-gray-400 text-sm">Grande</span>
-          <div className="text-white font-medium ml-4">{theme.fontSize}px</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
+          {themes.map((t) => {
+            const active = theme.color === t.id;
+
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTheme({ ...theme, color: t.id })}
+                className={`
+            group relative p-16 rounded-2xl border transition-all 
+            flex flex-col items-center 
+            ${active
+                    ? 'border-indigo-500 bg-indigo-500/10 shadow-[0_0_10px_rgba(99,102,241,0.25)]'
+                    : 'border-white/10 hover:border-white/20 hover:bg-white/5'}
+          `}
+              >
+                {/* Paleta */}
+                <div className="flex gap-2 mb-3">
+                  {t.colors.map((color, i) => (
+                    <div
+                      key={i}
+                      className="w-8 h-8 rounded-full shadow-sm ring-1 ring-white/10"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+
+                {/* Nome */}
+                <span className="text-white font-medium text-sm tracking-wide">
+                  {t.name}
+                </span>
+
+                {/* Check ativo */}
+                {active && (
+                  <Check className="w-4 h-4 text-indigo-400 absolute top-3 right-3" />
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -307,15 +300,13 @@ function NotificationsSection({ notifications, setNotifications }) {
                 <div className="text-gray-400 text-sm">{option.desc}</div>
               </div>
               <button
-                onClick={() => setNotifications({...notifications, [option.id]: !notifications[option.id]})}
-                className={`relative w-12 h-6 rounded-full transition-all ${
-                  notifications[option.id] ? 'bg-indigo-600' : 'bg-white/10'
-                }`}
+                onClick={() => setNotifications({ ...notifications, [option.id]: !notifications[option.id] })}
+                className={`relative w-12 h-6 rounded-full transition-all ${notifications[option.id] ? 'bg-indigo-600' : 'bg-white/10'
+                  }`}
               >
                 <div
-                  className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${
-                    notifications[option.id] ? 'left-7' : 'left-1'
-                  }`}
+                  className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${notifications[option.id] ? 'left-7' : 'left-1'
+                    }`}
                 ></div>
               </button>
             </div>
@@ -371,7 +362,7 @@ function HoursSection({ hours, setHours }) {
                     checked={hours[i]?.active}
                     onChange={(e) => {
                       const newHours = [...hours];
-                      newHours[i] = {...newHours[i], active: e.target.checked};
+                      newHours[i] = { ...newHours[i], active: e.target.checked };
                       setHours(newHours);
                     }}
                   />
@@ -385,7 +376,7 @@ function HoursSection({ hours, setHours }) {
                   disabled={!hours[i]?.active}
                   onChange={(e) => {
                     const newHours = [...hours];
-                    newHours[i] = {...newHours[i], open: e.target.value};
+                    newHours[i] = { ...newHours[i], open: e.target.value };
                     setHours(newHours);
                   }}
                   className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white disabled:opacity-50 focus:outline-none focus:border-indigo-500 transition"
@@ -397,7 +388,7 @@ function HoursSection({ hours, setHours }) {
                   disabled={!hours[i]?.active}
                   onChange={(e) => {
                     const newHours = [...hours];
-                    newHours[i] = {...newHours[i], close: e.target.value};
+                    newHours[i] = { ...newHours[i], close: e.target.value };
                     setHours(newHours);
                   }}
                   className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white disabled:opacity-50 focus:outline-none focus:border-indigo-500 transition"
@@ -413,47 +404,41 @@ function HoursSection({ hours, setHours }) {
 
 // Main Settings Component
 export default function CompanySettings() {
-  const currentUser = {
-    name: "João Silva",
-    business: "Barbearia Premium"
-  };
-
   const [activeSection, setActiveSection] = useState('company');
   const [companyData, setCompanyData] = useState({
-    logo: '💈',
+    // logo: 'LG',
     name: 'Barbearia Premium',
     type: 'barbearia',
     email: 'contato@barbeariapremiun.com',
     phone: '(11) 98765-4321',
     address: 'Rua das Flores, 123 - Centro',
-    cnpj: '12.345.678/0001-90',
-    website: 'https://barbeariapremiun.com'
+    // cnpj: '12.345.678/0001-90',
+    // website: 'https://barbeariapremiun.com'
   });
 
   const [theme, setTheme] = useState({
     mode: 'dark',
     color: 'purple',
-    fontSize: 14
   });
 
-  const [notifications, setNotifications] = useState({
-    newAppointment: true,
-    appointmentReminder: true,
-    cancelAppointment: true,
-    newClient: true,
-    payment: true,
-    reports: false
-  });
+  // const [notifications, setNotifications] = useState({
+  //   newAppointment: true,
+  //   appointmentReminder: true,
+  //   cancelAppointment: true,
+  //   newClient: true,
+  //   payment: true,
+  //   reports: false
+  // });
 
-  const [hours, setHours] = useState([
-    { active: true, open: '09:00', close: '18:00' },
-    { active: true, open: '09:00', close: '18:00' },
-    { active: true, open: '09:00', close: '18:00' },
-    { active: true, open: '09:00', close: '18:00' },
-    { active: true, open: '09:00', close: '18:00' },
-    { active: true, open: '09:00', close: '16:00' },
-    { active: false, open: '09:00', close: '18:00' }
-  ]);
+  // const [hours, setHours] = useState([
+  //   { active: true, open: '09:00', close: '18:00' },
+  //   { active: true, open: '09:00', close: '18:00' },
+  //   { active: true, open: '09:00', close: '18:00' },
+  //   { active: true, open: '09:00', close: '18:00' },
+  //   { active: true, open: '09:00', close: '18:00' },
+  //   { active: true, open: '09:00', close: '16:00' },
+  //   { active: false, open: '09:00', close: '18:00' }
+  // ]);
 
   const [showSaveNotification, setShowSaveNotification] = useState(false);
 
@@ -464,12 +449,12 @@ export default function CompanySettings() {
 
   return (
     <div className="min-h-screen bg-[#08060f] pt-28 md:pt-16">
-      <NavbarManage/>
-      
+      <NavbarManage />
+
       <main className="max-w-[1600px] mx-auto p-8">
         <div className="flex gap-8">
           <SettingsMenu activeSection={activeSection} setActiveSection={setActiveSection} />
-          
+
           <div className="flex-1">
             {activeSection === 'company' && (
               <CompanyInfoSection companyData={companyData} setCompanyData={setCompanyData} />
@@ -478,10 +463,32 @@ export default function CompanySettings() {
               <AppearanceSection theme={theme} setTheme={setTheme} />
             )}
             {activeSection === 'notifications' && (
-              <NotificationsSection notifications={notifications} setNotifications={setNotifications} />
+              // <NotificationsSection notifications={notifications} setNotifications={setNotifications} />
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-white text-2xl font-bold mb-2">Notificações</h2>
+                  <p className="text-gray-400">Configure as notificações que deseja receber</p>
+                </div>
+                <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-12 text-center">
+                  <Bell className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-white text-xl font-semibold mb-2">Em breve</h3>
+                  <p className="text-gray-400">Funcionalidade de notificações em desenvolvimento</p>
+                </div>
+              </div>
             )}
             {activeSection === 'hours' && (
-              <HoursSection hours={hours} setHours={setHours} />
+              // <HoursSection hours={hours} setHours={setHours} />
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-white text-2xl font-bold mb-2">Horário de Funcionamento</h2>
+                  <p className="text-gray-400">Configure os horários de funcionamento do seu negócio</p>
+                </div>
+                <div className="bg-[#0f0d1a] border border-white/5 rounded-2xl p-12 text-center">
+                  <Clock className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-white text-xl font-semibold mb-2">Em breve</h3>
+                  <p className="text-gray-400">Funcionalidade de horário em desenvolvimento</p>
+                </div>
+              </div>
             )}
             {activeSection === 'payment' && (
               <div className="space-y-6">
