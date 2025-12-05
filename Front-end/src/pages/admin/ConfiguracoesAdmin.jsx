@@ -83,19 +83,6 @@ function AdminInfoSection({ adminData }) {
             <span className="text-white">{adminData.email}</span>
           </div>
 
-          <div>
-            <label className="flex items-center gap-2 text-gray-400 text-sm mb-1">
-              <Phone className="w-4 h-4" />
-              Telefone
-            </label>
-            <span className="text-white">{adminData.phone}</span>
-          </div>
-
-          <div>
-            <label className="text-gray-400 text-sm mb-1 block">Cargo</label>
-            <span className="text-white font-medium">{adminData.role}</span>
-          </div>
-
         </div>
       </div>
     </div>
@@ -245,8 +232,6 @@ export default function ConfiguracoesAdmin() {
   const [adminData] = useState({
     name: 'Administrador Master',
     email: 'admin@sistema.com',
-    phone: '(00) 90000-0000',
-    role: 'Administrador Geral',
   });
 
   const [permissions, setPermissions] = useState({

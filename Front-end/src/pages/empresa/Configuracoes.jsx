@@ -73,11 +73,6 @@ function CompanyInfoSection({ companyData }) {
         </div>
 
         <div>
-          <label className="block text-gray-400 text-sm mb-1">Tipo de Negócio</label>
-          <span className="text-white capitalize font-medium">{companyData.type}</span>
-        </div>
-
-        <div>
           <label className="block text-gray-400 text-sm mb-1 flex items-center gap-2">
             <Mail className="w-4 h-4" />
             Email
@@ -240,7 +235,7 @@ export default function CompanySettings() {
 
   return (
     <div className="min-h-screen bg-[#08060f] pt-28 md:pt-16">
-      <NavbarManage />
+      <NavbarManage/>
 
       <main className="max-w-[1600px] mx-auto p-8">
         <div className="flex gap-8">
