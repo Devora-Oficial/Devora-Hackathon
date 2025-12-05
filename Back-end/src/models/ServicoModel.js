@@ -47,18 +47,26 @@ const ServicoModel = {
   },
 
   async atualizar(id, dados) {
-    const { nome, descricao, valor, duracao_minutos, ativo } = dados;
+    const fieldsToUpdate = {};
+    const allowedFields = ['nome', 'descricao', 'valor', 'duracao_minutos', 'ativo'];
 
-    const [result] = await db.query(
-      `UPDATE servicos SET 
-        nome = ?, 
-        descricao = ?, 
-        valor = ?, 
-        duracao_minutos = ?, 
-        ativo = ?
-      WHERE id = ?`,
-      [nome, descricao, valor, duracao_minutos, ativo, id]
-    );
+    // CORREÇÃO: Cria um objeto apenas com os campos que vieram no 'dados'
+    for (const key of allowedFields) {
+        if (dados[key] !== undefined) {
+            fieldsToUpdate[key] = dados[key];
+        }
+    }
+
+    if (Object.keys(fieldsToUpdate).length === 0) {
+        return 0; // Nada para atualizar se o objeto estiver vazio
+    }
+
+    // Cria a query dinamicamente e os valores para o prepared statement
+    const setClauses = Object.keys(fieldsToUpdate).map(field => `${field} = ?`);
+    const values = Object.values(fieldsToUpdate);
+
+    const query = `UPDATE servicos SET ${setClauses.join(', ')} WHERE id = ?`;
+    const [result] = await db.query(query, [...values, id]);
 
     return result.affectedRows;
   },

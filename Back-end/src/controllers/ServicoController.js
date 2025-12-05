@@ -9,50 +9,62 @@
  */
 
 const ServicoService = require("../services/ServicoService");
-const { ok, created, serverError, badRequest } = require("../utils/sendResponse");
+const { ok, created, serverError, badRequest, forbidden } = require("../utils/sendResponse");
 
 const ServicoController = {
-  // Recebe empresa_id como terceiro argumento (vindo do routes.js)
+  
+  handleError(res, err) {
+    const businessErrors = ["obrigatório", "Acesso negado", "não encontrado", "incompleto", "inválido", "positivo"];
+    
+    if (err.message.includes("Acesso negado")) {
+        return forbidden(res, err.message);
+    }
+    
+    if (businessErrors.some(keyword => err.message.includes(keyword))) {
+      return badRequest(res, err.message);
+    }
+    
+    console.error(err);
+    serverError(res, "Erro interno do servidor.");
+  },
+  
   async listar(req, res, empresa_id) {
     try {
-      // MUDANÇA: Chama o método específico para listar apenas daquela empresa
       const servicos = await ServicoService.listarPorEmpresa(empresa_id);
       ok(res, servicos);
     } catch (err) {
-      serverError(res, err.message);
+      ServicoController.handleError(res, err);
     }
   },
 
   async criar(req, res, body) {
-    try {
-      // Exemplo de validação de campos obrigatórios (ajuste conforme seu model!)
-      if (!body.nome || !body.valor) { 
-        return badRequest(res, "Campos 'nome' e 'valor' são obrigatórios");
-      }
-      
-      const id = await ServicoService.criar(body);
-      created(res, { id });
-    } catch (err) {
-      serverError(res, err.message);
-    }
-  },
+    try {
+      if (!body.nome || !body.valor) { 
+        return badRequest(res, "Campos 'nome' e 'valor' são obrigatórios");
+      }
+      
+      const id = await ServicoService.criar(body);
+      created(res, { id });
+    } catch (err) {
+      ServicoController.handleError(res, err);
+    }
+  },
 
   async atualizar(req, res, id, body, empresa_id) {
     try {
-      // Idealmente, você verificaria se o serviço pertence à empresa antes de atualizar
-      const rows = await ServicoService.atualizar(id, body);
+      const rows = await ServicoService.atualizar(id, body, empresa_id);
       ok(res, { updated: rows });
     } catch (err) {
-      serverError(res, err.message);
+      ServicoController.handleError(res, err);
     }
   },
 
   async deletar(req, res, id, empresa_id) {
     try {
-      const rows = await ServicoService.deletar(id);
+      const rows = await ServicoService.deletar(id, empresa_id);
       ok(res, { deleted: rows });
     } catch (err) {
-      serverError(res, err.message);
+      ServicoController.handleError(res, err);
     }
   }
 };

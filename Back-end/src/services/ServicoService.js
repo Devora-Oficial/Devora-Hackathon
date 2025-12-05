@@ -37,13 +37,29 @@ const ServicoService = {
     return await ServicoModel.criar(dados);
   },
 
-  async atualizar(id, dados) {
-    if (!id) throw new Error("ID do serviço é obrigatório.");
+  async checarPropriedade(id, empresa_id) {
+    const servico = await ServicoModel.buscarPorId(id);
+    if (!servico) {
+        throw new Error("Serviço não encontrado.");
+    }
+    if (servico.empresa_id !== empresa_id) {
+        throw new Error("Acesso negado: Serviço não pertence a esta empresa.");
+    }
+  },
+
+  async atualizar(id, dados, empresa_id) {
+    if (!id || !empresa_id) throw new Error("IDs obrigatórios para atualização.");
+
+    await ServicoService.checarPropriedade(id, empresa_id);
+
     return await ServicoModel.atualizar(id, dados);
   },
 
-  async deletar(id) {
-    if (!id) throw new Error("ID do serviço é obrigatório.");
+  async deletar(id, empresa_id) {
+    if (!id || !empresa_id) throw new Error("IDs obrigatórios para deleção.");
+    
+    await ServicoService.checarPropriedade(id, empresa_id);
+    
     return await ServicoModel.deletar(id);
   }
 };

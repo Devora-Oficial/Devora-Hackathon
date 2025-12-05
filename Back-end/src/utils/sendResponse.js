@@ -36,6 +36,9 @@ function notFound(res, message = "Recurso não encontrado.") {
 function forbidden(res, message = "Acesso negado.") {
     send(res, 403, { error: message });
 }
+function unauthorized(res, message = "Não autorizado.") {
+  send(res, 401, { error: message });
+}
 
 module.exports = {
   send,
@@ -44,5 +47,6 @@ module.exports = {
   badRequest,
   serverError,
   notFound, 
-  forbidden
+  forbidden,
+  unauthorized
 };

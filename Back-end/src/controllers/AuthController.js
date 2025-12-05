@@ -27,7 +27,7 @@ module.exports = {
             }
             
             // 2. Chama a lógica de autenticação no Service
-            const result = await AuthService.Login(email, senha, tipo);
+            const result = await AuthService.login(email, senha, tipo);
 
             // 3. Resposta de Sucesso (200 OK)
             return ok(res, result);
@@ -36,16 +36,10 @@ module.exports = {
             // 4. Tratamento de Erro Específico (401 Unauthorized)
             // Se a mensagem de erro indicar que a credencial é inválida/não existe, 
             // responde 401. Caso contrário, responde 500.
-            if (error.message.includes("Inválidas") || error.message.includes("encontrado")) {
-                // Usando unauthorized (401) do utilitário
-                return badRequest(res, "Credenciais Inválidas ou tipo de usuário incorreto."); 
-                // Nota: O ideal é que o Service lance um erro 401 específico, mas 
-                // como a gente não viu o Service, vou usar o badRequest (400) ou 
-                // assumir que o erro já vem 'tratado' pelo Service. 
-                // Se você criar a função `unauthorized(res, message)` no seu util, 
-                // use ela aqui! (ex: return unauthorized(res, error.message);)
-            }
-            
+            if (error.message.includes("Inválidas") || error.message.includes("encontrado") || error.message.includes("inválido")) {
+                // Usando unauthorized (401) do utilitário
+                return unauthorized(res, "Credenciais Inválidas ou tipo de usuário incorreto.");
+            }    
             // 5. Resposta de Erro Geral (500 Server Error)
             serverError(res, error.message);
         }
