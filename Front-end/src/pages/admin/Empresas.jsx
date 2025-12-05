@@ -66,8 +66,6 @@ const Empresas = () => {
     });
   };
 
-  // Empresas.jsx (Função fetchCompanies corrigida)
-
   const fetchCompanies = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -98,7 +96,6 @@ const Empresas = () => {
       
       // Mapear dados do backend para o formato usado no frontend (ajustar 'ativo' para 'status')
       const formattedData = data.map(company => ({
-        // ... (Restante da lógica de mapeamento)
         id: company.id,
         name: company.nome,
         email: company.email,
@@ -111,7 +108,6 @@ const Empresas = () => {
       setCompanies(formattedData);
     } catch (err) {
       console.error("Erro ao buscar empresas:", err);
-      // O erro agora deve ser mais claro: a mensagem JSON do servidor ou um erro de rede
       setError(err.message);
     } finally {
       setLoading(false);
@@ -194,7 +190,7 @@ const Empresas = () => {
       return;
     }
 
-    const token = localStorage.getItem('token'); // 👈 Adicionar: Obter o token
+    const token = localStorage.getItem('token');
     if (!token) {
         alert('Você não está autenticado. Por favor, faça login novamente.');
         return;
@@ -310,14 +306,11 @@ const Empresas = () => {
       )
     },
   ];
-  
-  // Talvez remover quando login estiver funcional
-  const tipoConta = 'admin'
 
   return (
     <>
       <div className="bg-[#08060f] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
-        <NavbarManage userType={tipoConta}/>
+        <NavbarManage/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
