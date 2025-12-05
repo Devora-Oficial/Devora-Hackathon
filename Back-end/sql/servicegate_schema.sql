@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS servicos (
 -- Tabela: agendamentos (sem clientes)
 CREATE TABLE IF NOT EXISTS agendamentos (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_nome VARCHAR(180) NOT NULL,
   servico_id INT NOT NULL,
   empresa_id INT NOT NULL,
   data_hora DATETIME NOT NULL,
@@ -67,12 +68,3 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE,
   INDEX idx_empresa_data (empresa_id, data_hora)
 );
-
-INSERT INTO plataforma_admins (nome, email, senha)
-VALUES 
-('Administrador Teste', 'admin@teste.com', '$2b$10$Cw9Wq5JZf4xP9gO8aN4T6OXVyhi0SKxF7hF5ZWSr1L6MjYSY4OwFi');
-
-INSERT INTO empresas (nome, email, senha, telefone, endereco)
-VALUES
-('Empresa Teste', 'empresa@teste.com', '$2b$10$Cw9Wq5JZf4xP9gO8aN4T6OXVyhi0SKxF7hF5ZWSr1L6MjYSY4OwFi', 
- '11999999999', 'Rua Teste');

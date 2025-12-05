@@ -16,7 +16,7 @@ async function seed() {
     email: "empresa@teste.com",
     senha: "123456",
     telefone: "11999999999",
-    endereco: "Rua Teste"
+    cep: "00000-000"
   });
   console.log("Empresa criada:", empresaId);
 }

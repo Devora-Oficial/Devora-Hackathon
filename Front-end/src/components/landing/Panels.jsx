@@ -29,18 +29,18 @@ export default function Panels() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           <PanelCard
-            title="Painel de Filas"
+            title="Dashboard"
             text="Tempo médio de espera, número de clientes em fila e avisos prioritários."
             delay={0.1}
           />
           <PanelCard
-            title="Agenda & Recursos"
-            text="Visão por funcionário, sala ou recurso — tudo sincronizado."
+            title="Serviços"
+            text="Cadastro completo para um gama de diferentes serviços, tudo cabe a você."
             delay={0.2}
           />
           <PanelCard
-            title="Financeiro"
-            text="Vendas, cancelamentos e relatórios de receita por período."
+            title="Agendamentos"
+            text="Registe, edite e gerencie seus agendamentos com os clientes."
             delay={0.3}
           />
         </div>

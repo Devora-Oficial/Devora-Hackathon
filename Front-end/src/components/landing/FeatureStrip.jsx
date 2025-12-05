@@ -19,11 +19,11 @@ const Feature = ({ icon, title, text, delay }) => (
 
 export default function FeatureStrip() {
   const items = [
-    { icon: "📅", title: "Agendamentos inteligentes", text: "Reserve, reagende e otimize horários automaticamente." },
+    { icon: "📅", title: "Agendamentos digitais", text: "Agende, reagende e gerencie os horários dos serviços." },
     { icon: "🔔", title: "Notificações & SMS", text: "Lembretes automáticos via SMS/WhatsApp e push." },
-    { icon: "⚙️", title: "Automação de filas", text: "Priorize atendimentos e minimize tempos de espera." },
-    { icon: "👥", title: "Equipe & permissões", text: "Controle de funções, escalas e performance." },
-    { icon: "💳", title: "Pagamentos integrados", text: "Cobre no app, PDV, ou por link." },
+    { icon: "💳", title: "Cadastro de serviços", text: "Gerencia de maneira simples e fácil os serviços que seu negócio oferece." },
+    { icon: "👥", title: "Dashboard completa", text: "Controle de seus negócios em uma única página." },
+    { icon: "⚙️", title: "Configurações flexiveis", text: "Deixe seu sistema à seu gosto pessoal." },
     { icon: "📈", title: "Relatórios inteligentes", text: "Métricas que mostram o desempenho do seu negócio." }
   ];
 

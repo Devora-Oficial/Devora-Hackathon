@@ -4,7 +4,7 @@ const auth = require("../utils/authMiddleware");
 
 module.exports = async function(req, res) {
     const { method, url } = req;
-    const authData = auth(req, res);
+    const authData = auth(req);
 
     if (authData.error || authData.user.role !== "empresa") {
         res.writeHead(401);

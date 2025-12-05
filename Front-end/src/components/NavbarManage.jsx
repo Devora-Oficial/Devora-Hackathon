@@ -1,17 +1,36 @@
-/* Abaixo está a versão atualizada do seu componente com: 
-   - Remoção total da borda dos <a> (Links)
-   - Linha azul embaixo APENAS quando estiver ativo
-   - Linha azul suave a direita (end) com Tailwind via pseudo-elemento
-*/
-
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Building2, Users, Scissors, Calendar, Settings, Moon, Sun, LogOut } from "lucide-react";
 
-export default function NavbarManage({ userType = "company", userName = "João Silva", companyName = "Barbearia Premium" }) {
+export default function NavbarManage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  
+  // Estados para dados do usuário
+  const [userData, setUserData] = useState({
+    nome: "Usuário",
+    email: "",
+  });
+  const [userType, setUserType] = useState("empresa");
+
+  // Carregar dados do usuário ao montar o componente
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("userData");
+    const storedRole = localStorage.getItem("role");
+    
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+
+    if (storedRole) {
+      setUserType(storedRole === "admin" ? "admin" : "company");
+    }
+  }, []);
 
   const navItems = userType === "admin"
     ? [
@@ -28,6 +47,14 @@ export default function NavbarManage({ userType = "company", userName = "João S
 
   const isActive = (path) => location.pathname === path;
 
+  // Função de logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userData");
+    navigate("/login");
+  };
+
   return (
     <header className="w-full fixed top-0 left-0 z-50 bg-[#07060a]/40 border-b border-white/6 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +63,6 @@ export default function NavbarManage({ userType = "company", userName = "João S
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center">
-              {/* <Building2 className="w-6 h-6 text-white" /> */}
               <span className="text-white font-bold">SG</span>
             </div>
             <span className="text-white font-bold text-lg tracking-tight hidden sm:block">
@@ -54,11 +80,10 @@ export default function NavbarManage({ userType = "company", userName = "João S
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-none outline-none
+                  className={`relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors border-none rounded-lg
                     ${active ? "text-white" : "text-gray-400 hover:text-white"}
                   `}
                 >
-                  {/* Linha azul no hover/end */}
                   <span
                     className={`absolute bottom-0 right-0 h-0.5 w-0 bg-purple-600 transition-all duration-300
                       ${active ? "w-full" : "group-hover:w-full"}
@@ -85,23 +110,25 @@ export default function NavbarManage({ userType = "company", userName = "João S
             <div className="relative">
               <div className="flex items-center gap-3 px-3 py-2 rounded-lg">
                 <div className="text-right hidden sm:block">
-                  <div className="text-sm font-medium text-white">{userName}</div>
+                  <div className="text-sm font-medium text-white">{userData.nome}</div>
                   <div className="text-xs text-gray-400">
-                    {userType === "admin" ? "Admin Master" : companyName}
+                    {userData.email}
                   </div>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm">
-                  {userName.charAt(0)}
+                  {userData.nome.charAt(0).toUpperCase()}
                 </div>
               </div>
             </div>
 
-            <Link
-              to={"/login"}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition"
+            {/* Botão de Logout */}
+            <button
+              onClick={handleLogout}
+              className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-gray-800 transition"
+              title="Sair"
             >
               <LogOut className="w-5 h-5" />
-            </Link>
+            </button>
           </div>
         </div>
       </div>

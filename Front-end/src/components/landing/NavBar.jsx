@@ -22,22 +22,15 @@ export default function Navbar() {
 
           <Link
             to="/login"
-            className="px-4 py-2 rounded-full border border-white/10 hover:border-purple-500 text-white transition"
-          >
-            Entrar
-          </Link>
-
-          <Link
-            to="/register"
             className="px-4 py-2 rounded-full bg-linear-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition font-medium shadow-lg shadow-purple-900/40"
           >
-            Criar Conta
+            Entrar
           </Link>
         </nav>
 
         {/* mobile placeholder */}
         <div className="md:hidden">
-          <Link to="/register" className="px-3 py-2 rounded bg-purple-600 text-white text-sm">Criar</Link>
+          <Link to="/login" className="px-4 py-2 rounded-full bg-linear-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition font-medium shadow-lg shadow-purple-900/40">Entrar</Link>
         </div>
       </div>
     </header>
