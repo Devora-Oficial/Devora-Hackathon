@@ -75,6 +75,7 @@ npm run dev
 - Necessário ligar o XAMPP
 - Criar banco de dados no phpMyAdmin
 - Arquivo do banco: Debora-Hackathon/Back-end/sql/servicegate_schema.sql
+- Apenas copie e cole o conteúdo do arquivo no script do SQL
 - Após criar o banco, no terminal do Back-end dê o comando:
 ```bash
 node seed.js
