@@ -18,33 +18,9 @@ pie title Uso das Tecnologias
     "Node.js" : 15
 ```
 
-## **🧭 Diagrama de Fluxo – Autenticação**
+## **🧱 Diagrama Entidade-Relacionamento**
 
-```mermaid
-flowchart TD
-    A[Login] --> B{Credenciais válidas?}
-    B -->|Sim| C[Gerar Token]
-    B -->|Não| D[Erro de Autenticação]
-    C --> E[Redirecionar para Dashboard]
-```
-
-## **🧱 Diagrama de Classes – Estrutura Lógica**
-
-```mermaid
-classDiagram
-    class Usuario {
-        string nome
-        string email
-        login()
-    }
-
-    class Auth {
-        gerarToken()
-        validarToken()
-    }
-
-    Usuario --> Auth
-```
+![DER](./DER/DER_ServiceGate.png)
 
 # **🛠 Stack Detalhada**
 
@@ -61,13 +37,13 @@ classDiagram
 
 ---
 
-# **👤 Responsável**
+# **👤 Responsáveis**
 
-[@GuilhermeNantes](https://github.com/GuilhermeNantes)
-[@MateusStortiHellmann](https://github.com/Mah-Shuu)
-[@ElielMurbach](https://github.com/ElielMurbach)
-[@RobertFernandes](https://github.com/kamurakk)
-[@EvandroMarques](https://github.com/evandroocm)
+- [@GuilhermeNantes](https://github.com/GuilhermeNantes)
+- [@MateusStortiHellmann](https://github.com/Mah-Shuu)
+- [@ElielMurbach](https://github.com/ElielMurbach)
+- [@RobertFernandes](https://github.com/kamurakk)
+- [@EvandroMarques](https://github.com/evandroocm)
 
 ---
 
