@@ -35,8 +35,8 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const Agendamentos = () => {
   // 1. ESTADOS
-  const [appointments, setAppointments] = useState([]); // Dados agora vêm da API
-  const [servicesList, setServicesList] = useState([]); // Nova lista para o dropdown de serviços
+  const [appointments, setAppointments] = useState([]);
+  const [servicesList, setServicesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -101,7 +101,6 @@ const Agendamentos = () => {
         
         return {
           id: item.id,
-          // ⚠️ Assumindo que o backend retorna 'cliente_nome' e 'service_name'
           customer: item.cliente_nome || 'Cliente Não Informado', 
           service: item.service_name || 'Serviço ID ' + item.servico_id, 
           serviceId: item.servico_id, 
@@ -169,7 +168,6 @@ const Agendamentos = () => {
     
     // Formata a data/hora para os inputs type="date" (YYYY-MM-DD) e type="time" (HH:MM)
     const rawDate = new Date(appointment.rawDateTime);
-    // toLocaleDateString('en-CA') com replace ou manipulação manual é mais seguro
     const datePart = rawDate.toISOString().substring(0, 10); // YYYY-MM-DD
     const timePart = rawDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); // HH:MM
 
@@ -204,7 +202,7 @@ const Agendamentos = () => {
       const dataHoraISO = `${formData.date}T${formData.time}:00.000Z`;
 
       const payload = {
-        cliente_nome: formData.customer, // ⚠️ Ajustar no backend para clientes
+        cliente_nome: formData.customer,
         servico_id: parseInt(formData.serviceId),
         data_hora: dataHoraISO,
         observacao: formData.observation,
@@ -242,7 +240,7 @@ const Agendamentos = () => {
       const dataHoraISO = `${formData.date}T${formData.time}:00.000Z`;
 
       const payload = {
-        cliente_nome: formData.customer, // ⚠️ Ajustar no backend para clientes
+        cliente_nome: formData.customer,
         servico_id: parseInt(formData.serviceId),
         data_hora: dataHoraISO,
         observacao: formData.observation,

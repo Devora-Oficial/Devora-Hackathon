@@ -1,4 +1,3 @@
-// src/pages/DashboardAdmin.jsx
 import React from 'react';
 import { motion } from "framer-motion";
 
@@ -16,7 +15,7 @@ import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 import NavbarManage from '../../components/NavbarManage';
 
 // ======================================
-// ANIMAÇÕES (mesmas do seu outro painel)
+// ANIMAÇÕES
 // ======================================
 const containerVariant = {
   hidden: {},
