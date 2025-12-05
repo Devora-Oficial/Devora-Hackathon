@@ -20,7 +20,7 @@ pie title Uso das Tecnologias
 
 ## **🧱 Diagrama Entidade-Relacionamento**
 
-![DER](./DER/DER_ServiceGate.png)
+![DER](./Documentos/DER_ServiceGate.png)
 
 # **🛠 Stack Detalhada**
 
