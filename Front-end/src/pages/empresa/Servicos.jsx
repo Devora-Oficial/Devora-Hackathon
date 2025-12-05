@@ -46,7 +46,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const Servicos = () => {
   const [services, setServices] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Mantido: Começa carregando
+  const [isLoading, setIsLoading] = useState(true); 
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -65,7 +65,7 @@ const Servicos = () => {
 
   // Função para pegar headers com Token
   const getHeaders = () => {
-    const token = localStorage.getItem("token"); // Assumindo que o token está salvo aqui
+    const token = localStorage.getItem("token");
     return {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
@@ -88,7 +88,6 @@ const Servicos = () => {
 
         if (response.status === 401 || response.status === 403) {
             localStorage.removeItem('token');
-            // Redirecionamento deve ser feito fora, mas o erro avisa
             throw new Error("Sessão expirada. Por favor, faça login novamente."); 
         }
 
@@ -127,14 +126,13 @@ const Servicos = () => {
 
     } catch (error) {
       console.error("Erro ao carregar serviços:", error.message);
-      // alert(`Falha ao carregar serviços: ${error.message}`); // Comentado para evitar pop-up a cada erro
       setServices([]); 
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 🔑 NOVO: useEffect com a lógica de carregamento e mapeamento
+  // 🔑 useEffect com a lógica de carregamento e mapeamento
   useEffect(() => {
     loadServices();
   }, []);
@@ -294,7 +292,6 @@ const Servicos = () => {
     }
   };
 
-  // ... (Resto do código de estilos e colunas permanece igual)
   const getStatusStyles = (status) => {
     const styles = {
       'Ativo': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
@@ -351,7 +348,7 @@ const Servicos = () => {
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
             viewport={{ once: true }}
           >
-            {/* Adicionado Feedback de Loading */}
+            {/* Feedback de Loading */}
             {isLoading ? (
               <div className="text-center text-white py-10">Carregando serviços...</div>
             ) : (
@@ -371,7 +368,7 @@ const Servicos = () => {
         </main>
       </div>
 
-      {/* --- MODAL DE ADICIONAR (Mantido) --- */}
+      {/* --- MODAL DE ADICIONAR --- */}
       <Modal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -463,7 +460,7 @@ const Servicos = () => {
         </div>
       </Modal>
 
-      {/* --- MODAL DE EDITAR (Mantido) --- */}
+      {/* --- MODAL DE EDITAR --- */}
       <Modal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -551,7 +548,7 @@ const Servicos = () => {
         </div>
       </Modal>
 
-      {/* --- MODAL DE DELETAR (Mantido) --- */}
+      {/* --- MODAL DE DELETAR --- */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
