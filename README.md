@@ -1,18 +1,8 @@
 # **README PRINCIPAL (Organizado e Pronto para Uso)**
 
-# **Devora - toki**
+# **Devora - ServiceGate**
 
-Aplicação web para gerenciamento de serviços
-
----
-
-## **📡 Status do Projeto**
-
-| Categoria          | Status                                                                  |
-| ------------------ | ----------------------------------------------------------------------- |
-| 🔧 Desenvolvimento | ![Dev](https://img.shields.io/badge/status-em%20desenvolvimento-yellow) |
-| 🚀 Produção        | ![Prod](https://img.shields.io/badge/versão-0.1.0-blue)                 |
-| 🧪 Testes          | ![Tests](https://img.shields.io/badge/testes-parciais-orange)           |
+Aplicação web para gerenciamento e agendamento de serviços
 
 ---
 
@@ -27,10 +17,6 @@ pie title Uso das Tecnologias
     "TailwindCSS" : 15
     "Node.js" : 15
 ```
-
-# **📦 Arquitetura do Sistema**
-
-Este bloco revela o fluxo operacional e o modelo interno — a “máquina invisível” operando por trás da interface.
 
 ## **🧭 Diagrama de Fluxo – Autenticação**
 
@@ -60,30 +46,6 @@ classDiagram
     Usuario --> Auth
 ```
 
-# **🗓 Cronograma – Gantt**
-
-O cronograma mostra o tempo como estrutura — o projeto é um processo, não um estado.
-
-```mermaid
-gantt
-    title Cronograma do Projeto (3 dias)
-    dateFormat  YYYY-MM-DD
-
-    %% Dia 1
-    section Front-end
-    Componentes       :a1, 2025-01-01, 1d
-
-    %% Dia 2
-    Estilização       :a1, 2025-01-01 , 2025-01-03
-
-    %% Dia 3
-    section Back-end
-    API               :b1, 2025-01-03, 1d
-    Autenticação      :b2, 2025-01-03, 1d
-```
-
----
-
 # **🛠 Stack Detalhada**
 
 ### **Front-end**
@@ -95,13 +57,17 @@ gantt
 ### **Back-end**
 
 - 🟩 Node.js
-- 🚏 Express
+- 🧱 MySQL
 
 ---
 
 # **👤 Responsável**
 
 [@GuilhermeNantes](https://github.com/GuilhermeNantes)
+[@MateusStortiHellmann](https://github.com/Mah-Shuu)
+[@ElielMurbach](https://github.com/ElielMurbach)
+[@RobertFernandes](https://github.com/kamurakk)
+[@EvandroMarques](https://github.com/evandroocm)
 
 ---
 
@@ -128,12 +94,5 @@ npm run dev
 
 # **📸 Screenshots**
 
-![Tela Inicial](./assets/home.png)
-
----
-
-# **📄 Licença**
-
-MIT
-bé
-Quer adicionar mais camadas ao README?
+![Tela Inicial](./fotosREADME/landingPage.png)
+![Dashboard da Empresa](./fotosREADME/dashboardEmpresa.png)

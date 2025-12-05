@@ -112,7 +112,7 @@ export default function NavbarManage() {
                 <div className="text-right hidden sm:block">
                   <div className="text-sm font-medium text-white">{userData.nome}</div>
                   <div className="text-xs text-gray-400">
-                    {userType === "admin" ? "Admin Master" : userData.empresa || userData.email}
+                    {userData.email}
                   </div>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm">
