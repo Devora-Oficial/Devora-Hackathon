@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react"; // Adicionar useEffect e useCallback
 import { DataTable } from "../../components/DataTable";
 import { X, Building2 } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
@@ -35,13 +35,10 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const Empresas = () => {
   // Alterar/Remover quando for puxado do banco
-  const [companies, setCompanies] = useState([
-    { id: 1, name: 'Barbearia Premium', email: 'contato@barbeariapremium.com', password: '123', phone: '(11) 99999-1111', cep: '00000-000', status: 'Ativo' },
-    { id: 2, name: 'Clínica Estética Belle', email: 'contato@clinicabelle.com', password: '123', phone: '(11) 99999-2222', cep: '00000-000', status: 'Ativo' },
-    { id: 3, name: 'Academia Fitness Plus', email: 'contato@fitnessplus.com', password: '123', phone: '(11) 99999-3333', cep: '00000-000', status: 'Ativo' },
-    { id: 4, name: 'Restaurante Sabor & Arte', email: 'contato@saborarte.com', password: '123', phone: '(11) 99999-4444', cep: '00000-000', status: 'Inativo' },
-    { id: 5, name: 'Pet Shop Amigo Fiel', email: 'contato@amigofiel.com', password: '123', phone: '(11) 99999-5555', cep: '00000-000', status: 'Ativo' },
-  ]);
+
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -68,6 +65,58 @@ const Empresas = () => {
       status: 'Ativo'
     });
   };
+
+  const fetchCompanies = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch('http://localhost:3000/empresas', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      // 1. Tente ler o corpo da resposta UMA ÚNICA VEZ
+      // É importante ler o corpo antes de verificar se a resposta está OK,
+      // pois precisaremos dela para o erro ou para os dados.
+      const responseBody = await response.json(); 
+
+      if (!response.ok) {
+        // Se não estiver OK, o responseBody contém os dados do erro
+        // responseBody é agora o objeto de erro JSON (errorData)
+        throw new Error(responseBody.error || `Erro ao carregar empresas: ${response.status}`);
+      }
+      
+      // 2. Se a resposta estiver OK, o responseBody é o objeto de dados (data)
+      const data = responseBody; 
+      
+      // Mapear dados do backend para o formato usado no frontend (ajustar 'ativo' para 'status')
+      const formattedData = data.map(company => ({
+        id: company.id,
+        name: company.nome,
+        email: company.email,
+        password: '', 
+        phone: company.telefone,
+        cep: company.cep,
+        status: company.ativo === 1 ? 'Ativo' : 'Inativo', 
+      }));
+
+      setCompanies(formattedData);
+    } catch (err) {
+      console.error("Erro ao buscar empresas:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCompanies();
+  }, [fetchCompanies]);
 
   // Abrir modal de adicionar
   const handleAdd = () => {
@@ -96,43 +145,127 @@ const Empresas = () => {
   };
 
   // Salvar nova empresa
-  const handleSaveNew = () => {
+  const handleSaveNew = async () => {
     if (!formData.name || !formData.email || !formData.password || !formData.phone || !formData.cep) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
     
-    const newCompany = {
-      id: companies.length > 0 ? Math.max(...companies.map(c => c.id)) + 1 : 1,
-      ...formData
+    // Mapear dados do formulário para o formato esperado pelo backend
+    const apiData = {
+      nome: formData.name,
+      email: formData.email,
+      senha: formData.password,
+      telefone: formData.phone,
+      cep: formData.cep
     };
-    setCompanies([...companies, newCompany]);
-    setIsAddModalOpen(false);
-    resetForm();
+    
+    try {
+      const response = await fetch('http://localhost:3000/empresas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(apiData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao criar empresa: ${response.status}`);
+      }
+
+      // Se a criação for bem-sucedida, feche o modal, resete o formulário e recarregue a lista
+      setIsAddModalOpen(false);
+      resetForm();
+      await fetchCompanies(); // Recarrega a lista
+    } catch (err) {
+      alert(`Falha ao salvar a nova empresa: ${err.message}`);
+    }
   };
 
   // Salvar edição
-  const handleSaveEdit = () => {
-    if (!formData.name || !formData.email || !formData.password || !formData.phone || !formData.cep) {
+  const handleSaveEdit = async () => {
+    if (!selectedCompany || !formData.name || !formData.email || !formData.phone || !formData.cep) {
       alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Você não está autenticado. Por favor, faça login novamente.');
+        return;
+    }
     
-    setCompanies(companies.map(company => 
-      company.id === selectedCompany.id 
-        ? { ...company, ...formData }
-        : company
-    ));
-    setIsEditModalOpen(false);
-    setSelectedCompany(null);
-    resetForm();
+    // Mapear dados do formulário para o formato esperado pelo backend
+    const apiData = {
+      nome: formData.name,
+      email: formData.email,
+      // A senha só deve ser enviada se for alterada, mas o modelo está esperando.
+      // Se não quiser alterar a senha, remova o campo 'password' do 'formData' e não o envie
+      // ou envie a senha atual (se for seguro). Aqui estamos enviando o valor do estado.
+      senha: formData.password, 
+      telefone: formData.phone,
+      cep: formData.cep,
+      ativo: formData.status === 'Ativo' ? 1 : 0 // Converte Status para o formato do DB
+    };
+    
+    try {
+      // Rota de atualização: PUT /empresas/:id
+      const response = await fetch(`http://localhost:3000/empresas/${selectedCompany.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(apiData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao atualizar empresa: ${response.status}`);
+      }
+
+      // Se a edição for bem-sucedida, feche o modal, resete o formulário e recarregue a lista
+      setIsEditModalOpen(false);
+      setSelectedCompany(null);
+      resetForm();
+      await fetchCompanies(); // Recarrega a lista
+    } catch (err) {
+      alert(`Falha ao salvar alterações: ${err.message}`);
+    }
   };
 
   // Confirmar deleção
-  const handleConfirmDelete = () => {
-    setCompanies(companies.filter(company => company.id !== selectedCompany.id));
-    setIsDeleteModalOpen(false);
-    setSelectedCompany(null);
+  const handleConfirmDelete = async () => {
+    if (!selectedCompany) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Você não está autenticado. Por favor, faça login como admin.');
+        return;
+    }
+    
+    try {
+      // Rota de deleção: DELETE /empresas/:id
+      const response = await fetch(`http://localhost:3000/empresas/${selectedCompany.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao excluir empresa: ${response.status}`);
+      }
+
+      // Se a exclusão for bem-sucedida, feche o modal, anule a seleção e recarregue a lista
+      setIsDeleteModalOpen(false);
+      setSelectedCompany(null);
+      await fetchCompanies(); // Recarrega a lista
+    } catch (err) {
+      alert(`Falha ao excluir a empresa: ${err.message}`);
+    }
   };
 
   // Função para retornar as classes CSS baseadas no status
@@ -173,14 +306,11 @@ const Empresas = () => {
       )
     },
   ];
-  
-  // Talvez remover quando login estiver funcional
-  const tipoConta = 'admin'
 
   return (
     <>
       <div className="bg-[#08060f] text-white font-sans antialiased min-h-screen pt-28 md:pt-16">
-        <NavbarManage userType={tipoConta}/>
+        <NavbarManage/>
         <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,24 +323,40 @@ const Empresas = () => {
             <p className="mt-1 text-gray-400">Gerencie todas as empresas cadastradas na plataforma</p>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <DataTable
-              data={companies}
-              columns={columns}
-              title="Lista de Empresas"
-              searchPlaceholder="Buscar empresa..."
-              onAdd={handleAdd}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              addLabel="Nova Empresa"
-              itemsPerPage={10}
-            />
-          </motion.div>
+          {/* Adicionar lógica de carregamento e erro */}
+          {loading && (
+            <div className="text-center py-10 text-gray-400">
+                Carregando empresas...
+            </div>
+          )}
+
+          {error && (
+            <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                <span className="font-medium">Erro ao carregar:</span> {error}
+            </div>
+          )}
+
+          {/* Mostrar tabela apenas se não estiver carregando e não houver erro grave */}
+          {!loading && !error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <DataTable
+                data={companies}
+                columns={columns}
+                title="Lista de Empresas"
+                searchPlaceholder="Buscar empresa..."
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                addLabel="Nova Empresa"
+                itemsPerPage={10}
+              />
+            </motion.div>
+          )}
         </main>
       </div>
 

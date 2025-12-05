@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // 💡 Importar useEffect
 import { DataTable } from "../../components/DataTable";
 import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
@@ -34,13 +34,10 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 };
 
 const Agendamentos = () => {
-  const [appointments, setAppointments] = useState([
-    { id: 1, customer: 'Carlos Silva', service: 'Corte + Barba', date: '01/12/2024', time: '10:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
-    { id: 2, customer: 'Ana Paula Santos', service: 'Corte Masculino', date: '01/12/2024', time: '11:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
-    { id: 3, customer: 'Roberto Oliveira', service: 'Barba Completa', date: '01/12/2024', time: '14:00', observation: 'Corte de cabelo tradicional masculino', status: 'Concluído' },
-    { id: 4, customer: 'Fernanda Costa', service: 'Pigmentação', date: '02/12/2024', time: '09:00', observation: 'Corte de cabelo tradicional masculino', status: 'Agendado' },
-    { id: 5, customer: 'Lucas Mendes', service: 'Corte Masculino', date: '30/11/2024', time: '16:00', observation: 'Corte de cabelo tradicional masculino', status: 'Cancelado' },
-  ]);
+  // 1. ESTADOS
+  const [appointments, setAppointments] = useState([]);
+  const [servicesList, setServicesList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Estado de carregamento
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -49,18 +46,95 @@ const Agendamentos = () => {
   
   const [formData, setFormData] = useState({
     customer: '',
-    service: '',
-    date: '',
-    time: '',
+    serviceId: '', // Usar ID do serviço para API
+    serviceName: '', // Nome do serviço para controle do formulário
+    date: '', // Usar formato YYYY-MM-DD para input type="date"
+    time: '', // Usar formato HH:MM para input type="time"
     observation: '',
     status: 'Agendado'
   });
 
-  // Resetar formulário
+  const API_URL = "http://localhost:3000"; 
+
+  const getHeaders = () => {
+    const token = localStorage.getItem("token");
+    return {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    };
+  };
+
+  // --- FUNÇÕES DE FETCH ---
+
+  // 💡 Busca a lista de serviços (necessária para o <select> no modal)
+  const fetchServicesList = async () => {
+    try {
+        const response = await fetch(`${API_URL}/servicos`, { headers: getHeaders() });
+        if (!response.ok) {
+            throw new Error('Falha ao carregar lista de serviços.');
+        }
+        const data = await response.json();
+        // Mapear para usar no dropdown: id, nome
+        setServicesList(data.map(s => ({ id: s.id, name: s.nome }))); 
+    } catch (error) {
+        console.error("Erro ao carregar serviços:", error.message);
+    }
+  }
+
+  // 💡 Função principal para carregar agendamentos
+  const loadAppointments = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/agendamentos`, { headers: getHeaders() });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao carregar agendamentos: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      const formattedData = data.map(item => {
+        const dateTime = new Date(item.data_hora);
+        const datePart = dateTime.toLocaleDateString('pt-BR');
+        const timePart = dateTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        
+        return {
+          id: item.id,
+          customer: item.cliente_nome || 'Cliente Não Informado', 
+          service: item.service_name || 'Serviço ID ' + item.servico_id, 
+          serviceId: item.servico_id, 
+          date: datePart,
+          time: timePart,
+          observation: item.observacao,
+          status: item.status,
+          rawDateTime: item.data_hora // Manter para facilitar a edição
+        };
+      });
+
+      setAppointments(formattedData);
+
+    } catch (error) {
+      console.error("Erro ao carregar agendamentos:", error.message);
+      setAppointments([]); 
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 💡 useEffect para carregar dados na montagem
+  useEffect(() => {
+    fetchServicesList(); 
+    loadAppointments(); 
+  }, []);
+
+  // --- HANDLERS DE ESTADO E FORMULÁRIO ---
+
   const resetForm = () => {
     setFormData({
       customer: '',
-      service: '',
+      serviceId: '',
+      serviceName: '',
       date: '',
       time: '',
       observation: '',
@@ -68,70 +142,154 @@ const Agendamentos = () => {
     });
   };
 
-  // Abrir modal de adicionar
+  // Atualiza o formData no input/select
+  const handleFormChange = (e) => {
+      const { name, value } = e.target;
+      let update = { [name]: value };
+
+      if (name === 'serviceId') {
+        const service = servicesList.find(s => s.id.toString() === value);
+        update = {
+            serviceId: value,
+            serviceName: service ? service.name : ''
+        };
+      }
+      
+      setFormData(prev => ({ ...prev, ...update }));
+  };
+
   const handleAdd = () => {
     resetForm();
     setIsAddModalOpen(true);
   };
 
-  // Abrir modal de editar
   const handleEdit = (appointment) => {
     setSelectedAppointment(appointment);
+    
+    // Formata a data/hora para os inputs type="date" (YYYY-MM-DD) e type="time" (HH:MM)
+    const rawDate = new Date(appointment.rawDateTime);
+    const datePart = rawDate.toISOString().substring(0, 10); // YYYY-MM-DD
+    const timePart = rawDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); // HH:MM
+
     setFormData({
       customer: appointment.customer,
-      service: appointment.service,
-      date: appointment.date,
-      time: appointment.time,
+      serviceId: appointment.serviceId.toString(), // Converter para string para o select
+      serviceName: appointment.service, 
+      date: datePart, 
+      time: timePart, 
       observation: appointment.observation,
       status: appointment.status
     });
     setIsEditModalOpen(true);
   };
 
-  // Abrir modal de deletar
   const handleDelete = (appointment) => {
     setSelectedAppointment(appointment);
     setIsDeleteModalOpen(true);
   };
 
-  // Salvar novo agendamento
-  const handleSaveNew = () => {
-    if (!formData.customer || !formData.service || !formData.date || !formData.time) {
-      alert('Por favor, preencha todos os campos!');
+  // --- HANDLERS CRUD API ---
+
+  // Salvar novo agendamento (POST)
+  const handleSaveNew = async () => {
+    if (!formData.customer || !formData.serviceId || !formData.date || !formData.time) {
+      alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
     
-    const newAppointment = {
-      id: appointments.length > 0 ? Math.max(...appointments.map(a => a.id)) + 1 : 1,
-      ...formData
-    };
-    setAppointments([...appointments, newAppointment]);
-    setIsAddModalOpen(false);
-    resetForm();
+    try {
+      // 💡 Converte data e hora para o formato DATETIME esperado pela API (ISO 8601)
+      const dataHoraISO = `${formData.date}T${formData.time}:00.000Z`;
+
+      const payload = {
+        cliente_nome: formData.customer,
+        servico_id: parseInt(formData.serviceId),
+        data_hora: dataHoraISO,
+        observacao: formData.observation,
+        status: formData.status
+      };
+
+      const response = await fetch(`${API_URL}/agendamentos`, {
+        method: "POST",
+        headers: getHeaders(), 
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao criar agendamento: ${response.status}`);
+      }
+
+      await loadAppointments(); // Recarrega os dados (reload na tela)
+      setIsAddModalOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error(error);
+      alert(`Erro ao salvar agendamento: ${error.message}`);
+    }
   };
 
-  // Salvar edição
-  const handleSaveEdit = () => {
-    if (!formData.customer || !formData.service || !formData.date || !formData.time) {
-      alert('Por favor, preencha todos os campos!');
+  // Salvar edição (PUT)
+  const handleSaveEdit = async () => {
+    if (!selectedAppointment || !formData.customer || !formData.serviceId || !formData.date || !formData.time) {
+      alert('Por favor, preencha todos os campos obrigatórios!');
       return;
     }
     
-    setAppointments(appointments.map(app => 
-      app.id === selectedAppointment.id 
-        ? { ...app, ...formData }
-        : app
-    ));
-    setIsEditModalOpen(false);
-    setSelectedAppointment(null);
-    resetForm();
+    try {
+      const dataHoraISO = `${formData.date}T${formData.time}:00.000Z`;
+
+      const payload = {
+        cliente_nome: formData.customer,
+        servico_id: parseInt(formData.serviceId),
+        data_hora: dataHoraISO,
+        observacao: formData.observation,
+        status: formData.status
+      };
+
+      const response = await fetch(`${API_URL}/agendamentos/${selectedAppointment.id}`, {
+        method: "PUT",
+        headers: getHeaders(), 
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao atualizar agendamento: ${response.status}`);
+      }
+
+      await loadAppointments(); // Recarrega os dados (reload na tela)
+      setIsEditModalOpen(false);
+      setSelectedAppointment(null);
+      resetForm();
+    } catch (error) {
+      console.error(error);
+      alert(`Erro ao atualizar agendamento: ${error.message}`);
+    }
   };
 
-  // Confirmar deleção
-  const handleConfirmDelete = () => {
-    setAppointments(appointments.filter(app => app.id !== selectedAppointment.id));
-    setIsDeleteModalOpen(false);
-    setSelectedAppointment(null);
+  // Confirmar deleção (DELETE)
+  const handleConfirmDelete = async () => {
+    if (!selectedAppointment) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/agendamentos/${selectedAppointment.id}`, {
+        method: "DELETE",
+        headers: getHeaders()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erro ao excluir agendamento: ${response.status}`);
+      }
+
+      await loadAppointments(); // Recarrega os dados (reload na tela)
+      setIsDeleteModalOpen(false);
+      setSelectedAppointment(null);
+    } catch (error) {
+      console.error(error);
+      alert(`Erro ao excluir agendamento: ${error.message}`);
+    }
   };
 
   // Função para retornar as classes CSS baseadas no status
@@ -183,17 +341,21 @@ const Agendamentos = () => {
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <DataTable
-              data={appointments}
-              columns={columns}
-              title="Lista de Agendamentos"
-              searchPlaceholder="Buscar agendamento..."
-              onAdd={handleAdd}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              addLabel="Novo Agendamento"
-              itemsPerPage={10}
-            />
+             {isLoading ? (
+              <div className="text-center text-white py-10">Carregando agendamentos...</div>
+            ) : (
+              <DataTable
+                data={appointments}
+                columns={columns}
+                title="Lista de Agendamentos"
+                searchPlaceholder="Buscar agendamento..."
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                addLabel="Novo Agendamento"
+                itemsPerPage={10}
+              />
+            )}
           </motion.div>
         </main>
       </div>
@@ -201,7 +363,7 @@ const Agendamentos = () => {
       {/* Modais renderizados fora do fluxo principal */}
       <Modal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {setIsAddModalOpen(false); resetForm();}}
         title="Novo Agendamento"
       >
         <div className="space-y-4">
@@ -211,8 +373,9 @@ const Agendamentos = () => {
             </label>
             <input
               type="text"
+              name="customer"
               value={formData.customer}
-              onChange={(e) => setFormData({ ...formData, customer: e.target.value })}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               placeholder="Nome do cliente"
             />
@@ -223,16 +386,17 @@ const Agendamentos = () => {
               Serviço
             </label>
             <select
-              value={formData.service}
-              onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+              name="serviceId"
+              value={formData.serviceId}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             >
               <option value="">Selecione um serviço</option>
-              <option value="Corte Masculino">Corte Masculino</option>
-              <option value="Corte + Barba">Corte + Barba</option>
-              <option value="Barba Completa">Barba Completa</option>
-              <option value="Pigmentação">Pigmentação</option>
-              <option value="Platinado">Platinado</option>
+              {servicesList.map(service => (
+                <option key={service.id} value={service.id}>
+                    {service.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -242,11 +406,11 @@ const Agendamentos = () => {
                 Data
               </label>
               <input
-                type="text"
+                type="date"
+                name="date"
                 value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                onChange={handleFormChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="DD/MM/YYYY"
               />
             </div>
 
@@ -255,11 +419,11 @@ const Agendamentos = () => {
                 Horário
               </label>
               <input
-                type="text"
+                type="time"
+                name="time"
                 value={formData.time}
-                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                onChange={handleFormChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="HH:MM"
               />
             </div>
           </div>
@@ -269,8 +433,9 @@ const Agendamentos = () => {
               Observação
             </label>
             <textarea
+              name="observation"
               value={formData.observation}
-              onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
               placeholder="Anote uma observação"
               rows="3"
@@ -282,8 +447,9 @@ const Agendamentos = () => {
               Status
             </label>
             <select
+              name="status"
               value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             >
               <option value="Agendado">Agendado</option>
@@ -295,7 +461,7 @@ const Agendamentos = () => {
 
         <div className="flex gap-3 mt-6">
           <button
-            onClick={() => setIsAddModalOpen(false)}
+            onClick={() => {setIsAddModalOpen(false); resetForm();}}
             className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             Cancelar
@@ -311,7 +477,7 @@ const Agendamentos = () => {
 
       <Modal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={() => {setIsEditModalOpen(false); setSelectedAppointment(null); resetForm();}}
         title="Editar Agendamento"
       >
         <div className="space-y-4">
@@ -321,8 +487,9 @@ const Agendamentos = () => {
             </label>
             <input
               type="text"
+              name="customer"
               value={formData.customer}
-              onChange={(e) => setFormData({ ...formData, customer: e.target.value })}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               placeholder="Nome do cliente"
             />
@@ -333,16 +500,17 @@ const Agendamentos = () => {
               Serviço
             </label>
             <select
-              value={formData.service}
-              onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+              name="serviceId"
+              value={formData.serviceId}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             >
               <option value="">Selecione um serviço</option>
-              <option value="Corte Masculino">Corte Masculino</option>
-              <option value="Corte + Barba">Corte + Barba</option>
-              <option value="Barba Completa">Barba Completa</option>
-              <option value="Pigmentação">Pigmentação</option>
-              <option value="Platinado">Platinado</option>
+              {servicesList.map(service => (
+                <option key={service.id} value={service.id}>
+                    {service.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -352,11 +520,11 @@ const Agendamentos = () => {
                 Data
               </label>
               <input
-                type="text"
+                type="date"
+                name="date"
                 value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                onChange={handleFormChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="DD/MM/YYYY"
               />
             </div>
 
@@ -365,11 +533,11 @@ const Agendamentos = () => {
                 Horário
               </label>
               <input
-                type="text"
+                type="time"
+                name="time"
                 value={formData.time}
-                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                onChange={handleFormChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                placeholder="HH:MM"
               />
             </div>
           </div>
@@ -379,8 +547,9 @@ const Agendamentos = () => {
               Observação
             </label>
             <textarea
+              name="observation"
               value={formData.observation}
-              onChange={(e) => setFormData({ ...formData, observation: e.target.value })}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white resize-none"
               placeholder="Anote uma observação"
               rows="3"
@@ -392,8 +561,9 @@ const Agendamentos = () => {
               Status
             </label>
             <select
+              name="status"
               value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             >
               <option value="Agendado">Agendado</option>
@@ -405,7 +575,7 @@ const Agendamentos = () => {
 
         <div className="flex gap-3 mt-6">
           <button
-            onClick={() => setIsEditModalOpen(false)}
+            onClick={() => {setIsEditModalOpen(false); setSelectedAppointment(null); resetForm();}}
             className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             Cancelar

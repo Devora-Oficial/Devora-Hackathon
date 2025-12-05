@@ -46,7 +46,7 @@ export default function MobileShowcase() {
           </ul>
         </motion.div>
 
-        {/* CELULAR – BALANÇO SUAVE */}
+        {/* CELULAR REALISTA */}
         <motion.div
           className="flex items-center justify-center"
           variants={phoneVariant}
@@ -55,20 +55,32 @@ export default function MobileShowcase() {
           viewport={{ once: true, amount: 0.3 }}
         >
           <motion.div
-            style={{ transformOrigin: "bottom center" }} // base fixa
-            animate={{
-              rotate: [-8, 8, -8], // <— balanço MUITO mais suave
-            }}
+            style={{ transformOrigin: "bottom center" }}
+            animate={{ rotate: [-6, 6, -6] }}
             transition={{
-              duration: 2.6,
+              duration: 3,
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="w-56 h-96 rounded-3xl bg-gradient-to-br from-purple-600 to-indigo-500 shadow-2xl flex items-center justify-center text-white"
+            className="relative w-56 h-96 rounded-[2.5rem] bg-black shadow-[0_0_35px_#7f5cff] border-[6px] border-gray-800 overflow-hidden"
           >
-            <div className="text-center px-4">
-              <div className="h-6 w-24 bg-white/20 rounded mb-4 mx-auto"></div>
-              <div className="h-44 bg-white/10 rounded"></div>
+            {/* BOTÕES LATERAIS */}
+            <div className="absolute -left-1 top-20 w-1 h-10 bg-gray-700 rounded-r-lg"></div>
+            <div className="absolute -left-1 top-36 w-1 h-16 bg-gray-700 rounded-r-lg"></div>
+
+            {/* ALTO-FALANTE */}
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-1.5 bg-gray-700 rounded-full"></div>
+
+            {/* CÂMERA FRONTAL REALISTA */}
+            <div className="absolute top-4 right-24 w-4 h-4 rounded-full bg-black shadow-inner flex items-center justify-center">
+              <div className="w-3 h-3 rounded-full bg-gray-800 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-blue-400 opacity-70"></div>
+              </div>
+            </div>
+
+            {/* TELA DO CELULAR */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-500 flex flex-col items-center justify-center px-4">
+              <div className="mt-2 h-4 w-20 bg-black rounded mb-auto"></div>
             </div>
           </motion.div>
         </motion.div>

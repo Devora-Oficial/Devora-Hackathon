@@ -11,14 +11,17 @@ export default function NavbarManage() {
   const [userData, setUserData] = useState({
     nome: "Usuário",
     email: "",
-    empresa: ""
   });
-  const [userType, setUserType] = useState("company");
+  const [userType, setUserType] = useState("empresa");
 
   // Carregar dados do usuário ao montar o componente
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData");
     const storedRole = localStorage.getItem("role");
+    
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
 
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
@@ -46,7 +49,7 @@ export default function NavbarManage() {
 
   // Função de logout
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userData");
     navigate("/login");
@@ -109,7 +112,7 @@ export default function NavbarManage() {
                 <div className="text-right hidden sm:block">
                   <div className="text-sm font-medium text-white">{userData.nome}</div>
                   <div className="text-xs text-gray-400">
-                    {userType === "admin" ? "Admin Master" : userData.empresa || userData.email}
+                    {userData.email}
                   </div>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-600 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm">

@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS servicos (
 -- Tabela: agendamentos (sem clientes)
 CREATE TABLE IF NOT EXISTS agendamentos (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_nome VARCHAR(180) NOT NULL,
   servico_id INT NOT NULL,
   empresa_id INT NOT NULL,
   data_hora DATETIME NOT NULL,

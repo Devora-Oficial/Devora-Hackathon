@@ -1,24 +1,43 @@
-// utils/authMiddleware.js
+// utils/authMiddleware.js (Versão Corrigida para Retorno Consistente)
+
 const { verify } = require("./token");
 
-module.exports = function authMiddleware(req, res) {
-    const authHeader = req.headers["authorization"];
+module.exports = function authMiddleware(req) { // Removido 'res'
+    // Usa 'authorization' em minúsculo, pois o Node normaliza os headers
+    const authHeader = req.headers["authorization"]; 
+
+    // 1. Check for missing header
     if (!authHeader) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: true, message: "Token não enviado" }));
-        return null; // para a execução da rota
+        // Retorna o objeto de erro esperado pelo router
+        return { error: true, message: "Token não enviado" }; 
     }
 
-    const token = authHeader.replace("Bearer ", "").trim();
-    const decoded = verify(token);
+    // Split the header: Expected format is "Bearer <token>"
+    const parts = authHeader.split(' ');
 
-    if (!decoded) {
-        res.writeHead(401, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: true, message: "Token inválido ou expirado" }));
-        return null; // para a execução da rota
+    // 2. Check for correct format (must have 2 parts, and the first part must be 'Bearer')
+    if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
+        return { error: true, message: "Formato do Token inválido. Use: Bearer <token>" };
     }
 
-    // disponibiliza o usuário na request
-    req.user = decoded;
-    return decoded; // retorna os dados do usuário para uso na rota
+    const token = parts[1];
+    
+    // 3. Check for empty token string
+    if (!token) {
+        return { error: true, message: "Token não fornecido após 'Bearer'" };
+    }
+
+    try {
+        const userPayload = verify(token); 
+        
+        // Garante que o payload retorne no formato user
+        req.user = userPayload; 
+        
+        // Retorna o payload decodificado (que contém id, email, role, etc)
+        return { user: userPayload, error: false }; 
+        
+    } catch (e) {
+        // Captura erros de Token inválido ou expirado
+        return { error: true, message: "Token inválido ou expirado" };
+    }
 };

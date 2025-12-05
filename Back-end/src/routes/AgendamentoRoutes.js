@@ -18,7 +18,7 @@ const { send, notFound } = require("../utils/sendResponse");
 
 module.exports = async function(req, res) {
     const { method, url } = req;
-    const authData = auth(req, res);
+    const authData = auth(req);
 
     if (authData.error || authData.user.role !== "empresa") {
         return send(res, 401, { error: "Apenas empresas autenticadas podem acessar agendamentos" });

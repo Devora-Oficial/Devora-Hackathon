@@ -3,7 +3,7 @@ import { DataTable } from "../../components/DataTable";
 import { X } from "lucide-react";
 import NavbarManage from "../../components/NavbarManage";
 
-// LEMBRAR QUE ESSA TELA TALVEZ NÃO ESTEJA NA VERSÃO FINAL, CASO NÃO, REMOVER LINK DA NAVBAR
+// TELA FORA DO ESCOPO
 
 // Componente Modal (fora do componente principal)
 const Modal = ({ isOpen, onClose, title, children }) => {

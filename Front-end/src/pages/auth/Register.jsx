@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// TELA FORA DO ESCOPO
+
 export default function Register() {
   return (
     <div className="min-h-screen flex bg-[#07060a] text-white">
