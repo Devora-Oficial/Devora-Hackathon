@@ -1,7 +1,8 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, UserStar } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Empresas from "../admin/Empresas";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,46 +10,76 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  const [role, setRole] = useState(true);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+  
+    if (!role) {
+      setError("Selecione o tipo de usuário para teste.");
+      return;
+    }
+  
     setIsLoading(true);
-
+  
     try {
-      const response = await fetch("http://localhost:3000/auth/login", { 
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Credenciais inválidas.");
-      }
-
-      const data = await response.json();
-
-      // Armazena o token
-      localStorage.setItem("token", data.token);
-      
-      // Armazena a role
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("userData", JSON.stringify({
-        nome: data.nome || "Usuário",
-        email: data.email || email,
-        id: data.id || null
-      }));
-
-      if (data.role === "empresa") navigate("/dashboardEmpresa");
-      if (data.role === "admin") navigate("/dashboardAdmin");
-
+      const data = { role };
+  
+      setTimeout(() => {
+        if (data.role === "empresa") navigate("/dashboardEmpresa");
+        else if (data.role === "admin") navigate("/dashboardAdmin");
+      }, 1500);
+  
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
+  
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError(null);
+  //   setIsLoading(true);
+    
+    // try {
+
+      // const response = await fetch("http://localhost:3000/auth/login", { 
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ email, password }),
+      // });
+
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.message || "Credenciais inválidas.");
+      // }
+
+      // const data = await response.json();
+
+      // // Armazena o token
+      // localStorage.setItem("token", data.token);
+      
+      // // Armazena a role
+      // localStorage.setItem("role", data.role);
+      // localStorage.setItem("userData", JSON.stringify({
+      //   nome: data.nome || "Usuário",
+      //   email: data.email || email,
+      //   id: data.id || null
+      // }));
+
+  //     setTimeout(() => {
+  //       if (data.role === "empresa") navigate("/dashboardEmpresa");
+  //       else if (data.role === "admin") navigate("/dashboardAdmin");
+  //     }, 1500);
+
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <motion.div 
@@ -112,12 +143,41 @@ export default function Login() {
               {/* BOTÃO */}
               <button
                 type="submit"
-                className="w-full py-2 font-semibold rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg"
                 disabled={isLoading}
+                className="w-full py-2 font-semibold rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg"
               >
-                {isLoading ? "Carregando..." : "Entrar"}
+                {isLoading ? "Entrando..." : "Entrar"}
               </button>
 
+              <p className="text-sm text-gray-300">
+                * Apenas para teste: escolha o tipo de usuário
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRole("empresa")}
+                  className={`w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all
+                    ${role === "empresa"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg"
+                      : "bg-[#1a1a1f] border border-white/10 hover:bg-[#23232a]"}`}
+                >
+                  <UserStar size={18} />
+                  Empresa
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setRole("admin")}
+                  className={`w-full py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all
+                    ${role === "admin"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg"
+                      : "bg-[#1a1a1f] border border-white/10 hover:bg-[#23232a]"}`}
+                >
+                  <UserStar size={18} />
+                  Admin
+                </button>
+                </div>
             </form>
 
           </div>
